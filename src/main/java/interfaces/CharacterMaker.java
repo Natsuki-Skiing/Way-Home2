@@ -35,14 +35,17 @@ public class CharacterMaker {
         private final int MAX_POINTS = 30; // Total points allowed
         private List<TextBox> attributeBoxes = new ArrayList<>(); // To track values
         private ComboBox<String> comboBoxRace;
-        public CharacterMaker(Screen screen) {
+        private Window window;
+        private Window raceWindow;
+        public CharacterMaker(Screen screen, WindowBasedTextGUI txtGUI) {
                 this.screen = screen;
 
                 try {
                         
-                        this.txtGUI = new MultiWindowTextGUI(screen);
-                        final Window window = new BasicWindow("Character Creation");
-                        final Window raceWindow = new BasicWindow("Race Description");
+                        this.txtGUI = txtGUI;   
+                        this.window = new BasicWindow("Character Creation");
+                        
+                        this.raceWindow = new BasicWindow("Race Description");
 
                         Panel desPanel = new Panel(new LinearLayout());
                         Panel contentPanel = new Panel(new GridLayout(3));
@@ -163,10 +166,11 @@ public class CharacterMaker {
                                 Integer.parseInt(this.attributeBoxes.get(3).getText()),
                                 Integer.parseInt(this.attributeBoxes.get(4).getText()),
                                 Integer.parseInt(this.attributeBoxes.get(5).getText()),
-                                raceEnum.valueOf(this.comboBoxRace.getText().toUpperCase())
-                                ); 
+                                raceEnum.valueOf(this.comboBoxRace.getText().toUpperCase()),
+                                100); 
                         try{
-                                this.screen.clear();
+                                this.raceWindow.close();
+                                this.window.close();
                         }catch(Exception e){
                                 e.printStackTrace();
                         }

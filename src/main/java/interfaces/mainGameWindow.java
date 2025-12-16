@@ -10,13 +10,41 @@ import com.googlecode.lanterna.terminal.DefaultTerminalFactory;
 import com.googlecode.lanterna.terminal.Terminal;
 import com.googlecode.lanterna.TerminalPosition;
 import com.googlecode.lanterna.TerminalSize;
+
+import java.lang.ProcessHandle.Info;
 import java.util.regex.Pattern;
 
 
 import creatures.*;
 public class mainGameWindow {
     private Screen screen;
-    public mainGameWindow(Screen screen) {
+    private WindowBasedTextGUI textGUI;
+    private Panel mapPanel;
+    private GameGrid gameGrid;
+    private InfoPanel infoPanel;
+    private Player player;
+    private Panel rootPanel;
+    public mainGameWindow(Screen screen, WindowBasedTextGUI textGUI, Player player) {
         this.screen = screen;
+        this.textGUI = textGUI;
+        this.player = player;
+        final Window window = new BasicWindow();
+        this.rootPanel = new Panel();
+        this.rootPanel.setLayoutManager(new LinearLayout(Direction.HORIZONTAL));
+        window.setComponent(this.rootPanel.withBorder(Borders.doubleLineBevel("Way Home")));
+        this.mapPanel = new Panel();
+        this.gameGrid = new GameGrid(80, 30 );
+        // Adding panels 
+        this.mapPanel.addComponent(this.gameGrid);
+        this.infoPanel = new InfoPanel(this.player);
+        this.rootPanel.addComponent(this.mapPanel);
+        this.rootPanel.addComponent(this.infoPanel.withBorder(Borders.doubleLineBevel(this.player.getName())));
+        
+        this.gameGrid.setTile(10, 10, new GameTile(TextColor.ANSI.BLACK, TextColor.ANSI.RED_BRIGHT, '@'));
+        textGUI.addWindowAndWait(window);
+        
     }
+
+    
+    
 }
