@@ -9,10 +9,10 @@ public class Entity {
     protected int charisma;
     protected int luck;
     protected int agility;
-    protected int hp;
-    protected int maxHp;
+    protected double hp;
+    protected double maxHp;
 
-    public Entity(String name, int strength,int perception,int endurance , int charisma ,int agility, int luck,int maxHp){
+    public Entity(String name, int strength,int perception,int endurance , int charisma ,int agility, int luck,double maxHp){
         this.name = name;
         this.strength = strength;
         this.perception = perception;
@@ -92,20 +92,36 @@ public class Entity {
         this.level = level;
     }
     
-    public int getHp() {
+    public double getHp() {
         return this.hp;
     }
 
-    public void setHp(int hp) {
+    public void setHp(double hp) {
         this.hp = hp;
     }
 
-    public int getMaxHp() {
+    public double getMaxHp() {
         return this.maxHp;
     }
 
-    public void setMaxHp(int maxHp) {
+    public void setMaxHp(double maxHp) {
         this.maxHp = maxHp;
+    } 
+
+    public double addHp(double amount) {
+        this.hp += amount;
+        if (this.hp > this.maxHp) {
+            this.hp = this.maxHp;
+        }
+        return this.hp;
+    } 
+
+    public double subHp(double amount) {
+        this.hp -= amount;
+        if (this.hp < 0) {
+            this.hp = 0;
+        }
+        return this.hp;
     }
 
 

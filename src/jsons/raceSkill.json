@@ -1,5 +1,5 @@
 {
-    "Nord":{"Smithing":0,"Light_Weapon":0,"Heavy_Weapon":0,"Alcahemy":0,"Barter":0,"Defense":0},
-    "Breton":{"Smithing":0,"Light_Weapon":0,"Destruction":0,"Alchemy":0,"Barter":0,"Defense":0},
-    "Orc":{"Smithing":0,"Light_Weapon":0,"Heavy_Weapon":0,"Alchemy":0,"Barter":0,"Defense":0}
+    "Nord":{"Smithing":0,"Light_Weapon":0,"Heavy_Weapon":0,"Alcahemy":0,"Barter":0,"Defense":0,"stealth":0},
+    "Breton":{"Smithing":0,"Light_Weapon":0,"Destruction":0,"Alchemy":0,"Barter":0,"Defense":0,"stealth":0},
+    "Orc":{"Smithing":0,"Light_Weapon":0,"Heavy_Weapon":0,"Alchemy":0,"Barter":0,"Defense":0,"stealth":0}
 }
