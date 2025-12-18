@@ -23,12 +23,13 @@ public class mainGameWindow {
     private GameGrid gameGrid;
     private InfoPanel infoPanel;
     private Player player;
+    private Window window;
     private Panel rootPanel;
     public mainGameWindow(Screen screen, WindowBasedTextGUI textGUI, Player player) {
         this.screen = screen;
         this.textGUI = textGUI;
         this.player = player;
-        final Window window = new BasicWindow();
+        this.window = new BasicWindow();
         this.rootPanel = new Panel();
         this.rootPanel.setLayoutManager(new LinearLayout(Direction.HORIZONTAL));
         window.setComponent(this.rootPanel.withBorder(Borders.doubleLineBevel("Way Home")));
@@ -40,11 +41,21 @@ public class mainGameWindow {
         this.rootPanel.addComponent(this.mapPanel);
         this.rootPanel.addComponent(this.infoPanel.withBorder(Borders.doubleLineBevel(this.player.getName())));
         
-        this.gameGrid.setTile(10, 10, new GameTile(TextColor.ANSI.BLACK, TextColor.ANSI.RED_BRIGHT, '@'));
-        textGUI.addWindowAndWait(window);
+        
+        
         
     }
 
+    public void setTile(int x , int y, GameTile tile) {
+        this.gameGrid.setTile(x, y, tile);
+    }
+
+    public GameTile getTile(int x, int y) {
+        return this.gameGrid.getTile(x, y);
+    }
+    public Window getWindow(){
+        return(this.window);
+    }
     
     
 }

@@ -1,8 +1,11 @@
 package creatures;
 import enums.*;
-import enums.raceEnum;
 import items.*;
 import java.util.HashMap;
+
+import com.googlecode.lanterna.TextColor;
+
+import interfaces.GameTile;
 public class Player extends Character {
     private int x = 0;
     private int y = 0;
@@ -10,15 +13,29 @@ public class Player extends Character {
     private int xpToNextLevel = 100;
     private Chest inventory = new Chest();
     private HashMap<itemTypeEnum, Item> equippedItems = new HashMap<>();
-    
+    private GameTile previousTile = null;
+    private GameTile playerTile = new GameTile(TextColor.ANSI.BLACK, TextColor.ANSI.RED_BRIGHT, '@');
     public Player( String name, int strength,int perception,int endurance , int charisma ,int agility, int luck,raceEnum race, int maxHp) {
         super(name, strength, perception, endurance, charisma, agility, luck,race,maxHp);
         this.equippedItems.put(itemTypeEnum.WEAPON, null);
         this.equippedItems.put(itemTypeEnum.ARMOR, null);
         this.equippedItems.put(itemTypeEnum.FISHING_ROD, null);
     } 
-    
 
+    
+    public GameTile getPlayerTile() {
+        return playerTile;
+    }
+
+    public void setPlayerTile(GameTile playerTile) {
+        this.playerTile = playerTile;
+    }
+    public GameTile getPreviousTile() {
+        return previousTile;
+    }
+    public void setPreviousTile(GameTile previousTile) {
+        this.previousTile = previousTile;
+    }
     public int getX() {
         return x;
     }
