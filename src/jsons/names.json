@@ -1,8 +1,23 @@
-[
+{"forenames":[
 "Bjorn", "Einar", "Sigurd", "Harald", "Leif", "Ivar", "Torsten", "Ulf", "Stig", "Hakon",
 "Knut", "Soren", "Magnus", "Rurik", "Alrik", "Frode", "Svein", "Asmund", "Viggo", "Halvar",
 "Aethelred", "Osric", "Godric", "Wulfric", "Hereward", "Cedric", "Eadric", "Dunstan", "Aelfwine", "Leofric",
 "Beorn", "Alaric", "Oswald", "Cuthbert", "Aldric", "Theobald", "Edmund", "Ethelstan", "Wystan", "Godwin",
-"Brynjorn", "Eldric", "Thrain", "Alfric", "Dornan", "Skarn", "Fenric", "Hrothgar", "Baldrik", "Voric",
-"Sigmar", "Ardan", "Brannor", "Ulric", "Faelan", "Kaelen", "Orin", "Tormund", "Valthor", "Erland","Tobias","Peter","Elliot","Lydia","Emma","Alice Greenfeild","Terry Davis","Fabien Dufoulon","Andrew Scott","Robert Paulson"
-]
+"Brynjorn", "Eldric", "Thrain", "Alfric", "Dornan", "Skarn", "Fenric", "Hrothgar","William", "Baldrik", "Voric",
+"Sigmar", "Ardan", "Brannor", "Ulric", "Faelan", "Kaelen", "Orin", "Tormund", "Valthor", "Erland","Tobias","Peter","Elliot","Lydia","Emma","Alice","Terry","Fabien","Andrew","Robert","Motoko"
+],
+"surenames":[
+    "Greenfeild","Davis","Dufoulon","Scott","Paulson","Orbine","the merciful","the mercilus","the bold","the scared","the disfigured","the brave","of Lancaster","of WetRock","the wise","the fool",
+    "the cunning","the cruel", "Nordson","Vinter","Holt","the mad","Thalorien","Stormhold","Darkwood","Manegold","Jones","the hidden","the third","the second","Jr","Gale","Chan","Robson","Bsc","the great",
+    "of the north","of the south","the wander","the lost","the found","the lost","the whoreson","the dishonered","Frostborn","Fletcher","Smith","Solberg","Lindholm","Lund","Hjort","Sandvik","Krog","Wolfhart",
+    "Jaeger","Vogel","Dristig","Ritter","Hardman","Underhill","Gibbons","Ravenhelm",
+    "Hildebrand",
+    "Skold",
+    "Stormwind",
+    "Bloodworth",
+    "Kruger",
+    "Whitemane",
+    "Ironclad",
+    "Olafsson",
+    "Deepdelver","Kusanagi"
+]}

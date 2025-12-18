@@ -36,10 +36,10 @@ public class Game {
         }
     }
     public  void main() {
-        //CharacterMaker characterMaker = new CharacterMaker(this.screen,this.textGUI);
+        CharacterMaker characterMaker = new CharacterMaker(this.screen,this.textGUI);
         
-        //this.player = characterMaker.getPlayer();
-        this.player = new Player("Hero",  10, 10, 10, 10, 10, 10,raceEnum.NORD,150);
+        this.player = characterMaker.getPlayer();
+        //this.player = new Player("Hero",  10, 10, 10, 10, 10, 10,raceEnum.NORD,150);
            
         this.mainWindow = new mainGameWindow(this.screen,this.textGUI,this.player);
         this.textGUI.addWindow(this.mainWindow.getWindow());

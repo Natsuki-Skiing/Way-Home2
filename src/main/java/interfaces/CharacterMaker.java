@@ -25,7 +25,7 @@ import creatures.Player;
 import enums.raceEnum;
 public class CharacterMaker {
         private Screen screen;
-        private ArrayList<String> namesList = null;
+        private HashMap<String,ArrayList<String>> namesMap = null;
         private TextBox txtBoxName;
         private TextBox textBoxRaceDes;
         private HashMap<String, String> raceDes;
@@ -37,6 +37,7 @@ public class CharacterMaker {
         private ComboBox<String> comboBoxRace;
         private Window window;
         private Window raceWindow;
+        private Random randGen = new Random();
         public CharacterMaker(Screen screen, WindowBasedTextGUI txtGUI) {
                 this.screen = screen;
 
@@ -241,21 +242,28 @@ public class CharacterMaker {
         }
 
         private String getName() {
-                if (this.namesList == null) {
+                if (this.namesMap == null) {
                         ObjectMapper objectMapper = new ObjectMapper();
                         File namesJson = new File("src/jsons/names.json");
                         try {
-                                this.namesList = objectMapper.readValue(namesJson,
-                                                new TypeReference<ArrayList<String>>() {
+                                this.namesMap = objectMapper.readValue(namesJson,
+                                                new TypeReference<HashMap<String,ArrayList<String>>>() {
                                                 });
                         } catch (Exception e) {
                                 System.err.println(e);
+                                return("Joe Biden");
                         }
 
                 }
-                Random randGen = new Random();
-                int randIndex = randGen.nextInt(this.namesList.size());
-                return (this.namesList.get(randIndex));
+                
+                int randIndex = this.randGen.nextInt(this.namesMap.get("forenames").size());
+                String name = this.namesMap.get("forenames").get(randIndex);
+
+                randIndex = this.randGen.nextInt(this.namesMap.get("surenames").size());
+                String surname = this.namesMap.get("surenames").get(randIndex);
+                name = name +" "+ surname;
+
+                return (name);
         }
 
         private ArrayList<String> loadRaces() {
