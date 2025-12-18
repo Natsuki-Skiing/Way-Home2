@@ -62,6 +62,16 @@ public class Chest  {
         return null; // Item not found
     }
 
+    public int getNoOfItem(itemTypeEnum type, String name) {
+        ArrayList<ChestItem> itemList = this.itemsMap.get(type);
+        for (ChestItem chestItem : itemList) {
+            if (chestItem.getItem().getName().equals(name)) {
+                return chestItem.getQuantity();
+            }
+        }
+        return 0; // Item not found
+    }
+
     public ChestItem takeItem(Item item, int amount) {
         return takeItem(item.getType(), item.getName(), amount);
     }
