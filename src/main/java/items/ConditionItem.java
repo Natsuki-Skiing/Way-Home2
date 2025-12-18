@@ -8,6 +8,20 @@ public class ConditionItem extends Item {
         this.condition = condition;
     }
 
+
+    public ConditionItem(ConditionItem other) {
+        super(other);
+        if (other != null) {
+            this.condition = other.condition;
+            this.maxCondition = other.maxCondition;
+        }
+    }
+
+    @Override
+    public Item copy() {
+        return new ConditionItem(this);
+    }
+
     public int getCondition() {
         return condition;
     }

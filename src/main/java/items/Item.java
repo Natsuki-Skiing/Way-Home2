@@ -15,6 +15,18 @@ public class Item {
         this.type = type;
     }
 
+    public Item(Item other) {
+        this.name = other.name;
+        this.description = other.description;
+        this.value = other.value;
+        this.type = other.type;
+    }
+
+    public Item copy() {
+        return new Item(this);
+    }
+
+
     public String getName() {
         return name;
     }

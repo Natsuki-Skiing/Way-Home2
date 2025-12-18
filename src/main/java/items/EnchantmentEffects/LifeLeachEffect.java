@@ -8,4 +8,4 @@ public class LifeLeachEffect implements EnchantmentEffect{
         attacker.addHp(damageDealt);
         return String.format("%s leaches %.2f health from %s.", attacker.getName(), damageDealt, target.getName());
     }
-}  
+}
