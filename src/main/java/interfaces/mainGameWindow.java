@@ -34,7 +34,7 @@ public class mainGameWindow {
         this.rootPanel.setLayoutManager(new LinearLayout(Direction.HORIZONTAL));
         window.setComponent(this.rootPanel.withBorder(Borders.doubleLineBevel("Way Home")));
         this.mapPanel = new Panel();
-        this.gameGrid = new GameGrid(80, 30 );
+        this.gameGrid = new GameGrid(80, 30 ,this.player);
         // Adding panels 
         this.mapPanel.addComponent(this.gameGrid);
         this.infoPanel = new InfoPanel(this.player);

@@ -8,13 +8,16 @@ import com.googlecode.lanterna.screen.Screen;
 import com.googlecode.lanterna.screen.TerminalScreen;
 import com.googlecode.lanterna.terminal.DefaultTerminalFactory;
 import com.googlecode.lanterna.terminal.Terminal;
+import creatures.Player;
 public class GameGrid extends AbstractComponent<GameGrid> {
     private final GameTile[][] tiles;
     private final int width;
     private final int height;
-    public GameGrid(int width, int height) {
+    private Player player;
+    public GameGrid(int width, int height, Player player) {
         this.width = width;
         this.height = height;
+        this.player = player;
         this.tiles = new GameTile[this.width][this.height];
         for (int x = 0; x < width; x++) {
             for (int y = 0; y < height; y++) {
@@ -58,6 +61,10 @@ public class GameGrid extends AbstractComponent<GameGrid> {
                         graphics.setCharacter(x, y, tile.getDisplayChar());
                     }
                 }
+
+                graphics.setForegroundColor(player.getPlayerTile().getForegroundColor());
+                graphics.setBackgroundColor(player.getPlayerTile().getBackgroundColor());
+                graphics.setCharacter(player.getX(),player.getY(), player.getPlayerTile().getDisplayChar());
             }
         };
     } 

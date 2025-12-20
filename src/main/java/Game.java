@@ -76,22 +76,12 @@ public class Game {
         }
     }
 
-    private GameTile movePlayer(int deltaX, int deltaY) {
-        int newX = this.player.getX() + deltaX;
-        int newY = this.player.getY() + deltaY;
-        GameTile targetTile = this.mainWindow.getTile(newX, newY);
-        if (targetTile != null) {
-            if(this.player.getPreviousTile()!= null){
-                this.mainWindow.setTile(this.player.getX(), this.player.getY(), this.player.getPreviousTile());
-            }
-            
-            this.player.setPreviousTile(this.mainWindow.getTile(this.player.getX(), this.player.getY()));
-            this.player.setX(newX);
-            this.player.setY(newY);
-            this.mainWindow.setTile(newX, newY, this.player.getPlayerTile());
-            this.renderWindow = true;
-            return targetTile;
-        }
-        return null;
+    private void movePlayer(int deltaX, int deltaY) {
+        this.player.setX(this.player.getX() + deltaX);
+        this.player.setY(this.player.getY() + deltaY);  
+        this.renderWindow = true;
+        
+        
+        
     }
 }
