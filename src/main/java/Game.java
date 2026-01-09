@@ -46,7 +46,7 @@ public class Game {
         //this.player = characterMaker.getPlayer();
         this.player = new Player("Hero",  10, 10, 10, 10, 10, 10,raceEnum.NORD,150);
         
-        this.player.addItemToInventory(new Weapon("A spoon", "Can be used to eat soup", 0.67, 0, 0, itemTypeEnum.WEAPON_LARGE, 100), 1);
+        this.player.addItemToInventory(new Weapon("A spoon", "Can be used to eat soup", 0.67, 0, 0, itemTypeEnum.WEAPON_LARGE, 100), 3);
         this.player.equipItem(this.player.getInventory().getItemsByType(enums.itemTypeEnum.WEAPON).get(0).getItem());
         
         this.mainWindow = new mainGameWindow(this.screen,this.textGUI,this.player);

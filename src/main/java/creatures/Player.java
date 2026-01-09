@@ -76,7 +76,7 @@ public class Player extends Character {
     }
 
     public void addItemToInventory(Item item, int quantity) {
-        this.inventory.addRegularItem(item);
+        this.inventory.addRegularItem(item, quantity);
     }
 
     public boolean hasFishingRodEquipped() {
