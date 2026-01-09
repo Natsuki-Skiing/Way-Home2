@@ -41,10 +41,10 @@ public class InputManager {
             }
     }
 
-    public inputActionEnum getInput(){
+    public inputActionEnum getInput(KeyStroke input){
         inputActionEnum action = null;
         try{
-            KeyStroke input = this.terminal.readInput();
+            
             if(input.getKeyType() == KeyType.Character){
                 action = charBindings.get(input.getCharacter());
             }else{

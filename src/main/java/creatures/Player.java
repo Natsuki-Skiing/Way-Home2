@@ -102,7 +102,9 @@ public class Player extends Character {
     public ChestItem takeItemFromInventory(Item item, int amount) {
         return takeItemFromInventory(item.getType(), item.getName(), amount);
     }
-
+    public void unequipItem(Item item){
+        this.equippedItems.put(item.getType(), null);
+    }
     public boolean equipItem(Item item) {
         if(this.equippedItems.containsKey( item.getType())){
             this.equippedItems.put(item.getType(), item);
@@ -120,6 +122,10 @@ public class Player extends Character {
         return this.inventory.takeItem(type, name, amount);
     }
 
+    public boolean checkIfEquipt(Item item){
+        Item equippedItem = this.equippedItems.get(item.getType());
+        return equippedItem != null && equippedItem.getName().equals(item.getName());
+    }
     public ChestItem takeItemFromInventory(ChestItem chestItem) {
         return takeItemFromInventory(chestItem.getItem(), chestItem.getQuantity());
     }

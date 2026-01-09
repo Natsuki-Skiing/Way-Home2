@@ -7,12 +7,13 @@ public class Item {
     private String description;
     private BigDecimal value;
     private itemTypeEnum type;
-
-    public Item(String name, String description, BigDecimal value, itemTypeEnum type) {
+    private itemTypeEnum useType;
+    public Item(String name, String description, BigDecimal value, itemTypeEnum type,itemTypeEnum useType) {
         this.name = name;
         this.description = description;
         this.value = value;
         this.type = type;
+        this.useType = useType;
     }
 
     public Item(Item other) {
@@ -25,8 +26,12 @@ public class Item {
     public Item copy() {
         return new Item(this);
     }
-
-
+    public itemTypeEnum getUseType(){
+        return(this.useType);
+    }
+    public void setItemUseType(itemTypeEnum useType){
+        this.useType = useType;
+    }
     public String getName() {
         return name;
     }

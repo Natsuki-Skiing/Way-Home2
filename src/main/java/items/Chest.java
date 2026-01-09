@@ -76,5 +76,9 @@ public class Chest  {
         return takeItem(item.getType(), item.getName(), amount);
     }
 
+    public ArrayList<itemTypeEnum> getTypesOfChest(){
+        return(new ArrayList<>(this.itemsMap.keySet()));
+    }
+
 
 }

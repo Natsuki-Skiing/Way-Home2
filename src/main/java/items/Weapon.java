@@ -8,12 +8,15 @@ public class Weapon extends ConditionItem {
     private ArrayList<Enchantment> enchantments;
     private itemTypeEnum weaponType;
     public Weapon(String name, String description, java.math.BigDecimal value, int damage, double weight, itemTypeEnum weaponType,int maxCondition) {
-        super(name, description, value,maxCondition, itemTypeEnum.WEAPON);
+        super(name, description, value,maxCondition, itemTypeEnum.WEAPON,itemTypeEnum.EQUIPPABLE);
         this.damage = damage;
         this.weaponType = weaponType;
         this.enchantments = new ArrayList<Enchantment>();
     }
-
+    
+    public  Weapon(String name, String description, double value, int damage, double weight, itemTypeEnum weaponType,int maxCondition){
+        this(name, description, new java.math.BigDecimal(value), damage, weight, weaponType, maxCondition);
+    }
 
     public Weapon(Weapon other) {
         super(other); // Copies Item and ConditionItem fields

@@ -1,11 +1,13 @@
 
 import interfaces.*;
+import items.Weapon;
 import creatures.*;
 import enums.*;
 import com.googlecode.lanterna.TextColor;
 import com.googlecode.lanterna.gui2.*;
 import com.googlecode.lanterna.gui2.dialogs.MessageDialog;
 import com.googlecode.lanterna.gui2.dialogs.MessageDialogButton;
+import com.googlecode.lanterna.input.KeyStroke;
 import com.googlecode.lanterna.screen.Screen;
 import com.googlecode.lanterna.screen.TerminalScreen;
 import com.googlecode.lanterna.terminal.DefaultTerminalFactory;
@@ -13,6 +15,7 @@ import com.googlecode.lanterna.terminal.Terminal;
 import com.googlecode.lanterna.TerminalPosition;
 import com.googlecode.lanterna.TerminalSize;
 import java.util.regex.Pattern;
+import java.math.BigDecimal;
 
 public class Game {
     private Player player;
@@ -22,9 +25,11 @@ public class Game {
     private boolean running = true;
     private InputManager inputManager;
     private boolean renderWindow;
+    private Terminal terminal;
     public Game() {
         try {
             Terminal terminal = new DefaultTerminalFactory().createTerminal();
+            this.terminal = terminal;
             this.screen = new TerminalScreen(terminal);
             this.screen.startScreen();
             this.screen.setCursorPosition(null);
@@ -36,11 +41,14 @@ public class Game {
         }
     }
     public  void main() {
-        CharacterMaker characterMaker = new CharacterMaker(this.screen,this.textGUI);
+        //CharacterMaker characterMaker = new CharacterMaker(this.screen,this.textGUI);
         
-        this.player = characterMaker.getPlayer();
-        //this.player = new Player("Hero",  10, 10, 10, 10, 10, 10,raceEnum.NORD,150);
-           
+        //this.player = characterMaker.getPlayer();
+        this.player = new Player("Hero",  10, 10, 10, 10, 10, 10,raceEnum.NORD,150);
+        
+        this.player.addItemToInventory(new Weapon("A spoon", "Can be used to eat soup", 0.67, 0, 0, itemTypeEnum.WEAPON_LARGE, 100), 1);
+        this.player.equipItem(this.player.getInventory().getItemsByType(enums.itemTypeEnum.WEAPON).get(0).getItem());
+        
         this.mainWindow = new mainGameWindow(this.screen,this.textGUI,this.player);
         this.textGUI.addWindow(this.mainWindow.getWindow());
        
@@ -56,7 +64,14 @@ public class Game {
                 }
                 this.renderWindow = false;
             }
-            switch (this.inputManager.getInput()) {
+            KeyStroke input;
+            try{
+                input = this.terminal.readInput();
+            }catch(Exception e){
+                continue;
+            }
+            
+            switch (this.inputManager.getInput(input)) {
                 case UP:
                     this.movePlayer(0, -1);
                     break;
@@ -69,8 +84,13 @@ public class Game {
                 case RIGHT:
                     this.movePlayer(1, 0);
                     break;
+                case INVENTORY:
+                    InventoryInterface invScreen = new InventoryInterface(player, screen, textGUI, terminal);
+                    invScreen.mainLoop();
 
                 default:
+                    this.mainWindow.getWindow().handleInput(input);
+                    this.renderWindow = true;
                     break;
             }
         }

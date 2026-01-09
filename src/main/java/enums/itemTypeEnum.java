@@ -4,6 +4,7 @@ public enum itemTypeEnum {
     WEAPON,
     ARMOR,
     CONSUMABLE,
+    EQUIPPABLE,
     MISC,
     POTION,
     FOOD,

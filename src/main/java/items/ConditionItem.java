@@ -3,8 +3,8 @@ package items;
 public class ConditionItem extends Item {
     private int condition;
     private int maxCondition;
-    public ConditionItem(String name, String description, java.math.BigDecimal value, int condition, enums.itemTypeEnum type) {
-        super(name, description, value, type);
+    public ConditionItem(String name, String description, java.math.BigDecimal value, int condition, enums.itemTypeEnum type , enums.itemTypeEnum useType) {
+        super(name, description, value, type,useType);
         this.condition = condition;
     }
 

@@ -16,7 +16,9 @@ public class ChestItem {
     public Item getItem() {
         return item;
     }
-
+    public String getName(){
+        return(this.item.getName());
+    }
     public int getQuantity() {
         return quantity;
     }

@@ -238,7 +238,7 @@ public class CharacterMaker {
         }
 
         private void generateName() {
-                this.txtBoxName.setText(getName());
+                        this.txtBoxName.setText(getName());
         }
 
         private String getName() {
