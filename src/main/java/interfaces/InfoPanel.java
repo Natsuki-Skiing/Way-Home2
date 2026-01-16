@@ -15,6 +15,7 @@ public class InfoPanel extends Panel {
     private Player player;
     private HealthBar healthBar;
     private Label positionLabel;
+    private Label timeLabel = new Label("");
     public InfoPanel(Player player) {
         this.player = player;
         this.healthBar = new HealthBar(player);
@@ -24,12 +25,15 @@ public class InfoPanel extends Panel {
         this.addComponent(new Label("Position: "));
         //TODO ADD player position label 
         this.addComponent(new EmptySpace());
+        this.addComponent(new Label("Time: "));
+        this.addComponent(timeLabel);
 
 
-        update();
+        update("");
     } 
-    public void update() {
+    public void update(String timeString) {
         this.healthBar.update();
+        this.timeLabel.setText(timeString);
     }
 
 

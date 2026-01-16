@@ -56,6 +56,11 @@ public class mainGameWindow {
     public Window getWindow(){
         return(this.window);
     }
+
+    public void updateInfo(String time){
+        this.infoPanel.update(time);
+    }
+
     
     
 }

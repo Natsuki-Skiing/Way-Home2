@@ -4,25 +4,24 @@ import enums.itemTypeEnum;
 import java.util.HashMap;
 import java.util.ArrayList;
 public class Chest  {
-    private HashMap<itemTypeEnum, ArrayList<ChestItem>> itemsMap;
+    private HashMap<itemTypeEnum, HashMap<Integer,ChestItem>> itemsMap;
 
 
     public Chest() {
         this.itemsMap = new HashMap<>();
-        this.itemsMap.put(itemTypeEnum.WEAPON, new ArrayList<ChestItem>());
-        this.itemsMap.put(itemTypeEnum.ARMOR, new ArrayList<ChestItem>());
-        this.itemsMap.put(itemTypeEnum.POTION, new ArrayList<ChestItem>());
-        this.itemsMap.put(itemTypeEnum.MISC, new ArrayList<ChestItem>());
-        this.itemsMap.put(itemTypeEnum.FOOD, new ArrayList<ChestItem>());
-        this.itemsMap.put(itemTypeEnum.FISHING_ROD, new ArrayList<ChestItem>());
+        this.itemsMap.put(itemTypeEnum.WEAPON, new HashMap<Integer,ChestItem>());
+        this.itemsMap.put(itemTypeEnum.ARMOR, new HashMap<Integer,ChestItem>());
+        this.itemsMap.put(itemTypeEnum.POTION, new HashMap<Integer,ChestItem>());
+        this.itemsMap.put(itemTypeEnum.MISC, new HashMap<Integer,ChestItem>());
+        this.itemsMap.put(itemTypeEnum.FOOD, new HashMap<Integer,ChestItem>());
+        this.itemsMap.put(itemTypeEnum.FISHING_ROD, new HashMap<Integer,ChestItem>());
     }
 
     private boolean alreadyContainsItem(Item item,int quantity){
-        for(ChestItem ci : this.itemsMap.get(item.getType())) {
-            if (ci.getItem().getName().equals(item.getName())) {
-                ci.addQuantity(quantity);
-                return( true );
-            }
+        if(this.itemsMap.get(item.getType()).containsKey(item.getItemID())){
+            ChestItem ci = this.itemsMap.get(item.getType()).get(item.getItemID());
+            ci.addQuantity(quantity);
+            return( true );
         }
         return false;
     }
@@ -31,7 +30,7 @@ public class Chest  {
        
         if(!alreadyContainsItem(item,quantity)){
             ChestItem chestItem = new ChestItem(item, quantity);
-            this.itemsMap.get(item.getType()).add(chestItem);
+            this.itemsMap.get(item.getType()).put(item.getItemID(), chestItem);
         }
     }
 
@@ -44,17 +43,19 @@ public class Chest  {
     }
 
     public ArrayList<ChestItem> getItemsByType(itemTypeEnum type) {
-        return this.itemsMap.get(type);
+        ArrayList<ChestItem> itemList = new ArrayList<>(this.itemsMap.get(type).values());
+        return itemList;
     }
 
-    public ChestItem takeItem(itemTypeEnum type, String name, int amount) {
-        ArrayList<ChestItem> itemList = this.itemsMap.get(type);
-        for (int i = 0; i < itemList.size(); i++) {
-            ChestItem chestItem = itemList.get(i);
-            if (chestItem.getItem().getName().equals(name)) {
-                ChestItem takenItem = chestItem.takeAmount(amount);
+    public ChestItem takeItem(itemTypeEnum type, int itemID, int amount) {
+        ChestItem chestItem = this.itemsMap.get(type).get(itemID);
+        if (chestItem != null) {
+            int availableQuantity = chestItem.getQuantity();
+            if (availableQuantity >= amount) {
+                chestItem.addQuantity(-amount);
+                ChestItem takenItem = new ChestItem(chestItem.getItem(), amount);
                 if (chestItem.getQuantity() == 0) {
-                    itemList.remove(i);
+                    this.itemsMap.get(type).remove(itemID);
                 }
                 return takenItem;
             }
@@ -62,18 +63,16 @@ public class Chest  {
         return null; // Item not found
     }
 
-    public int getNoOfItem(itemTypeEnum type, String name) {
-        ArrayList<ChestItem> itemList = this.itemsMap.get(type);
-        for (ChestItem chestItem : itemList) {
-            if (chestItem.getItem().getName().equals(name)) {
-                return chestItem.getQuantity();
-            }
+    public int getNoOfItem(itemTypeEnum type, int itemID) {
+        ChestItem chestItem = this.itemsMap.get(type).get(itemID);
+        if (chestItem != null) {
+            return chestItem.getQuantity();
         }
         return 0; // Item not found
     }
 
     public ChestItem takeItem(Item item, int amount) {
-        return takeItem(item.getType(), item.getName(), amount);
+        return takeItem(item.getType(), item.getItemID(), amount);
     }
 
     public ArrayList<itemTypeEnum> getTypesOfChest(){

@@ -26,6 +26,7 @@ public class Game {
     private InputManager inputManager;
     private boolean renderWindow;
     private Terminal terminal;
+    private Clock clock;
     public Game() {
         try {
             Terminal terminal = new DefaultTerminalFactory().createTerminal();
@@ -48,16 +49,18 @@ public class Game {
         
         this.player.addItemToInventory(new Weapon("A spoon", "Can be used to eat soup", 0.67, 0, 0, itemTypeEnum.WEAPON_LARGE, 100), 3);
         this.player.equipItem(this.player.getInventory().getItemsByType(enums.itemTypeEnum.WEAPON).get(0).getItem());
-        
+        this.clock = new Clock(0, 2500, 200);
         this.mainWindow = new mainGameWindow(this.screen,this.textGUI,this.player);
         this.textGUI.addWindow(this.mainWindow.getWindow());
        
     
         movePlayer(0, 0);
-
+        this.clock.startClock();
         while(this.running){
+            
             if(this.renderWindow){
                 try {
+                    this.mainWindow.updateInfo(this.clock.getTimeString());
                     this.textGUI.updateScreen();
                 } catch (java.io.IOException e) {
                     e.printStackTrace();
@@ -85,6 +88,7 @@ public class Game {
                     this.movePlayer(1, 0);
                     break;
                 case INVENTORY:
+                    this.clock.updateTime();
                     InventoryInterface invScreen = new InventoryInterface(player, screen, textGUI, terminal);
                     invScreen.mainLoop();
 

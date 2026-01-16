@@ -8,12 +8,14 @@ public class Item {
     private BigDecimal value;
     private itemTypeEnum type;
     private itemTypeEnum useType;
-    public Item(String name, String description, BigDecimal value, itemTypeEnum type,itemTypeEnum useType) {
+    private int itemID;
+    public Item(String name, String description, BigDecimal value, itemTypeEnum type,itemTypeEnum useType, int itemID) {
         this.name = name;
         this.description = description;
         this.value = value;
         this.type = type;
         this.useType = useType;
+        this.itemID = itemID;
     }
 
     public Item(Item other) {
@@ -22,7 +24,9 @@ public class Item {
         this.value = other.value;
         this.type = other.type;
     }
-
+    public int getItemID(){
+        return(this.itemID);
+    }
     public Item copy() {
         return new Item(this);
     }
@@ -40,6 +44,12 @@ public class Item {
     }
     public BigDecimal getValue() {
         return value;   
+    }
+    public void setItemID(int itemID){
+        this.itemID = itemID;
+    }
+    public String getValueAsString(){
+        return(String.format("%.2f", this.value));
     }
 
     public void setValue(BigDecimal value) {

@@ -4,18 +4,18 @@ import enums.itemTypeEnum;
 import java.util.List;
 import java.util.ArrayList;
 public class Weapon extends ConditionItem {
-    private int damage;
+    private double damage;
     private ArrayList<Enchantment> enchantments;
     private itemTypeEnum weaponType;
-    public Weapon(String name, String description, java.math.BigDecimal value, int damage, double weight, itemTypeEnum weaponType,int maxCondition) {
-        super(name, description, value,maxCondition, itemTypeEnum.WEAPON,itemTypeEnum.EQUIPPABLE);
+    public Weapon(String name, String description, java.math.BigDecimal value, int damage, double weight, itemTypeEnum weaponType,int maxCondition,int itemID){
+        super(name, description, value,maxCondition, itemTypeEnum.WEAPON,itemTypeEnum.EQUIPPABLE,itemID);
         this.damage = damage;
         this.weaponType = weaponType;
         this.enchantments = new ArrayList<Enchantment>();
     }
     
-    public  Weapon(String name, String description, double value, int damage, double weight, itemTypeEnum weaponType,int maxCondition){
-        this(name, description, new java.math.BigDecimal(value), damage, weight, weaponType, maxCondition);
+    public  Weapon(String name, String description, double value, int damage, double weight, itemTypeEnum weaponType,int maxCondition,int itemID){
+        this(name, description, new java.math.BigDecimal(value), damage, weight, weaponType, maxCondition,itemID);
     }
 
     public Weapon(Weapon other) {
@@ -40,11 +40,17 @@ public class Weapon extends ConditionItem {
     public Item copy() {
         return new Weapon(this);
     }
-    public int getDamage() {
+    public double getDamage() {
         return damage;
     }
 
-    
+    public itemTypeEnum getWeaponType(){
+        return(this.weaponType);
+    }
+
+    public void setDamage(double damage){
+        this.damage = damage;
+    }
 
     public ArrayList<Enchantment> getEnhancements() {
         return enchantments;
@@ -53,4 +59,6 @@ public class Weapon extends ConditionItem {
     public void addEnhancement(Enchantment enhancement) {
         this.enchantments.add(enhancement);
     } 
+
+    
 }

@@ -29,7 +29,7 @@ public class InventoryInterface {
     private Player player;
     private Panel rootPanel;
     private Panel listPanel;
-    private Panel controlsPanel;
+    private Panel infoPanel;
     private Label currentCatLabel;
     private Chest inventory;
     private Screen screen;
@@ -37,8 +37,11 @@ public class InventoryInterface {
     private Window window;
     private ArrayList<enums.itemTypeEnum> catList;
     private Terminal terminal;
-    
+    private TextBox itemDesBox;
+    private TextBox itemStatBox;
     private int currentCatIndex = 0;
+    private int currentIndex = 0;
+    
     //private Table<String> table = new Table<String>("Item Name","Quantity"," ");
     private ActionListBox table = new ActionListBox();
     public InventoryInterface(Player player,Screen screen, WindowBasedTextGUI textGUI,Terminal terminal){
@@ -55,14 +58,22 @@ public class InventoryInterface {
         this.player = player;
         this.rootPanel = new Panel();
         this.listPanel = new Panel();
-        this.controlsPanel = new Panel();
+        this.infoPanel = new Panel();
+        this.rootPanel.setLayoutManager(new LinearLayout(Direction.HORIZONTAL));
         this.currentCatLabel = new Label(" ");
         this.listPanel.addComponent(currentCatLabel);
         this.listPanel.addComponent(this.table);
-        this.rootPanel.addComponent(listPanel);
+        this.rootPanel.addComponent(listPanel.withBorder(Borders.doubleLine("Inventory of "+this.player.getName())));
+        this.rootPanel.addComponent(this.infoPanel.withBorder(Borders.doubleLine("Item information")));
+        this.itemDesBox = new TextBox(new TerminalSize(30, 10));
+        this.itemStatBox = new TextBox(new TerminalSize(30, 10));
+        this.itemDesBox.setReadOnly(true);
+        this.itemStatBox.setReadOnly(true);
+        this.infoPanel.addComponent(this.itemDesBox.withBorder(Borders.singleLine("Description")));
+        this.infoPanel.addComponent(this.itemStatBox.withBorder(Borders.singleLine("Stats")));
         this.catList = this.inventory.getTypesOfChest();
         
-        this.controlsPanel.addComponent(new Label("Change Category: <- ->"));
+        //this.infoPanel.addComponent(new Label("Change Category: <- ->"));
         
         
     }
@@ -76,6 +87,7 @@ public class InventoryInterface {
     public void mainLoop(){
         
         this.window.setComponent(this.rootPanel);
+        this.table.takeFocus();
         this.changeCat(0);
         boolean running = true;
         this.textGUI.addWindow(this.window);
@@ -93,26 +105,70 @@ public class InventoryInterface {
             }
             switch (keyComp) {
                 case ArrowLeft:
-                    changeCat(-1);
+                    if(this.textGUI.getFocusedInteractable() == this.table){
+                        changeCat(-1);
+                    }
                     break;
                 
 
                 case ArrowRight:
-                    changeCat(1);
+                    if(this.textGUI.getFocusedInteractable() == this.table){
+                        changeCat(1);
+                    }
                     break;
 
                 case Escape: // Add an exit key
                 this.window.close(); // Removes window from stack
                 running = false;
                 break;
-
+                case ArrowDown:
+                    updateDes(1);
+                    break;
+                case ArrowUp:
+                    updateDes(-1);
+                    break;
                 default:
-                    this.window.handleInput(input);
+                    break;
             }
-            
+            this.window.handleInput(input);
         }
         this.window.close();
         
+    }
+    private void updateDes(int modifier){
+        if(this.textGUI.getFocusedInteractable() == this.table){
+            this.currentIndex += modifier;
+            if(this.currentIndex < 0){
+                this.currentIndex  =0;
+            }else if(this.currentIndex > getNumberOfItems()){
+                this.currentIndex = getNumberOfItems();
+            }
+
+            Item item = this.inventory.getItemsByType(getCurrentType()).get(currentIndex).getItem();
+            this.itemDesBox.setText(item.getDescription());
+            this.itemStatBox.setText("");
+            this.itemStatBox.addLine("Item type : "+item.getType().name());
+            if(item instanceof Weapon weapon){
+                String damageStr = String.valueOf(weapon.getDamage());
+                this.itemStatBox.addLine("Damage : "+ damageStr);
+                this.itemStatBox.addLine("Weapon type : "+ weapon.getWeaponType().name());
+            }
+            if(item instanceof ConditionItem conItem){
+                this.itemStatBox.addLine("Condition : "+ conItem.getCondition()+" / "+conItem.getMaxCondition());
+            }
+            this.itemStatBox.addLine("Value : ᚠ "+item.getValueAsString());
+        }
+        
+        
+
+    }
+
+    private int getNumberOfItems(){
+        int size = this.inventory.getItemsByType(getCurrentType()).size();
+        if(size >0){
+            size --;
+        }
+        return(size);
     }
     private void populateTable(){
             itemTypeEnum type = getCurrentType();
@@ -186,6 +242,7 @@ public class InventoryInterface {
 		.showDialog(textGUI);
     }
     private void changeCat(int modifier){
+       
         this.currentCatIndex += modifier;
         if(this.currentCatIndex > this.catList.size()-1){
             this.currentCatIndex = 0;
@@ -194,6 +251,8 @@ public class InventoryInterface {
         } 
         this.currentCatLabel.setText(this.catList.get(this.currentCatIndex).name());
         this.populateTable();
+        
+        
     }
 
     private void nextCat(){
