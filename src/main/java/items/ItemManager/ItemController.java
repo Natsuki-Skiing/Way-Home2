@@ -1,6 +1,13 @@
 package items.ItemManager;
 import enums.*;
 import items.*;
+import items.Instances.ConditionInstance;
+import items.Instances.ItemInstance;
+import items.Instances.WeaponInstance;
+import items.templates.ConditionTemplate;
+import items.templates.ItemTemplate;
+import items.templates.WeaponTemplate;
+
 import java.util.HashMap;
 import java.util.Random;
 import java.util.Vector;
@@ -8,8 +15,8 @@ import java.math.BigDecimal;
 import java.util.random.*;
 import java.util.concurrent.atomic.AtomicInteger;
 public class ItemController {
-    private HashMap<enums.itemTypeEnum,Vector<Item>> mainItemMap;
-    private HashMap<String,Item> rarityItemMap;
+    private HashMap<enums.itemTypeEnum,Vector<ItemTemplate>> mainItemMap;
+    private HashMap<String,Integer> rarityItemMap;
     private AtomicInteger itemIDCounter = new AtomicInteger(0);
     // Grey will just be the base item
     private Rarity green;
@@ -18,30 +25,57 @@ public class ItemController {
     private Rarity gold;
 
     public ItemController(){
-        this.mainItemMap = new HashMap<enums.itemTypeEnum,Vector<Item>>();
-        this.rarityItemMap = new HashMap<String,Item>();
+        this.mainItemMap = new HashMap<enums.itemTypeEnum,Vector<ItemTemplate>>();
+        this.rarityItemMap = new HashMap<String,Integer>();
         this.green = new Rarity("Green",1.15,1.1,1.05);
         this.blue = new Rarity("Blue",1.25,1.25,1.11);
         this.purple = new Rarity("Purple",1.5,1.35,1.2);
         this.gold = new Rarity("Gold",1.8,1.55,1.5);
     }
-    private <T extends Item> T applyRarity(Rarity rarity , T origiaItem){
 
-        
-        origiaItem.setValue((origiaItem.getValue().multiply(new BigDecimal( rarity.getValueModifier()))));
-        if(origiaItem instanceof ConditionItem conItem){
-            conItem.setMaxCondition((int)(conItem.getMaxCondition()*rarity.getConditionModifier()));
-            conItem.setCondition(conItem.getMaxCondition());
+    private void registerItem(ItemTemplate item){
+        if(!this.mainItemMap.containsKey(item.getType())){
+            this.mainItemMap.put(item.getType(), new Vector<ItemTemplate>());
         }
-
-        if(origiaItem instanceof Weapon weapon){
-            weapon.setDamage(weapon.getDamage()*rarity.getMainModifier());
-        }
-
-       //TODO For other item types 
-
-       return(origiaItem);
+        this.mainItemMap.get(item.getType()).add(item);
     }
+   public ItemInstance applyRarity(Rarity rarity, ItemInstance item) {
+    
+    
+
+    BigDecimal currentValue = item.getValue();
+    BigDecimal multiplier = new BigDecimal(rarity.getValueModifier());
+    item.setValue(currentValue.multiply(multiplier));
+
+    item.setNameModifier(rarity.getName());
+
+  
+    if (item instanceof ConditionInstance) {
+        ConditionInstance conItem = (ConditionInstance) item;
+        
+        // Calculate  max condition
+        ConditionTemplate conTemplate = (ConditionTemplate) conItem.getTemplate();
+        int baseMax = conTemplate.getMaxCondition();
+        int targetMax = (int) (baseMax * rarity.getConditionModifier());
+        
+       
+        int bonusCondition = targetMax - baseMax;
+        conItem.setMaxModifier(bonusCondition);
+        
+       
+        conItem.setCondition(conItem.getMaxCondition());
+    }
+
+    
+    if (item instanceof WeaponInstance) {
+        WeaponInstance weapon = (WeaponInstance) item;
+        double newModifier = weapon.getDamageModifier() * rarity.getMainModifier();
+        weapon.setDamageModifier(newModifier);
+    }
+
+    return item;
+}
+    
 
     private Rarity getRarity(){
         Random randomGenerator = new Random();
@@ -66,44 +100,55 @@ public class ItemController {
     public int getNewItemID(){
         return(this.itemIDCounter.getAndIncrement());
     }
-    public Item getItem(enums.itemTypeEnum itemType){
-        Item finalItem = null;
-        Item baseItem = this.retreiveItemFromMap(itemType);
-        if (baseItem != null){
+    public ItemInstance getItem(enums.itemTypeEnum itemType){
+        
+        ItemInstance item = this.retreiveInstanceFromMap(itemType);
+        if (item != null){
             Rarity itemRarity = this.getRarity();
-            if (itemRarity == null){
-                // Null means that it is just the standard item so just get a refrence to the base item from the main map
-                finalItem = baseItem;
-            }else{
-                
-                finalItem = this.applyRarity(itemRarity,baseItem);
-                finalItem.setItemID(getNewItemID());
-                // No need to create multiple copies of the same rarity item so store them in a map
-                if(this.rarityItemMap.containsKey(finalItem.getName())){
-                    finalItem = this.rarityItemMap.get(finalItem.getName());
+            if(itemRarity != null){
+
+                item = this.applyRarity(itemRarity,item);
+                // To help with chest systems we need to assign a unique item ID to each different rarity version of an item
+                int itemID = -1;
+                if(this.rarityItemMap.containsKey(item.getTemplate().getName())){
+                    itemID = this.rarityItemMap.get(item.getTemplate().getName());
                 }else{
-                    this.rarityItemMap.put(finalItem.getName(),finalItem);
+                    itemID = getNewItemID();
+                    this.rarityItemMap.put(item.getTemplate().getName(),itemID);
                 }
+                item.setItemIDOverride(getNewItemID());
+               
             }
             
             
         }
-        return(finalItem);
+        return(item);
 
     }
-
-    private Item retreiveItemFromMap(enums.itemTypeEnum itemType){
-        Item originalItem = null;
-        Vector<Item> itemVector = this.mainItemMap.get(itemType);
+    public ItemInstance instanceFromTemplate(ItemTemplate template){
+       
+        if(template instanceof WeaponTemplate weaponTemplate){
+            return(new WeaponInstance(weaponTemplate,weaponTemplate.getMaxCondition()));
+        } else if(template instanceof ConditionTemplate conditionTemplate){
+            return(new ConditionInstance(conditionTemplate,conditionTemplate.getMaxCondition()));
+        } else {
+            return(new ItemInstance(template));
+        }
+        
+        
+    }
+    private ItemInstance retreiveInstanceFromMap(enums.itemTypeEnum itemType){
+        ItemTemplate template = null;
+        Vector<ItemTemplate> itemVector = this.mainItemMap.get(itemType);
         Random randomGenerator = new Random();
 
         int randIndex = randomGenerator.nextInt(itemVector.size());
 
-        originalItem = itemVector.get(randIndex);
-
-        if(originalItem!= null){
-            return(originalItem.copy());
+        template = itemVector.get(randIndex);
+        if(template != null){
+            return(instanceFromTemplate(template));
         }
+
         return(null);
     }
 }

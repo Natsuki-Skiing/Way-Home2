@@ -1,15 +1,15 @@
-package items;
+package items.templates;
 import java.math.BigDecimal;
 import enums.itemTypeEnum;
-public class Item {
+public class ItemTemplate {
 
     private String name;
     private String description;
     private BigDecimal value;
     private itemTypeEnum type;
     private itemTypeEnum useType;
-    private int itemID;
-    public Item(String name, String description, BigDecimal value, itemTypeEnum type,itemTypeEnum useType, int itemID) {
+    protected int itemID;
+    public ItemTemplate(String name, String description, BigDecimal value, itemTypeEnum type,itemTypeEnum useType, int itemID) {
         this.name = name;
         this.description = description;
         this.value = value;
@@ -18,7 +18,7 @@ public class Item {
         this.itemID = itemID;
     }
 
-    public Item(Item other) {
+    public ItemTemplate(ItemTemplate other) {
         this.name = other.name;
         this.description = other.description;
         this.value = other.value;
@@ -27,8 +27,8 @@ public class Item {
     public int getItemID(){
         return(this.itemID);
     }
-    public Item copy() {
-        return new Item(this);
+    public ItemTemplate copy() {
+        return new ItemTemplate(this);
     }
     public itemTypeEnum getUseType(){
         return(this.useType);

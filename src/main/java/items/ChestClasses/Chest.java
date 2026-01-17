@@ -1,8 +1,11 @@
-package items;
+package items.ChestClasses;
 import java.math.BigDecimal;
 import enums.itemTypeEnum;
 import java.util.HashMap;
 import java.util.ArrayList;
+
+import items.Instances.*;
+import items.templates.*;
 public class Chest  {
     private HashMap<itemTypeEnum, HashMap<Integer,ChestItem>> itemsMap;
 
@@ -17,24 +20,40 @@ public class Chest  {
         this.itemsMap.put(itemTypeEnum.FISHING_ROD, new HashMap<Integer,ChestItem>());
     }
 
-    private boolean alreadyContainsItem(Item item,int quantity){
-        if(this.itemsMap.get(item.getType()).containsKey(item.getItemID())){
-            ChestItem ci = this.itemsMap.get(item.getType()).get(item.getItemID());
-            ci.addQuantity(quantity);
-            return( true );
+    private boolean alreadyContainsItem(ItemInstance item, int quantity){
+        boolean contains = false;
+        enums.itemTypeEnum template = item.getTemplate().getType();
+        ItemInstance instanceInMap = null;
+        if(this.itemsMap.get(template).containsKey(item.getItemID())){
+            instanceInMap = this.itemsMap.get(template).get(item.getItemID()).getItem();
         }
-        return false;
+        
+        if(instanceInMap != null){
+            
+            if(instanceInMap instanceof ConditionInstance && item instanceof ConditionInstance){
+                ConditionInstance ci1 = (ConditionInstance) instanceInMap;
+                ConditionInstance ci2 = (ConditionInstance) item;
+                if(ci1.getCondition() == ci2.getCondition()){
+                    contains = true;
+                }
+            }
+        }
+        return contains;
     }
 
-    public void addRegularItem(Item item, int quantity) {
+    public void addRegularItem(ItemInstance item, int quantity) {
        
+        
         if(!alreadyContainsItem(item,quantity)){
             ChestItem chestItem = new ChestItem(item, quantity);
-            this.itemsMap.get(item.getType()).put(item.getItemID(), chestItem);
+            this.itemsMap.get(item.getTemplate().getType()).put(item.getItemID(), chestItem);
+        }else{
+            ChestItem ci = this.itemsMap.get(item.getTemplate().getType()).get(item.getItemID());
+            ci.addQuantity(quantity);
         }
     }
 
-    public void addRegularItem(Item item) {
+    public void addRegularItem(ItemInstance item) {
         addRegularItem(item,1);
     }
     
@@ -71,8 +90,8 @@ public class Chest  {
         return 0; // Item not found
     }
 
-    public ChestItem takeItem(Item item, int amount) {
-        return takeItem(item.getType(), item.getItemID(), amount);
+    public ChestItem takeItem(ItemInstance item, int amount) {
+        return takeItem(item.getTemplate().getType(), item.getItemID(), amount);
     }
 
     public ArrayList<itemTypeEnum> getTypesOfChest(){

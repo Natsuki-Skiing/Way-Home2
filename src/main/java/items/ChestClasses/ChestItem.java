@@ -1,10 +1,10 @@
-package items;
-
+package items.ChestClasses;
+import items.Instances.*;
 public class ChestItem {
-    private final Item item;
+    private final ItemInstance item;
     private  int quantity = 1;
 
-    public ChestItem(Item item, int quantity) {
+    public ChestItem(ItemInstance item, int quantity) {
         this.item = item;
         this.quantity = quantity;
     }
@@ -13,11 +13,11 @@ public class ChestItem {
         this.quantity += amount;
     }
 
-    public Item getItem() {
+    public ItemInstance getItem() {
         return item;
     }
     public String getName(){
-        return(this.item.getName());
+        return(this.item.getDisplayName());
     }
     public int getQuantity() {
         return quantity;

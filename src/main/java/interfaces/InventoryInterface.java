@@ -21,6 +21,15 @@ import java.util.regex.Pattern;
 
 import creatures.Player;
 import items.*;
+import items.ChestClasses.Chest;
+import items.ChestClasses.ChestItem;
+import items.Instances.ConditionInstance;
+import items.Instances.ItemInstance;
+import items.Instances.WeaponInstance;
+import items.templates.ConditionTemplate;
+import items.templates.ItemTemplate;
+import items.templates.WeaponTemplate;
+
 import java.util.ArrayList;
 import java.util.concurrent.atomic.AtomicBoolean;
 
@@ -144,16 +153,17 @@ public class InventoryInterface {
                 this.currentIndex = getNumberOfItems();
             }
 
-            Item item = this.inventory.getItemsByType(getCurrentType()).get(currentIndex).getItem();
-            this.itemDesBox.setText(item.getDescription());
+            ItemInstance item = this.inventory.getItemsByType(getCurrentType()).get(currentIndex).getItem();
+            ItemTemplate template = item.getTemplate();
+            this.itemDesBox.setText(template.getDescription());
             this.itemStatBox.setText("");
-            this.itemStatBox.addLine("Item type : "+item.getType().name());
-            if(item instanceof Weapon weapon){
+            this.itemStatBox.addLine("Item type : "+template.getType().name());
+            if(item instanceof WeaponInstance weapon && template instanceof WeaponTemplate weaponTemplate){
                 String damageStr = String.valueOf(weapon.getDamage());
                 this.itemStatBox.addLine("Damage : "+ damageStr);
-                this.itemStatBox.addLine("Weapon type : "+ weapon.getWeaponType().name());
+                this.itemStatBox.addLine("Weapon type : "+ weaponTemplate.getWeaponType().name());
             }
-            if(item instanceof ConditionItem conItem){
+            if(item instanceof ConditionInstance conItem){
                 this.itemStatBox.addLine("Condition : "+ conItem.getCondition()+" / "+conItem.getMaxCondition());
             }
             this.itemStatBox.addLine("Value : ᚠ "+item.getValueAsString());
@@ -191,7 +201,7 @@ public class InventoryInterface {
         final AtomicBoolean hasEquip = new AtomicBoolean(false);
         String actionMsg = "Consume";
         
-        if(selectedItem.getItem().getUseType() == enums.itemTypeEnum.EQUIPPABLE){
+        if(selectedItem.getItem().getTemplate().getUseType() == enums.itemTypeEnum.EQUIPPABLE){
             equip.set(true);
             if(this.player.checkIfEquipt(selectedItem.getItem())){
                 hasEquip.set(true);

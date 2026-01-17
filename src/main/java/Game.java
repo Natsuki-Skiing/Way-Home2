@@ -1,6 +1,6 @@
 
 import interfaces.*;
-import items.Weapon;
+import items.templates.WeaponTemplate;
 import creatures.*;
 import enums.*;
 import com.googlecode.lanterna.TextColor;
@@ -17,6 +17,8 @@ import com.googlecode.lanterna.TerminalSize;
 import java.util.regex.Pattern;
 import java.math.BigDecimal;
 
+import items.Instances.WeaponInstance;
+import items.ItemManager.ItemController;
 public class Game {
     private Player player;
     public Screen screen;
@@ -27,6 +29,7 @@ public class Game {
     private boolean renderWindow;
     private Terminal terminal;
     private Clock clock;
+    private ItemController itemController = new ItemController();
     public Game() {
         try {
             Terminal terminal = new DefaultTerminalFactory().createTerminal();
@@ -46,8 +49,9 @@ public class Game {
         
         //this.player = characterMaker.getPlayer();
         this.player = new Player("Hero",  10, 10, 10, 10, 10, 10,raceEnum.NORD,150);
-        
-        this.player.addItemToInventory(new Weapon("A spoon", "Can be used to eat soup", 0.67, 0, 0, itemTypeEnum.WEAPON_LARGE, 100), 3);
+        WeaponTemplate spooWeaponTemplate =  new WeaponTemplate("A spoon", "Can be used to eat soup", 0.67, 0, 0, itemTypeEnum.WEAPON_LARGE, 100,this.itemController.getNewItemID());
+        WeaponInstance spoonWeaponInstance = new WeaponInstance(spooWeaponTemplate);
+        this.player.addItemToInventory(spoonWeaponInstance, 3);
         this.player.equipItem(this.player.getInventory().getItemsByType(enums.itemTypeEnum.WEAPON).get(0).getItem());
         this.clock = new Clock(0, 2500, 200);
         this.mainWindow = new mainGameWindow(this.screen,this.textGUI,this.player);

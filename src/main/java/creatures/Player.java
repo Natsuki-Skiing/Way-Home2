@@ -1,6 +1,11 @@
 package creatures;
 import enums.*;
 import items.*;
+import items.ChestClasses.Chest;
+import items.ChestClasses.ChestItem;
+import items.Instances.ItemInstance;
+import items.templates.ItemTemplate;
+
 import java.util.HashMap;
 
 import com.googlecode.lanterna.TextColor;
@@ -12,7 +17,7 @@ public class Player extends Character {
     private int xp = 0;
     private int xpToNextLevel = 100;
     private Chest inventory = new Chest();
-    private HashMap<itemTypeEnum, Item> equippedItems = new HashMap<>();
+    private HashMap<itemTypeEnum, ItemInstance> equippedItems = new HashMap<>();
     private GameTile previousTile = null;
     private GameTile playerTile = new GameTile(TextColor.ANSI.BLACK, TextColor.ANSI.RED_BRIGHT, '@');
     public Player( String name, int strength,int perception,int endurance , int charisma ,int agility, int luck,raceEnum race, int maxHp) {
@@ -75,56 +80,58 @@ public class Player extends Character {
         return inventory;
     }
 
-    public void addItemToInventory(Item item, int quantity) {
+    public void addItemToInventory(ItemInstance item, int quantity) {
         this.inventory.addRegularItem(item, quantity);
     }
 
     public boolean hasFishingRodEquipped() {
-        Item fishingRod = this.equippedItems.get(itemTypeEnum.FISHING_ROD);
+        ItemInstance fishingRod = this.equippedItems.get(itemTypeEnum.FISHING_ROD);
         return fishingRod != null;
     }
 
     public boolean hasWeaponEquipped() {
-        Item weapon = this.equippedItems.get(itemTypeEnum.WEAPON);
+        ItemInstance weapon = this.equippedItems.get(itemTypeEnum.WEAPON);
         return weapon != null;
     }
 
     public boolean hasArmorEquipped() {
-        Item armor = this.equippedItems.get(itemTypeEnum.ARMOR);
+        ItemInstance armor = this.equippedItems.get(itemTypeEnum.ARMOR);
         return armor != null;
     }
 
     private boolean hasItemEquipped(itemTypeEnum type) {
-        Item item = this.equippedItems.get(type);
+        ItemInstance item = this.equippedItems.get(type);
         return item != null;
     }
 
-    public ChestItem takeItemFromInventory(Item item, int amount) {
-        return takeItemFromInventory(item.getType(), item.getName(), amount);
+    public ChestItem takeItemFromInventory(ItemInstance item, int amount) {
+        return takeItemFromInventory(item.getTemplate().getType(), item.getItemID(), amount);
     }
-    public void unequipItem(Item item){
-        this.equippedItems.put(item.getType(), null);
+    public void unequipItem(ItemInstance item){
+        this.equippedItems.put(item.getTemplate().getType(), null);
     }
-    public boolean equipItem(Item item) {
-        if(this.equippedItems.containsKey( item.getType())){
-            this.equippedItems.put(item.getType(), item);
+    public boolean equipItem(ItemInstance item) {
+        if(this.equippedItems.containsKey( item.getTemplate().getType())){
+            this.equippedItems.put(item.getTemplate().getType(), item);
             return true;
         }
         return false;
     }
-    public ChestItem takeItemFromInventory(itemTypeEnum type, String name, int amount) {
-        if(this.inventory.getNoOfItem(type,name) == 1){
-            if(hasItemEquipped(type) && this.equippedItems.get(type).getName() == name){
+    
+
+
+    public ChestItem takeItemFromInventory(itemTypeEnum type, int itemID, int amount) {
+        if(this.inventory.getNoOfItem(type,itemID) == 1){
+            if(hasItemEquipped(type) && this.equippedItems.get(type).getItemID() == itemID){
                 this.equippedItems.put(type, null);
             }
         }
-
-        return this.inventory.takeItem(type, name, amount);
+        return this.inventory.takeItem(type, itemID, amount);
     }
 
-    public boolean checkIfEquipt(Item item){
-        Item equippedItem = this.equippedItems.get(item.getType());
-        return equippedItem != null && equippedItem.getName().equals(item.getName());
+    public boolean checkIfEquipt(ItemInstance item){
+        ItemInstance equippedItem = this.equippedItems.get(item.getTemplate().getType());
+        return equippedItem != null && equippedItem.getItemID() == item.getItemID();
     }
     public ChestItem takeItemFromInventory(ChestItem chestItem) {
         return takeItemFromInventory(chestItem.getItem(), chestItem.getQuantity());
