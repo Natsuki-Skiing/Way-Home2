@@ -29,7 +29,10 @@ public class ItemInstance {
     }
     public String getDisplayName() {
         if (showOriginalName) {
-            return nameModifier + template.getName();
+            if (nameModifier.isEmpty()) {
+                return template.getName();
+            }
+            return nameModifier + " "+ template.getName();
         } else {
             return nameModifier;
         }

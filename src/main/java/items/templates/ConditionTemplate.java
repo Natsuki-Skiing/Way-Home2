@@ -21,4 +21,8 @@ public class ConditionTemplate extends ItemTemplate {
         return maxCondition;
     }
     
+    public ConditionTemplate(java.util.HashMap<String, Object> itemData, int itemID) {
+        super(itemData, itemID);
+        this.maxCondition = (Integer) itemData.get("maxCondition");
+    }
 }

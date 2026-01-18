@@ -1,6 +1,7 @@
 package items.templates;
 import java.math.BigDecimal;
 import enums.itemTypeEnum;
+import java.util.HashMap;
 public class ItemTemplate {
 
     private String name;
@@ -15,6 +16,16 @@ public class ItemTemplate {
         this.value = value;
         this.type = type;
         this.useType = useType;
+        this.itemID = itemID;
+    }
+
+    public ItemTemplate(HashMap<String, Object> itemData, int itemID) {
+        this.name = (String) itemData.get("name");
+        this.description = (String) itemData.get("description");
+        this.value = new BigDecimal((Double) itemData.get("value"));
+        String typeStr = (String) itemData.get("type");
+        this.type = enums.itemTypeEnum.valueOf(typeStr.toUpperCase());
+        this.useType = enums.itemTypeEnum.valueOf(((String) itemData.get("useType")).toUpperCase());
         this.itemID = itemID;
     }
 

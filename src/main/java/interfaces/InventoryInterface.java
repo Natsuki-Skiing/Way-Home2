@@ -16,7 +16,7 @@ import com.googlecode.lanterna.input.KeyType;
 import com.googlecode.lanterna.input.KeyStroke;
 import com.googlecode.lanterna.input.KeyType;
 import java.util.regex.Pattern;
-
+import java.util.Vector;
 
 
 import creatures.Player;
@@ -74,8 +74,8 @@ public class InventoryInterface {
         this.listPanel.addComponent(this.table);
         this.rootPanel.addComponent(listPanel.withBorder(Borders.doubleLine("Inventory of "+this.player.getName())));
         this.rootPanel.addComponent(this.infoPanel.withBorder(Borders.doubleLine("Item information")));
-        this.itemDesBox = new TextBox(new TerminalSize(30, 10));
-        this.itemStatBox = new TextBox(new TerminalSize(30, 10));
+        this.itemDesBox = new TextBox(new TerminalSize(50, 10));
+        this.itemStatBox = new TextBox(new TerminalSize(50, 10));
         this.itemDesBox.setReadOnly(true);
         this.itemStatBox.setReadOnly(true);
         this.infoPanel.addComponent(this.itemDesBox.withBorder(Borders.singleLine("Description")));
@@ -144,8 +144,29 @@ public class InventoryInterface {
         this.window.close();
         
     }
+    private Vector<String> formateDescription(String description){
+        Vector<String> lines = new Vector<String>();
+        String[] words = description.split(" ");
+        String currentLine = "";
+        for(String word : words){
+            if(currentLine.length() + word.length() +1 >this.itemDesBox.getSize().getColumns()-1){
+                lines.add(currentLine);
+                currentLine = word;
+            }else{
+                if(currentLine.isEmpty()){
+                    currentLine = word;
+                }else{
+                    currentLine += " "+word;
+                }
+            }
+        }
+        if(!currentLine.isEmpty()){
+            lines.add(currentLine);
+        }
+        return(lines);
+    }
     private void updateDes(int modifier){
-        if(this.textGUI.getFocusedInteractable() == this.table){
+        if(this.textGUI.getFocusedInteractable() == this.table ){
             this.currentIndex += modifier;
             if(this.currentIndex < 0){
                 this.currentIndex  =0;
@@ -155,7 +176,12 @@ public class InventoryInterface {
 
             ItemInstance item = this.inventory.getItemsByType(getCurrentType()).get(currentIndex).getItem();
             ItemTemplate template = item.getTemplate();
-            this.itemDesBox.setText(template.getDescription());
+            this.itemDesBox.setText("");
+            //this.itemDesBox.removeLine(0);
+            Vector<String> descLines = formateDescription(template.getDescription());
+            for(String line : descLines){
+                this.itemDesBox.addLine(line);
+            }
             this.itemStatBox.setText("");
             this.itemStatBox.addLine("Item type : "+template.getType().name());
             if(item instanceof WeaponInstance weapon && template instanceof WeaponTemplate weaponTemplate){

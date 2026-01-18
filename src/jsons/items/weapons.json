@@ -1,3 +1,39 @@
-{
+[{
+    "name": "Spoon",
+    "description": "Can be used to eat soup",
+    "value": 0.67,
+    "type": "WEAPON",
+    "weaponType":"WEAPON_SMALL",
+    "useType":"EQUIPPABLE",
+    "damage": 10.0,
+    "maxCondition": 35
+},{
+    "name": "Stone Hatchet",
+    "description": "A basic stone hatchet, useful for chopping wood.",
+    "value": 3.30,
+    "type": "WEAPON",
+    "weaponType":"WEAPON_MEDIUM",
+    "useType":"EQUIPPABLE",
+    "damage": 15.50,
+    "maxCondition": 50
+},{
+    "name":"Orcish Dagger",
+    "description":"A sharp, misshapen dagger forged by orc 'smiths'. It's made from cheap steel. It's iregular shape causes deep rough wounds which are hard to heal.A blade for the uncivilized.",
+    "value": 25.00,
+    "type": "WEAPON",
+    "weaponType":"WEAPON_SMALL",
+    "useType":"EQUIPPABLE",
+    "damage": 35.0,
+    "maxCondition": 70
+},{
+    "name":"Nordic Iron Short Sword",
+    "description":"A short sword made in the runic style of the ancient Noridc people. It's Nordic engravings are said to imbue the wielder with strength and courage. It's an effective weapon for the frenzied close combat style of the Nords. The blade is made from lower quality metal than that forged by some other races of man",
+    "value": 45.00,
+    "type": "WEAPON",
+    "weaponType":"WEAPON_MEDIUM",
+    "useType":"EQUIPPABLE",
+    "damage": 50.0,
+    "maxCondition": 85
+
     
-}
+}]

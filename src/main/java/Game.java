@@ -29,7 +29,7 @@ public class Game {
     private boolean renderWindow;
     private Terminal terminal;
     private Clock clock;
-    private ItemController itemController = new ItemController();
+    private ItemController itemController;
     public Game() {
         try {
             Terminal terminal = new DefaultTerminalFactory().createTerminal();
@@ -40,6 +40,7 @@ public class Game {
             this.textGUI = new MultiWindowTextGUI(this.screen);
             this.inputManager = new InputManager(terminal);
             this.renderWindow = false;
+            this.itemController = new ItemController();
         } catch (Exception e) {
             e.printStackTrace();
         }
@@ -49,10 +50,13 @@ public class Game {
         
         //this.player = characterMaker.getPlayer();
         this.player = new Player("Hero",  10, 10, 10, 10, 10, 10,raceEnum.NORD,150);
-        WeaponTemplate spooWeaponTemplate =  new WeaponTemplate("A spoon", "Can be used to eat soup", 0.67, 0, 0, itemTypeEnum.WEAPON_LARGE, 100,this.itemController.getNewItemID());
-        WeaponInstance spoonWeaponInstance = new WeaponInstance(spooWeaponTemplate);
-        this.player.addItemToInventory(spoonWeaponInstance, 3);
+        
+       
+        this.player.addItemToInventory(this.itemController.getItem(enums.itemTypeEnum.WEAPON), 3);
+        
+        
         this.player.equipItem(this.player.getInventory().getItemsByType(enums.itemTypeEnum.WEAPON).get(0).getItem());
+        combatEncounter();
         this.clock = new Clock(0, 2500, 200);
         this.mainWindow = new mainGameWindow(this.screen,this.textGUI,this.player);
         this.textGUI.addWindow(this.mainWindow.getWindow());
@@ -111,5 +115,12 @@ public class Game {
         
         
         
+    }
+
+
+    private void combatEncounter(){
+        Entity enemy = new Entity("Goblin",5,5,5,5,5,5,50);
+        CombatInterface combatInterface = new CombatInterface(this.player, enemy, this.textGUI, this.terminal);
+        combatInterface.mainLoop();
     }
 }

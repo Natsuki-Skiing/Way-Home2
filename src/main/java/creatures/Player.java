@@ -4,6 +4,7 @@ import items.*;
 import items.ChestClasses.Chest;
 import items.ChestClasses.ChestItem;
 import items.Instances.ItemInstance;
+import items.Instances.WeaponInstance;
 import items.templates.ItemTemplate;
 
 import java.util.HashMap;
@@ -136,5 +137,15 @@ public class Player extends Character {
     public ChestItem takeItemFromInventory(ChestItem chestItem) {
         return takeItemFromInventory(chestItem.getItem(), chestItem.getQuantity());
     }
+
+    public WeaponInstance getEquippedWeapon() {
+        ItemInstance weapon = this.equippedItems.get(itemTypeEnum.WEAPON);
+        if (weapon != null && weapon instanceof WeaponInstance) {
+            return (WeaponInstance) weapon;
+        }
+        return null;
+    }
+
+
 
 }

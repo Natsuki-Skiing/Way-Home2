@@ -84,20 +84,19 @@ public class CharacterMaker {
                                 }
                         });
 
-                        // Fill the 3rd column of the Race row so we can move to the next line
+                        
                         contentPanel.addComponent(new EmptySpace());
 
-                        // --- ATTRIBUTES SECTION ---
+                       
 
                         contentPanel.addComponent(new Separator(Direction.HORIZONTAL)
                                         .setLayoutData(GridLayout.createHorizontallyFilledLayoutData(3)));
 
-                        // 1. Points Label
+                        
                         this.pointsLabel = new Label("Points Remaining: " + MAX_POINTS);
                         contentPanel.addComponent(this.pointsLabel
                                         .setLayoutData(GridLayout.createHorizontallyFilledLayoutData(3)));
 
-                        // 2. Generate Spinners for each Attribute
                         String[] attributes = { "Strength", "Perception", "Endurance", "Charisma","Agility", "Luck" };
 
                         for (String attr : attributes) {
@@ -125,7 +124,7 @@ public class CharacterMaker {
 
                         window.setComponent(contentPanel);
 
-                        // --- Initialization Logic ---
+                        
                         if (!raceList.isEmpty()) {
                                 comboBoxRace.setSelectedIndex(0);
                                 textBoxRaceDes.setText(this.raceDes.get(raceList.get(0)));
@@ -134,7 +133,7 @@ public class CharacterMaker {
                         raceWindow.setHints(Arrays.asList(Window.Hint.FIXED_POSITION));
                         window.setHints(Arrays.asList(Window.Hint.FIXED_POSITION));
 
-                        // Set theme early so we can calculate size
+                        
                         window.setTheme(txtGUI.getTheme());
 
                         TerminalSize raceSize = contentPanel.getPreferredSize();
@@ -181,12 +180,11 @@ public class CharacterMaker {
         }
 
 
-        // --- NEW HELPER METHODS ---
 
         private Panel createAttributeSpinner(String attributeName) {
                 Panel panel = new Panel(new GridLayout(5));
 
-                // Label (takes up 2 columns space for alignment)
+                
                 panel.addComponent(new Label(attributeName)
                                 .setLayoutData(GridLayout.createHorizontallyFilledLayoutData(2)));
 

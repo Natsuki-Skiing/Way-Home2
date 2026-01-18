@@ -5,6 +5,7 @@ import items.Enchantment;
 
 import java.util.List;
 import java.util.ArrayList;
+import java.util.HashMap;
 public class WeaponTemplate extends ConditionTemplate {
     private double damage;
     private ArrayList<Enchantment> enchantments;
@@ -14,6 +15,12 @@ public class WeaponTemplate extends ConditionTemplate {
         this.damage = damage;
         this.weaponType = weaponType;
         
+    }
+
+    public WeaponTemplate(HashMap<String, Object> itemData, int itemID) {
+        super(itemData, itemID);
+        this.damage = (Double) itemData.get("damage");
+        this.weaponType = enums.itemTypeEnum.valueOf(((String) itemData.get("weaponType")).toUpperCase());
     }
     
     public  WeaponTemplate(String name, String description, double value, int damage, double weight, itemTypeEnum weaponType,int maxCondition,int itemID){
