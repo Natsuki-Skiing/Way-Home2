@@ -5,8 +5,9 @@ import items.ChestClasses.Chest;
 import items.ChestClasses.ChestItem;
 import items.Instances.ItemInstance;
 import items.Instances.WeaponInstance;
+import items.templates.ArmourTemplate;
 import items.templates.ItemTemplate;
-
+import items.Instances.*;
 import java.util.HashMap;
 
 import com.googlecode.lanterna.TextColor;
@@ -19,13 +20,19 @@ public class Player extends Character {
     private int xpToNextLevel = 100;
     private Chest inventory = new Chest();
     private HashMap<itemTypeEnum, ItemInstance> equippedItems = new HashMap<>();
+    private HashMap<enums.armourSlotEnum,ArmourInstance> armourSlots = new HashMap<>();
     private GameTile previousTile = null;
     private GameTile playerTile = new GameTile(TextColor.ANSI.BLACK, TextColor.ANSI.RED_BRIGHT, '@');
     public Player( String name, int strength,int perception,int endurance , int charisma ,int agility, int luck,raceEnum race, int maxHp) {
         super(name, strength, perception, endurance, charisma, agility, luck,race,maxHp);
         this.equippedItems.put(itemTypeEnum.WEAPON, null);
-        this.equippedItems.put(itemTypeEnum.ARMOR, null);
         this.equippedItems.put(itemTypeEnum.FISHING_ROD, null);
+
+        this.armourSlots.put(enums.armourSlotEnum.BOOTS,null);
+        this.armourSlots.put(enums.armourSlotEnum.CHEST_PLATE,null);
+        this.armourSlots.put(enums.armourSlotEnum.GLOVES,null);
+        this.armourSlots.put(enums.armourSlotEnum.HELMET,null);
+        
     } 
     
     public GameTile getPlayerTile() {
@@ -94,9 +101,25 @@ public class Player extends Character {
         return weapon != null;
     }
 
-    public boolean hasArmorEquipped() {
-        ItemInstance armor = this.equippedItems.get(itemTypeEnum.ARMOR);
+    public boolean hasArmorEquipped(enums.armourSlotEnum armourType) {
+        ArmourInstance armor = this.armourSlots.get(armourType);
         return armor != null;
+    }
+
+    public boolean hasHelmetEquipped(){
+        return hasArmorEquipped(enums.armourSlotEnum.HELMET);
+    }
+
+    public boolean hasChestEquipped(){
+        return hasArmorEquipped(enums.armourSlotEnum.CHEST_PLATE);
+    }
+
+    public boolean hasHelmetEquipped(){
+        return hasArmorEquipped(enums.armourSlotEnum.HELMET);
+    }
+
+    public boolean hasHelmetEquipped(){
+        return hasArmorEquipped(enums.armourSlotEnum.HELMET);
     }
 
     private boolean hasItemEquipped(itemTypeEnum type) {
