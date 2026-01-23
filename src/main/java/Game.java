@@ -46,17 +46,17 @@ public class Game {
         }
     }
     public  void main() {
-        //CharacterMaker characterMaker = new CharacterMaker(this.screen,this.textGUI);
+        CharacterMaker characterMaker = new CharacterMaker(this.screen,this.textGUI);
         
-        //this.player = characterMaker.getPlayer();
-        this.player = new Player("Hero",  10, 10, 10, 10, 10, 10,raceEnum.NORD,150);
+        this.player = characterMaker.getPlayer();
+        //this.player = new Player("Hero",  10, 10, 10, 10, 10, 10,raceEnum.NORD,150);
         
        
         this.player.addItemToInventory(this.itemController.getItem(enums.itemTypeEnum.WEAPON), 3);
         
         
         this.player.equipItem(this.player.getInventory().getItemsByType(enums.itemTypeEnum.WEAPON).get(0).getItem());
-        combatEncounter();
+        ///combatEncounter();
         this.clock = new Clock(0, 2500, 200);
         this.mainWindow = new mainGameWindow(this.screen,this.textGUI,this.player);
         this.textGUI.addWindow(this.mainWindow.getWindow());

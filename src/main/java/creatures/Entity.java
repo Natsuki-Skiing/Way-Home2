@@ -1,5 +1,6 @@
 package creatures;
-
+import java.util.HashMap;
+import enums.*;
 public class Entity {
     protected String name;
     protected int level;
@@ -11,7 +12,7 @@ public class Entity {
     protected int agility;
     protected double hp;
     protected double maxHp;
-
+    protected HashMap<enums.skillEnum,Integer> skill;
     public Entity(String name, int strength,int perception,int endurance , int charisma ,int agility, int luck,double maxHp){
         this.name = name;
         this.strength = strength;
@@ -20,13 +21,30 @@ public class Entity {
         this.charisma= charisma;
         this.luck = luck;
         this.agility = agility;
-        this.maxHp = maxHp;
+        this.maxHp = calculateMaxHp(endurance, strength);
         this.hp = maxHp;
 
         
     }
+    public double getEvasionChance(){
+        double agilityFactor = this.agility * 1.0;
+        double luckFactor = this.luck * 0.35;
 
-   public int getStrength() { 
+        return(agilityFactor+luckFactor);
+
+    }
+    public double getBarterModifier(){
+        double barterModifer = (this.charisma *1.2)+ (this.luck*0.25);
+        return(barterModifer);
+    }
+    public double getCritChance(){
+        return(this.luck*1.5);
+    }
+    private int calculateMaxHp(int endurance,int strength){
+        return(10 + (endurance * 10) + (strength *2));
+    }
+
+    public int getStrength() { 
         return this.strength;
     }
 

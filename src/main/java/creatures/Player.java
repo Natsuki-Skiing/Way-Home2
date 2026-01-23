@@ -27,7 +27,6 @@ public class Player extends Character {
         this.equippedItems.put(itemTypeEnum.ARMOR, null);
         this.equippedItems.put(itemTypeEnum.FISHING_ROD, null);
     } 
-
     
     public GameTile getPlayerTile() {
         return playerTile;
