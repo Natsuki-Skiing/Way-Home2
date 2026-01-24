@@ -10,10 +10,12 @@ public class WeaponTemplate extends ConditionTemplate {
     private double damage;
     private ArrayList<Enchantment> enchantments;
     private itemTypeEnum weaponType;
+    
     public WeaponTemplate(String name, String description, java.math.BigDecimal value, int damage, double weight, itemTypeEnum weaponType,int maxCondition,int itemID){
         super(name, description, value,maxCondition, itemTypeEnum.WEAPON,itemTypeEnum.EQUIPPABLE,itemID);
         this.damage = damage;
         this.weaponType = weaponType;
+    
         
     }
 

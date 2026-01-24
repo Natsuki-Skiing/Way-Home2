@@ -3,8 +3,6 @@ import enums.*;
 import items.*;
 import items.ChestClasses.Chest;
 import items.ChestClasses.ChestItem;
-import items.Instances.ItemInstance;
-import items.Instances.WeaponInstance;
 import items.templates.ArmourTemplate;
 import items.templates.ItemTemplate;
 import items.Instances.*;
@@ -110,16 +108,16 @@ public class Player extends Character {
         return hasArmorEquipped(enums.armourSlotEnum.HELMET);
     }
 
-    public boolean hasChestEquipped(){
+    public boolean hasChestPlateEquipped(){
         return hasArmorEquipped(enums.armourSlotEnum.CHEST_PLATE);
     }
 
-    public boolean hasHelmetEquipped(){
-        return hasArmorEquipped(enums.armourSlotEnum.HELMET);
+    public boolean hasGlovesEquipped(){
+        return hasArmorEquipped(enums.armourSlotEnum.GLOVES);
     }
 
-    public boolean hasHelmetEquipped(){
-        return hasArmorEquipped(enums.armourSlotEnum.HELMET);
+    public boolean hasBootsEquipped(){
+        return hasArmorEquipped(enums.armourSlotEnum.BOOTS);
     }
 
     private boolean hasItemEquipped(itemTypeEnum type) {
@@ -133,12 +131,30 @@ public class Player extends Character {
     public void unequipItem(ItemInstance item){
         this.equippedItems.put(item.getTemplate().getType(), null);
     }
-    public boolean equipItem(ItemInstance item) {
+    private boolean equipArmour(ArmourInstance item){
+        if(this.armourSlots.containsKey(item.getTemplate().getType())){
+            ArmourTemplate template =(ArmourTemplate) item.getTemplate();
+            this.armourSlots.put(template.getArmourSlot(), item);
+            return true;
+        }
+        return false;
+    }
+
+    private boolean equipRegularItem(ItemInstance item){
         if(this.equippedItems.containsKey( item.getTemplate().getType())){
             this.equippedItems.put(item.getTemplate().getType(), item);
             return true;
         }
         return false;
+    }
+    public boolean equipItem(ItemInstance item) {
+    
+        if(item instanceof ArmourInstance armourItem){
+            return(equipArmour(armourItem));
+        }
+
+        return(equipRegularItem(item));
+        
     }
     
 
