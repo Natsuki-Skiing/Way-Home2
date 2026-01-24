@@ -12,7 +12,7 @@ import java.util.Random;
 import java.util.TreeMap;
 import java.util.Vector;
 import java.math.BigDecimal;
-import java.util.random.*;
+import java.util.Set;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import java.util.concurrent.atomic.AtomicInteger;
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -159,6 +159,14 @@ public class ItemController {
     
     public int getNewItemID(){
         return(this.itemIDCounter.getAndIncrement());
+    }
+
+
+    public ItemInstance getItem(){
+        Vector<enums.itemTypeEnum> types = new Vector<>(this.mainItemMap.keySet());
+        enums.itemTypeEnum type = types.get(this.randomGenerator.nextInt(types.size()));
+
+        return(getItem(type));
     }
     public ItemInstance getItem(enums.itemTypeEnum itemType){
         

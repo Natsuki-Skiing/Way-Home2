@@ -46,10 +46,10 @@ public class Game {
         }
     }
     public  void main() {
-        CharacterMaker characterMaker = new CharacterMaker(this.screen,this.textGUI);
+        //CharacterMaker characterMaker = new CharacterMaker(this.screen,this.textGUI);
+        //this.player = characterMaker.getPlayer();
         
-        this.player = characterMaker.getPlayer();
-        //this.player = new Player("Hero",  10, 10, 10, 10, 10, 10,raceEnum.NORD,150);
+        this.player = new Player("Hero",  10, 10, 10, 10, 10, 10,raceEnum.NORD,150);
         
        
         this.player.addItemToInventory(this.itemController.getItem(enums.itemTypeEnum.WEAPON), 3);
@@ -97,9 +97,11 @@ public class Game {
                     break;
                 case INVENTORY:
                     this.clock.updateTime();
-                    InventoryInterface invScreen = new InventoryInterface(player, screen, textGUI, terminal);
-                    invScreen.mainLoop();
-
+                    InventoryInterface invScreen = new InventoryInterface(player, screen, textGUI);
+                    //invScreen.mainLoop();
+                    invScreen.show();
+                case STATS:
+                    break;
                 default:
                     this.mainWindow.getWindow().handleInput(input);
                     this.renderWindow = true;
