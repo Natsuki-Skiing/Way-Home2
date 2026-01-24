@@ -194,7 +194,7 @@ public class Player extends Character {
         double evasionChance = super.getEvasionChance();
 
         for(ArmourInstance armourItem: this.armourSlots.values()){
-            ArmourTemplate template = (ArmourTemplate) armourItem.getTemplate()
+            ArmourTemplate template = (ArmourTemplate) armourItem.getTemplate();
             switch (template.getArmourType()) {
                 case ARMOUR_LIGHT:
                     evasionChance -= 1.5;
@@ -211,7 +211,7 @@ public class Player extends Character {
                     break;
             }
         }
-        return(evasionChance < 0.0) ? 0.0 : evasionChance;;
+        return(evasionChance < 0.0) ? 0.0 : evasionChance;
         
     }
 
