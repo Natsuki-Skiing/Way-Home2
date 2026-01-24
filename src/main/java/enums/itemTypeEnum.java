@@ -13,5 +13,5 @@ public enum itemTypeEnum {
     WEAPON_MEDIUM,
     WEAPON_LARGE,
     WEAPON_RANGED,
-    REPAIR
+    SHEILD
 }

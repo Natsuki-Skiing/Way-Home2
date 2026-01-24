@@ -25,6 +25,7 @@ public class Player extends Character {
         super(name, strength, perception, endurance, charisma, agility, luck,race,maxHp);
         this.equippedItems.put(itemTypeEnum.WEAPON, null);
         this.equippedItems.put(itemTypeEnum.FISHING_ROD, null);
+        this.equippedItems.put(itemTypeEnum.SHEILD,null);
 
         this.armourSlots.put(enums.armourSlotEnum.BOOTS,null);
         this.armourSlots.put(enums.armourSlotEnum.CHEST_PLATE,null);
@@ -132,8 +133,8 @@ public class Player extends Character {
         this.equippedItems.put(item.getTemplate().getType(), null);
     }
     private boolean equipArmour(ArmourInstance item){
-        if(this.armourSlots.containsKey(item.getTemplate().getType())){
-            ArmourTemplate template =(ArmourTemplate) item.getTemplate();
+        ArmourTemplate template =(ArmourTemplate) item.getTemplate();
+        if(this.armourSlots.containsKey(template.getArmourSlot())){
             this.armourSlots.put(template.getArmourSlot(), item);
             return true;
         }
