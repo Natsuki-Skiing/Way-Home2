@@ -100,6 +100,13 @@ public class Player extends Character {
         return sheild != null;
     }
 
+    public SheildInstance getEquippedSheild(){
+        ItemInstance sheild = this.equippedItems.get(itemTypeEnum.WEAPON);
+        if (sheild != null && sheild instanceof SheildInstance) {
+            return (SheildInstance) sheild;
+        }
+        return null;
+    }
     public boolean hasWeaponEquipped() {
         ItemInstance weapon = this.equippedItems.get(itemTypeEnum.WEAPON);
         return weapon != null;
@@ -112,6 +119,10 @@ public class Player extends Character {
 
     public boolean hasHelmetEquipped(){
         return hasArmorEquipped(enums.armourSlotEnum.HELMET);
+    }
+
+    public ArmourInstance getEquippedArmour(enums.armourSlotEnum armourSlot){
+        return(this.armourSlots.get(armourSlot));
     }
 
     public boolean hasChestPlateEquipped(){

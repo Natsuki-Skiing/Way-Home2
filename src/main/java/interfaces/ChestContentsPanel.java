@@ -204,6 +204,7 @@ public class ChestContentsPanel extends Panel {
                         player.equipItem(selectedItem.getItem());
                     }
                 } else {
+                    //TODO
                     // Logic for consuming items
                 }
                 populateTable();
