@@ -95,6 +95,11 @@ public class Player extends Character {
         return fishingRod != null;
     }
 
+    public boolean hasSheildEquipped(){
+        ItemInstance sheild = this.equippedItems.get(itemTypeEnum.SHEILD);
+        return sheild != null;
+    }
+
     public boolean hasWeaponEquipped() {
         ItemInstance weapon = this.equippedItems.get(itemTypeEnum.WEAPON);
         return weapon != null;
