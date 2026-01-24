@@ -41,7 +41,7 @@ public class InventoryInterface {
     private Window window;
     private Panel rootPanel;
     public InventoryInterface(Player player,Screen screen, WindowBasedTextGUI textGUI){
-        this.chestPanel = new ChestContentsPanel(player, player.getInventory());
+        this.chestPanel = new ChestContentsPanel(player, player.getInventory(),this.textGUI);
 
         this.window = new BasicWindow();
         this.window.setHints(java.util.Arrays.asList(
@@ -74,6 +74,11 @@ public class InventoryInterface {
         else if (keyStroke.getKeyType() == KeyType.ArrowRight) {
             chestPanel.changeCat(1);
             deliverEvent.set(false); // Stop the event from moving focus
+        }
+
+        else if (keyStroke.getKeyType() == KeyType.Enter) {
+            chestPanel.executeSelectedItem();
+            deliverEvent.set(false);
         }
     }
 });

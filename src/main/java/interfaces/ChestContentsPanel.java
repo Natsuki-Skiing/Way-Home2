@@ -3,7 +3,10 @@ package interfaces;
 
 import com.googlecode.lanterna.TerminalSize;
 import com.googlecode.lanterna.gui2.*;
+import com.googlecode.lanterna.gui2.dialogs.ActionListDialog;
 import com.googlecode.lanterna.gui2.dialogs.ActionListDialogBuilder;
+import com.googlecode.lanterna.gui2.dialogs.MessageDialog;
+import com.googlecode.lanterna.gui2.dialogs.MessageDialogButton;
 import com.googlecode.lanterna.input.KeyStroke;
 import com.googlecode.lanterna.input.KeyType;
 import creatures.Player;
@@ -14,6 +17,7 @@ import items.Instances.ConditionInstance;
 import items.Instances.ItemInstance;
 import items.Instances.WeaponInstance;
 import items.templates.ItemTemplate;
+import items.templates.SheildTemplate;
 import items.templates.WeaponTemplate;
 
 import java.util.ArrayList;
@@ -30,11 +34,13 @@ public class ChestContentsPanel extends Panel {
     private final ListeningActionListBox table;
     private final ArrayList<itemTypeEnum> catList;
     private int currentCatIndex = 0;
+    private WindowBasedTextGUI textGUI;
 
-    public ChestContentsPanel(Player player, Chest inventorySource) {
+    public ChestContentsPanel(Player player, Chest inventorySource,WindowBasedTextGUI textGUI) {
         this.player = player;
         this.inventory = inventorySource;
         this.catList = this.inventory.getTypesOfChest();
+        this.textGUI = textGUI;
 
         this.setLayoutManager(new LinearLayout(Direction.HORIZONTAL));
 
@@ -154,6 +160,16 @@ public class ChestContentsPanel extends Panel {
         this.itemStatBox.addLine("Value : ᚠ " + item.getValueAsString());
     }
 
+    public void executeSelectedItem() {
+    
+        Runnable action = table.getSelectedItem();
+        
+        
+        if (action != null) {
+            action.run();
+        }
+}
+
     private void populateTable() {
         itemTypeEnum type = getCurrentType();
         ArrayList<ChestItem> itemList = this.inventory.getItemsByType(type);
@@ -177,7 +193,29 @@ public class ChestContentsPanel extends Panel {
         }
         updateDescription();
     }
+    private boolean weaponSheildCheck(ItemInstance item){
+        boolean pass = true;
+        ItemTemplate template = item.getTemplate();
+        if (template.getType() == itemTypeEnum.WEAPON) {
+            WeaponTemplate weaponTemplate = (WeaponTemplate) template;
+            itemTypeEnum weaponType = weaponTemplate.getWeaponType();
+            if (this.player.hasSheildEquipped() && (weaponType == itemTypeEnum.WEAPON_LARGE)) {
+                pass = false;
 
+            }
+        }else if(template.getType() == itemTypeEnum.SHEILD){
+            SheildTemplate sheildTemplate = (SheildTemplate) template;
+            if(this.player.hasWeaponEquipped()){
+                WeaponTemplate weaponTemplate = (WeaponTemplate) this.player.getEquippedWeapon().getTemplate();
+                if(weaponTemplate.getWeaponType() == itemTypeEnum.WEAPON_LARGE){
+                    pass = false;
+                }
+            }
+        }
+
+        return (pass);
+        
+    }
     private void handleSelection(ChestItem selectedItem) {
         final AtomicBoolean isEquippable = new AtomicBoolean(false);
         final AtomicBoolean isEquipped = new AtomicBoolean(false);
@@ -192,21 +230,36 @@ public class ChestContentsPanel extends Panel {
                 actionMsg = "Equip";
             }
         }
-
-        new ActionListDialogBuilder()
+        
+        ActionListDialog dialog = new ActionListDialogBuilder()
             .setTitle(selectedItem.getName())
             .setDescription("Choose action")
             .addAction(actionMsg, () -> {
                 if (isEquippable.get() && this.player != null) {
-                    if (isEquipped.get()) {
+                    
+                    
+                    // For balance can't use large weapon with sheild
+                    
+                    if(weaponSheildCheck(selectedItem.getItem())){
+                        if (isEquipped.get()) {
                         player.unequipItem(selectedItem.getItem());
-                    } else {
-                        player.equipItem(selectedItem.getItem());
+                        } else {
+                            player.equipItem(selectedItem.getItem());
+                        }
+                    }else{
+                        MessageDialog.showMessageDialog(
+                        textGUI,
+                        "Invalid Action", // Title
+                        "Can't equip large weapon and shield at the same time", // Message
+                        MessageDialogButton.OK // Buttons
+                        );
                     }
+                    
                 } else {
                     //TODO
                     // Logic for consuming items
                 }
+
                 populateTable();
             })
             .addAction("Drop", () -> {
@@ -217,8 +270,12 @@ public class ChestContentsPanel extends Panel {
                 populateTable();
             })
             .addAction("Back", () -> {})
-            .build()
-            .showDialog((WindowBasedTextGUI) getTextGUI());
+            .build();
+            
+        dialog.setComponent(dialog.getComponent().withBorder(Borders.doubleLine()));
+
+    
+        dialog.showDialog((WindowBasedTextGUI) getTextGUI());
     }
 
     public void changeCat(int modifier) {
