@@ -40,6 +40,10 @@ public class Entity {
     public double getCritChance(){
         return(this.luck*1.5);
     }
+
+    public double getBlockChance(){
+        return(this.luck*2 + this.strength*1.2);
+    }
     private int calculateMaxHp(int endurance,int strength){
         return(10 + (endurance * 10) + (strength *2));
     }
