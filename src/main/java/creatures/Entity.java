@@ -42,7 +42,7 @@ public class Entity {
     }
 
     public double getBlockChance(){
-        return(this.luck*2 + this.strength*1.2);
+        return(this.luck*0.3 + this.strength*1.5+this.agility*0.3);
     }
     private int calculateMaxHp(int endurance,int strength){
         return(10 + (endurance * 10) + (strength *2));

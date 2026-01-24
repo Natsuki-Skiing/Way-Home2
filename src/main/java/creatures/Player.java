@@ -189,6 +189,31 @@ public class Player extends Character {
         }
         return null;
     }
+    @Override
+    public double getEvasionChance(){
+        double evasionChance = super.getEvasionChance();
+
+        for(ArmourInstance armourItem: this.armourSlots.values()){
+            ArmourTemplate template = (ArmourTemplate) armourItem.getTemplate()
+            switch (template.getArmourType()) {
+                case ARMOUR_LIGHT:
+                    evasionChance -= 1.5;
+                    break;
+                
+                case ARMOUR_MEDIUM:
+                    evasionChance -= 2.5;
+                    break;
+
+                case ARMOUR_HEAVY:
+                    evasionChance -= 3.0;
+                    break;
+                default:
+                    break;
+            }
+        }
+        return(evasionChance < 0.0) ? 0.0 : evasionChance;;
+        
+    }
 
 
 
