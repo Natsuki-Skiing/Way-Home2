@@ -9,6 +9,11 @@ import com.googlecode.lanterna.screen.Screen;
 import com.googlecode.lanterna.screen.TerminalScreen;
 import com.googlecode.lanterna.terminal.DefaultTerminalFactory;
 import com.googlecode.lanterna.terminal.Terminal;
+import java.util.Random;
+import Combat.CombatEncounter;
+
+import java.util.Vector;
+
 import com.googlecode.lanterna.TerminalPosition;
 import com.googlecode.lanterna.TerminalSize;
 import com.googlecode.lanterna.gui2.table.*;
@@ -27,7 +32,6 @@ public class CombatInterface {
     private Entity enemy;
     private WindowBasedTextGUI textGUI;
     private Window window;
-    private Terminal terminal;
     private Panel rootPanel;
     private Panel logPanel;
     private Panel actionPanel;
@@ -41,14 +45,15 @@ public class CombatInterface {
     private Button useItemButton;
     private Button endTurnButton;
     private Button changeWeaponButton;
-    
-    public CombatInterface(Player player, Entity enemy,WindowBasedTextGUI textGUI,Terminal terminal) {
-        this.player = player;
-        this.enemy = enemy;
+    private CombatEncounter combatEngine;
+    private Random randGen = new Random();
+    public CombatInterface(CombatEncounter combatEngine,WindowBasedTextGUI textGUI) {
+        this.player = combatEngine.getPlayer();
+        this.enemy = combatEngine.getOpp();
         this.playerWeapon = player.getEquippedWeapon();
         
         this.textGUI = textGUI;
-        this.terminal = terminal;
+       
         this.window = new BasicWindow("Combat");
 
         this.rootPanel = new Panel();
@@ -65,14 +70,18 @@ public class CombatInterface {
             @Override
             public void run() {
                 addLogMessage(player.getName() + " attacks " + enemy.getName() + " with " + playerWeapon.getDisplayName());
-                // Combat logic would go here
+                attack();
             }
         });
         this.fleeButton = new Button("Flee", new Runnable() {
             @Override
             public void run() {
                 addLogMessage(player.getName() + " attempts to flee!");
-                // Flee logic would go here
+                if(combatEngine.flee()){
+                    addLogMessage( randomString(new String[]{"You Flee!","You manage to escape the "+enemy.getName(),"You run away","You are a coward, but a lucky one"}));
+                }else{
+                    addLogMessage("");
+                }
             }
         });
         this.useItemButton = new Button("Use Item", new Runnable() {
@@ -145,6 +154,31 @@ public class CombatInterface {
     private void addLogMessage(String message){
         this.logTextBox.addLine(message);
         this.logTextBox.setCaretPosition(this.logTextBox.getLineCount(), 0);
+    }
+    private void attack(){
+        
+    }
+    private String randomString(String[] messageOptions){
+        String message = "";
+        int size = messageOptions.length;
+
+        if(size > 1){
+            message = messageOptions[this.randGen.nextInt(size)];
+        }else{
+            message = messageOptions[0];
+        }
+        
+        return(message);
+    }
+
+    private void addMessageBuffer(){
+        Vector<String> buffer = this.combatEngine.getMessageBuffer();
+
+        for(String message : buffer){
+            addLogMessage(message);
+        }
+
+        this.combatEngine.clearMessageBuffer();
     }
     
     private void updateHealthBars(){

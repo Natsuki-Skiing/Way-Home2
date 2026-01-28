@@ -1,11 +1,17 @@
+package Combat;
 import creatures.*;
 import enums.armourSlotEnum;
 import interfaces.CombatInterface;
 import items.EnchantmentEffects.*;
 import items.Instances.ConditionInstance;
 import items.Instances.SheildInstance;
+import items.Instances.WeaponInstance;
 
+import com.googlecode.lanterna.gui2.*;
+import com.googlecode.lanterna.terminal.Terminal;
 import java.util.Random;
+import java.util.Vector;
+import java.lang.Math;
 public class CombatEncounter {
     Player player;
     //TODO 
@@ -13,10 +19,32 @@ public class CombatEncounter {
     Entity opp;
     CombatInterface ui;
     Random randomGen = new Random();
-    public CombatEncounter(Player player, Entity opp){
-        
+    Boolean isPlayerTurn = false;
+    Vector<String> messageBuffer = new Vector<>();
+    
+    public CombatEncounter(Player player, Entity opp,WindowBasedTextGUI textGUI){
+        this.player = player;
+        this.opp = opp;
+
+        this.ui = new CombatInterface(this,textGUI);
     }
 
+    public Vector<String> getMessageBuffer(){
+        return(this.messageBuffer);
+    }
+
+    public void attack(){
+        if(this.player.hasWeaponEquipped()){
+            WeaponInstance playerWeapon = player.getEquippedWeapon();
+            
+        }
+        
+
+    }
+
+    public void clearMessageBuffer(){
+        this.messageBuffer.clear();
+    }
     private void reduceItemCondition(ConditionInstance item){
         item.setCondition(item.getCondition()-this.randomGen.nextInt(3));
     }
@@ -62,6 +90,34 @@ public class CombatEncounter {
 
         
     }
+    public Player getPlayer(){
+        return(this.player);
+    }
+    public boolean flee(){
+        boolean success = false;
+        int playerAg = this.player.getAgility();
+        int oppAg = this.opp.getAgility();
+
+        double chance = 12.0 +playerAg;
+        chance += this.player.getLuck()*0.5;
+
+        chance += playerAg - oppAg;
+        
+
+        
+        if (chance >= 100){
+            success = true;
+        }else if(chance >0){
+            success = chancePass(chance);
+        }
+        
+
+        return(success);
+    }
+
+    public Entity getOpp(){
+        return(this.opp);
+    }
     private void addMessageOpp(String message){
         addMessage(this.opp.getName()+" "+message);
     }
@@ -69,7 +125,7 @@ public class CombatEncounter {
         addMessage(this.player.getName()+" "+message);
     }
     private void addMessage(String message){
-
+        this.messageBuffer.add(message);
     }
     
 }

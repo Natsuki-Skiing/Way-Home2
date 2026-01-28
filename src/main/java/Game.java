@@ -12,6 +12,9 @@ import com.googlecode.lanterna.screen.Screen;
 import com.googlecode.lanterna.screen.TerminalScreen;
 import com.googlecode.lanterna.terminal.DefaultTerminalFactory;
 import com.googlecode.lanterna.terminal.Terminal;
+
+import Combat.CombatEncounter;
+
 import com.googlecode.lanterna.TerminalPosition;
 import com.googlecode.lanterna.TerminalSize;
 import java.util.regex.Pattern;
@@ -122,7 +125,6 @@ public class Game {
 
     private void combatEncounter(){
         Entity enemy = new Entity("Goblin",5,5,5,5,5,5,50);
-        CombatInterface combatInterface = new CombatInterface(this.player, enemy, this.textGUI, this.terminal);
-        combatInterface.mainLoop();
+        CombatEncounter combat = new CombatEncounter(player, enemy, textGUI);
     }
 }
