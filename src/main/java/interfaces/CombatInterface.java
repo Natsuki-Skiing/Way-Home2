@@ -156,6 +156,24 @@ public class CombatInterface {
         this.logTextBox.setCaretPosition(this.logTextBox.getLineCount(), 0);
     }
     private void attack(){
+        double damage = this.combatEngine.attack();
+
+        if(damage > 0.0){
+            this.addLogMessage(randomString(new String[]{"Your attack lands!","You land a devestating blow!","That's going to leave a scar",
+                "You hit your mark", "The "+enemy.getName()+" failed to doge your attack","Your swift strike wounds "+enemy.getName()
+            }));
+
+            this.addLogMessage("for "+damage+" !");
+
+            updateHealthBars();
+            updateWeaponConditionBar();
+
+
+        }else{
+            this.addLogMessage(randomString(new String[] {"Your attack fails to hurt the "+this.enemy.getName()+" !",
+                "You do no damage! ", "The attack was too weak to damage the "+ enemy.getName(),"You do no damage :["
+            }));
+        }
         
     }
     private String randomString(String[] messageOptions){
