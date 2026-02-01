@@ -6,6 +6,7 @@ import items.EnchantmentEffects.*;
 import items.Instances.ConditionInstance;
 import items.Instances.SheildInstance;
 import items.Instances.WeaponInstance;
+import items.templates.WeaponTemplate;
 
 import com.googlecode.lanterna.gui2.*;
 import com.googlecode.lanterna.terminal.Terminal;
@@ -16,7 +17,7 @@ public class CombatEncounter {
     Player player;
     //TODO 
     //Make an opp class
-    Entity opp;
+    Opp opp;
     CombatInterface ui;
     Random randomGen = new Random();
     Boolean isPlayerTurn = false;
@@ -33,13 +34,53 @@ public class CombatEncounter {
         return(this.messageBuffer);
     }
 
-    public void attack(){
+    public double attack(){
+        WeaponInstance playerWeapon;
+        double damage = 0.0;
         if(this.player.hasWeaponEquipped()){
-            WeaponInstance playerWeapon = player.getEquippedWeapon();
-            
+            playerWeapon = player.getEquippedWeapon();
+
+        }else{
+            //Unarmed so like using fists? 
+            //TODO If have races with claws account for this 
+            int unarmedDamage =2 + this.player.getStrength();
+            if(player.hasSheildEquipped()){
+                unarmedDamage = (int) (unarmedDamage *0.70);
+            }
+            playerWeapon = new WeaponInstance(new WeaponTemplate("Unarmed", null, 0, unarmedDamage, 0, null, 0, 0), 999999);
         }
+
+        if(!chancePass(this.opp.getEvasionChance())){
+            damage = calculateOppDamage(playerWeapon.getDamage());
+
+            //TODO  
+            //Weapon effects
+
+            opp.subHp(damage);
+
+        
+        }
+        return(damage);
+    }
+
+    public double oppAttack(){
+        WeaponInstance oppWeapon = opp.getWeapon();
+        double damage = 0.0;
+
         
 
+        if(!chancePass(this.opp.getEvasionChance())){
+            damage = calculateDamage(oppWeapon.getDamage());
+
+            //TODO  
+            //Weapon effects
+
+            player.subHp(damage);
+
+        
+        }
+
+        return(damage);
     }
 
     public void clearMessageBuffer(){
@@ -55,11 +96,16 @@ public class CombatEncounter {
             if(randomNumber <= chance){
                 pass = true;
             }
+        }else if(chance > 0.0 && chance < 1.0){
+            double randomNumber = this.randomGen.nextDouble(100.0);
+            if(randomNumber <= chance){
+                pass = true;
+            }
         }
 
         return(pass);
     }
-    private int calculateDamage(int incomingDamage){
+    private double calculateDamage(double incomingDamage){
         //Sheild reduces incoming damage
         if(this.player.hasSheildEquipped()){
             
@@ -80,7 +126,7 @@ public class CombatEncounter {
         }
 
         double armourReductionFactor = 100.0/(100.0+(armourDefenseSum+ (this.player.getEndurance() * 0.4)));
-        incomingDamage = (int)(incomingDamage * armourReductionFactor);
+        incomingDamage = (incomingDamage * armourReductionFactor);
 
 
         
@@ -114,7 +160,12 @@ public class CombatEncounter {
 
         return(success);
     }
-
+    private double calculateOppDamage(double incomingDamage){
+        double armourReductionFactor = 100.0/(100.0+((this.opp.getEndurance() * 0.4)));
+        armourReductionFactor =(int) armourReductionFactor * ((this.player.getLevel()*0.3));
+        incomingDamage = (int)(incomingDamage * armourReductionFactor);
+        return(incomingDamage);
+    }
     public Entity getOpp(){
         return(this.opp);
     }
@@ -127,5 +178,4 @@ public class CombatEncounter {
     private void addMessage(String message){
         this.messageBuffer.add(message);
     }
-    
 }
