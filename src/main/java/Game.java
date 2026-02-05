@@ -60,6 +60,10 @@ public class Game {
         
         this.player.equipItem(this.player.getInventory().getItemsByType(enums.itemTypeEnum.WEAPON).get(0).getItem());
         ///combatEncounter();
+        /// 
+        /// 
+        ///
+        combatEncounter();
         this.clock = new Clock(0, 2500, 200);
         this.mainWindow = new mainGameWindow(this.screen,this.textGUI,this.player);
         this.textGUI.addWindow(this.mainWindow.getWindow());
@@ -124,7 +128,10 @@ public class Game {
 
 
     private void combatEncounter(){
-        Entity enemy = new Entity("Goblin",5,5,5,5,5,5,50);
+        Opp enemy = new Opp("Goblin",4,5,5,5,9,6,50,null,1.2,oppInfoEnum.HUMANOID);
+        enemy.setWeapon(new WeaponInstance(new WeaponTemplate("Goblin Scythe","Wop wop wop",1.0,20,1,itemTypeEnum.WEAPON_LARGE,1000,1)));
         CombatEncounter combat = new CombatEncounter(player, enemy, textGUI);
+        combat.showInterface();
+        
     }
 }

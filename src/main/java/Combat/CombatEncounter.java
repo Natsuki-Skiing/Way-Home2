@@ -1,6 +1,7 @@
 package Combat;
 import creatures.*;
 import enums.armourSlotEnum;
+import enums.combatInfoEnum;
 import interfaces.CombatInterface;
 import items.EnchantmentEffects.*;
 import items.Instances.ConditionInstance;
@@ -23,7 +24,7 @@ public class CombatEncounter {
     Boolean isPlayerTurn = false;
     Vector<String> messageBuffer = new Vector<>();
     
-    public CombatEncounter(Player player, Entity opp,WindowBasedTextGUI textGUI){
+    public CombatEncounter(Player player, Opp opp,WindowBasedTextGUI textGUI){
         this.player = player;
         this.opp = opp;
 
@@ -34,7 +35,8 @@ public class CombatEncounter {
         return(this.messageBuffer);
     }
 
-    public double attack(){
+    public CombatInfo attack(){
+        CombatInfo retInfo = new CombatInfo(0, null,"");
         WeaponInstance playerWeapon;
         double damage = 0.0;
         if(this.player.hasWeaponEquipped()){
@@ -55,32 +57,65 @@ public class CombatEncounter {
 
             //TODO  
             //Weapon effects
+            if(damage > 0.0){
+                
+                retInfo.damage = damage;
+                opp.subHp(damage);
+                if(opp.getHp() <= 0.0){
+                    retInfo.info = combatInfoEnum.DEATH;
+                }else{
+                    retInfo.info = combatInfoEnum.HIT;
+                }
+            }else{
+                retInfo.info = combatInfoEnum.NO_DAMAGE;
+            }
 
-            opp.subHp(damage);
+            
 
         
+        }else{
+            retInfo.info = combatInfoEnum.DOGE;
         }
-        return(damage);
+        return(retInfo);
     }
+    public CombatInfo oppTurn(){
+        CombatInfo returnInfo = new CombatInfo(0, null,"");
 
-    public double oppAttack(){
+        //TODO 
+        //Add more complex decicison making here 
+        // Use items and that 
+
+        returnInfo = oppAttack();
+
+
+        return(returnInfo);
+
+
+
+    }
+    public CombatInfo oppAttack(){
+        CombatInfo returnInfo = new CombatInfo(0, null, null);
         WeaponInstance oppWeapon = opp.getWeapon();
-        double damage = 0.0;
-
         
 
         if(!chancePass(this.opp.getEvasionChance())){
-            damage = calculateDamage(oppWeapon.getDamage());
+            returnInfo = calculateDamage(oppWeapon.getDamage());
 
             //TODO  
             //Weapon effects
 
-            player.subHp(damage);
+            player.subHp(returnInfo.damage);
+
+            if(player.getHp() <=0.0){
+                returnInfo.info = combatInfoEnum.DEATH;
+            }
 
         
+        }else{
+            returnInfo.info = combatInfoEnum.DOGE;
         }
 
-        return(damage);
+        return(returnInfo);
     }
 
     public void clearMessageBuffer(){
@@ -105,14 +140,18 @@ public class CombatEncounter {
 
         return(pass);
     }
-    private double calculateDamage(double incomingDamage){
+    private CombatInfo calculateDamage(double incomingDamage){
+
+        CombatInfo returnInfo = new CombatInfo(incomingDamage, null, null);
         //Sheild reduces incoming damage
         if(this.player.hasSheildEquipped()){
             
             if(chancePass(this.player.getBlockChance())){
                 SheildInstance playerSheild = this.player.getEquippedSheild();
-                incomingDamage = (int)(incomingDamage * playerSheild.getDefensePer());
-                addMessagePlayer("Uses his sheild.");
+                incomingDamage = (incomingDamage * playerSheild.getDefensePer());
+                returnInfo.info = combatInfoEnum.BLOCK;
+                
+
             }
         }
         
@@ -124,14 +163,24 @@ public class CombatEncounter {
                 reduceItemCondition(this.player.getEquippedArmour(slot));
             }
         }
-
-        double armourReductionFactor = 100.0/(100.0+(armourDefenseSum+ (this.player.getEndurance() * 0.4)));
+        
+        double armourReductionFactor = 100.0/(100.0+(armourDefenseSum+ (this.player.getEndurance() )));
         incomingDamage = (incomingDamage * armourReductionFactor);
 
+        if(incomingDamage > 0.0){
+            returnInfo.damage = incomingDamage * armourReductionFactor;
+        }
 
+        if(returnInfo.info != combatInfoEnum.BLOCK){
+            if(returnInfo.damage <= 0.0){
+                returnInfo.info = combatInfoEnum.NO_DAMAGE;
+            }else{
+                returnInfo.info = combatInfoEnum.HIT;
+            }
+        }
         
 
-        return(incomingDamage);
+        return(returnInfo);
         
 
         
@@ -162,7 +211,7 @@ public class CombatEncounter {
     }
     private double calculateOppDamage(double incomingDamage){
         double armourReductionFactor = 100.0/(100.0+((this.opp.getEndurance() * 0.4)));
-        armourReductionFactor =(int) armourReductionFactor * ((this.player.getLevel()*0.3));
+        //armourReductionFactor = armourReductionFactor * ((this.player.getLevel()*0.3));
         incomingDamage = (int)(incomingDamage * armourReductionFactor);
         return(incomingDamage);
     }
@@ -178,4 +227,10 @@ public class CombatEncounter {
     private void addMessage(String message){
         this.messageBuffer.add(message);
     }
+
+    public void showInterface(){
+        this.ui.mainLoop();
+    }
+
+    
 }

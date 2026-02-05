@@ -21,7 +21,9 @@ import java.io.File;
 import java.io.IOException;
 import java.util.NavigableMap;
 public class ItemController {
-    private HashMap<enums.itemTypeEnum,Vector<ItemTemplate>> mainItemMap;
+    private int maxTier = 3;
+    private HashMap<enums.itemTypeEnum,HashMap<Integer,Vector<ItemTemplate>>> mainItemMap;
+    private HashMap<Integer,ItemTemplate> idItemMap;
     private HashMap<String,Integer> rarityItemMap;
     private AtomicInteger itemIDCounter = new AtomicInteger(0);
     private static final Random randomGenerator = new Random();
@@ -32,9 +34,16 @@ public class ItemController {
     private Rarity purple;
     private Rarity gold;
     private int totalWeight = 0;
+
+
+    public class regStruct{
+        public ItemTemplate template;
+        public int tier;
+    }
+
     public ItemController(){
-        
-        this.mainItemMap = new HashMap<enums.itemTypeEnum,Vector<ItemTemplate>>();
+        this.idItemMap = new HashMap<Integer,ItemTemplate>();
+        this.mainItemMap = new HashMap<>();
         this.rarityItemMap = new HashMap<String,Integer>();
         this.green = new Rarity("Green",1.15,1.1,1.05);
         this.blue = new Rarity("Blue",1.25,1.25,1.11);
@@ -62,24 +71,36 @@ public class ItemController {
         
         return dropTable.higherEntry(value).getValue();
     }
-    private void registerItem(ItemTemplate item){
-        if(!this.mainItemMap.containsKey(item.getType())){
-            this.mainItemMap.put(item.getType(), new Vector<ItemTemplate>());
+    private void registerItem(regStruct itemStruct){
+        ItemTemplate item = itemStruct.template;
+        int tier = itemStruct.tier;
+        // 1. Ensure the top-level key (Type) exists
+        if (!this.mainItemMap.containsKey(item.getType())) {
+            this.mainItemMap.put(item.getType(), new HashMap<>());
         }
-        this.mainItemMap.get(item.getType()).add(item);
+
+        // 2. Get the inner map for that type
+        HashMap<Integer, Vector<ItemTemplate>> tierMap = this.mainItemMap.get(item.getType());
+
+        // 3. Ensure the tier key exists in the inner map
+        if (!tierMap.containsKey(tier)) {
+            tierMap.put(tier, new Vector<>());
+        }
+            
+        this.mainItemMap.get(item.getType()).get(tier).add(item);
     }
 
     private void populateItemMap(String filePath){
-        Vector<ItemTemplate> items = loadItemsFromJson(filePath);
+        Vector<regStruct> items = loadItemsFromJson(filePath);
         if(items != null){
-            for(ItemTemplate item : items){
+            for(regStruct item : items){
                 registerItem(item);
             }
         }
 
     }
 
-    private Vector<ItemTemplate> loadItemsFromJson(String filePath){
+    private Vector<regStruct> loadItemsFromJson(String filePath){
         ObjectMapper mapper = new ObjectMapper();
         File itemsJson = new File(filePath);
         Vector<HashMap<String, Object>> rawData = null; 
@@ -94,7 +115,7 @@ public class ItemController {
         if(rawData == null){
             return(null);
         }
-        Vector<ItemTemplate> items = new Vector<ItemTemplate>();
+        Vector<regStruct> items = new Vector<regStruct>();
 
         for(HashMap<String, Object> itemData : rawData){
             String typeStr = (String) itemData.get("type");
@@ -110,7 +131,10 @@ public class ItemController {
                     break;
             }
             if(itemTemplate != null){
-                items.add(itemTemplate);
+                regStruct struct = new regStruct();
+                struct.template = itemTemplate;
+                struct.tier =(int) itemData.get("tier");
+                items.add(struct);
             }
         }
 
@@ -162,15 +186,34 @@ public class ItemController {
     }
 
 
+
+    private int getRandomTier(){
+        int number = this.randomGenerator.nextInt(101);
+        int tier = 1;
+        if(number > 40 && number < 75){
+            tier = 2;
+        }else if(number > 75){
+            tier =3;
+        }
+
+
+        return(tier);
+    }
+    public ItemInstance getItem(int tier){
+        Vector<enums.itemTypeEnum> types = new Vector<>(this.mainItemMap.keySet());
+        enums.itemTypeEnum type = types.get(this.randomGenerator.nextInt(types.size()));
+
+        return(getItem(type,tier));
+    }
     public ItemInstance getItem(){
         Vector<enums.itemTypeEnum> types = new Vector<>(this.mainItemMap.keySet());
         enums.itemTypeEnum type = types.get(this.randomGenerator.nextInt(types.size()));
 
-        return(getItem(type));
+        return(getItem(type,getRandomTier()));
     }
-    public ItemInstance getItem(enums.itemTypeEnum itemType){
+    public ItemInstance getItem(enums.itemTypeEnum itemType,int tier){
         
-        ItemInstance item = this.retreiveInstanceFromMap(itemType);
+        ItemInstance item = this.retreiveInstanceFromMap(itemType,tier);
         if (item != null){
             Rarity itemRarity = this.getRarity();
             if(itemRarity != null){
@@ -193,6 +236,16 @@ public class ItemController {
         return(item);
 
     }
+
+
+    public ItemInstance getItemByID(int itemID){
+        if(this.idItemMap.containsKey(itemID)){
+            ItemTemplate template = this.idItemMap.get(itemID);
+            return(instanceFromTemplate(template));
+        }
+        return(null);
+        
+    }
     public ItemInstance instanceFromTemplate(ItemTemplate template){
        
         if(template instanceof WeaponTemplate weaponTemplate){
@@ -205,9 +258,9 @@ public class ItemController {
         
         
     }
-    private ItemInstance retreiveInstanceFromMap(enums.itemTypeEnum itemType){
+    private ItemInstance retreiveInstanceFromMap(enums.itemTypeEnum itemType,int tier){
         ItemTemplate template = null;
-        Vector<ItemTemplate> itemVector = this.mainItemMap.get(itemType);
+        Vector<ItemTemplate> itemVector = this.mainItemMap.get(itemType).get(tier);
         Random randomGenerator = new Random();
 
         int randIndex = randomGenerator.nextInt(itemVector.size());

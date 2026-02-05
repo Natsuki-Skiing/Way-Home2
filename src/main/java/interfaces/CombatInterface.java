@@ -10,8 +10,6 @@ import com.googlecode.lanterna.screen.TerminalScreen;
 import com.googlecode.lanterna.terminal.DefaultTerminalFactory;
 import com.googlecode.lanterna.terminal.Terminal;
 import java.util.Random;
-import Combat.CombatEncounter;
-
 import java.util.Vector;
 
 import com.googlecode.lanterna.TerminalPosition;
@@ -21,8 +19,9 @@ import com.googlecode.lanterna.input.KeyStroke;
 import com.googlecode.lanterna.input.KeyType;
 import com.googlecode.lanterna.input.KeyStroke;
 import com.googlecode.lanterna.input.KeyType;
-
+import Combat.*;
 import creatures.*;
+import enums.combatInfoEnum;
 import items.Instances.WeaponInstance;
 
 public class CombatInterface {
@@ -46,12 +45,14 @@ public class CombatInterface {
     private Button endTurnButton;
     private Button changeWeaponButton;
     private CombatEncounter combatEngine;
+    private Boolean playerTurn;
     private Random randGen = new Random();
     public CombatInterface(CombatEncounter combatEngine,WindowBasedTextGUI textGUI) {
+        this.combatEngine = combatEngine;
         this.player = combatEngine.getPlayer();
         this.enemy = combatEngine.getOpp();
         this.playerWeapon = player.getEquippedWeapon();
-        
+        this.playerTurn = true;
         this.textGUI = textGUI;
        
         this.window = new BasicWindow("Combat");
@@ -69,40 +70,65 @@ public class CombatInterface {
         this.attackButton = new Button("Attack", new Runnable() {
             @Override
             public void run() {
-                addLogMessage(player.getName() + " attacks " + enemy.getName() + " with " + playerWeapon.getDisplayName());
-                attack();
+                if(playerTurn){
+                    addLogMessage(player.getName() + " attacks " + enemy.getName() + " with " + playerWeapon.getDisplayName());
+                    attack();
+                    playerTurn = false;
+                    oppTurn();
+                }
+                
             }
         });
         this.fleeButton = new Button("Flee", new Runnable() {
             @Override
             public void run() {
-                addLogMessage(player.getName() + " attempts to flee!");
-                if(combatEngine.flee()){
-                    addLogMessage( randomString(new String[]{"You Flee!","You manage to escape the "+enemy.getName(),"You run away","You are a coward, but a lucky one"}));
-                }else{
-                    addLogMessage("");
+                if(playerTurn){
+                    addLogMessage(player.getName() + " attempts to flee!");
+                    if(combatEngine.flee()){
+                        addLogMessage( randomString(new String[]{"You Flee!","You manage to escape the "+enemy.getName(),"You run away","You are a coward, but a lucky one"}));
+                    }else{
+                        addLogMessage("");
+                        playerTurn = false;
+                        oppTurn();
+                    }
                 }
+                
             }
         });
         this.useItemButton = new Button("Use Item", new Runnable() {
             @Override
             public void run() {
-                addLogMessage(player.getName() + " uses an item!");
+                if(playerTurn){
+                    addLogMessage(player.getName() + " uses an item!");
+                    playerTurn = false;
+                    oppTurn();
                 // Use item logic would go here
+                }
+                
             }
         });
         this.endTurnButton = new Button("End Turn", new Runnable() {
             @Override
             public void run() {
-                addLogMessage(player.getName() + " ends their turn.");
+                if(playerTurn){
+                    addLogMessage(player.getName() + " ends their turn.");
+                    playerTurn = false;
+                    oppTurn();
+                }
+                
                 // End turn logic would go here
             }
         });
         this.changeWeaponButton = new Button("Change Weapon", new Runnable() {
             @Override
             public void run() {
-                addLogMessage(player.getName() + " changes weapon.");
-                // Change weapon logic would go here
+                if(playerTurn){
+                    addLogMessage(player.getName() + " changes weapon.");
+                    playerTurn = false;
+                    oppTurn();
+                    // Change weapon logic would go here
+                }
+                
             }
         }); 
 
@@ -152,13 +178,19 @@ public class CombatInterface {
         this.textGUI.addWindowAndWait(this.window);
     }
     private void addLogMessage(String message){
-        this.logTextBox.addLine(message);
-        this.logTextBox.setCaretPosition(this.logTextBox.getLineCount(), 0);
+        //TODO MAke the scrolling work 
+        this.logTextBox.setReadOnly(false);
+        this.logTextBox.addLine(">" + message);
+        
+        this.logTextBox.setCaretPosition(this.logTextBox.getLineCount() - 1, 0); // jump to last line
+        this.logTextBox.setReadOnly(true);
+        this.logTextBox.invalidate();
     }
     private void attack(){
-        double damage = this.combatEngine.attack();
+        CombatInfo info = this.combatEngine.attack();
 
-        if(damage > 0.0){
+        if(info.info == combatInfoEnum.HIT){
+            double damage = info.damage;
             this.addLogMessage(randomString(new String[]{"Your attack lands!","You land a devestating blow!","That's going to leave a scar",
                 "You hit your mark", "The "+enemy.getName()+" failed to doge your attack","Your swift strike wounds "+enemy.getName()
             }));
@@ -169,12 +201,63 @@ public class CombatInterface {
             updateWeaponConditionBar();
 
 
-        }else{
+        }else if(info.info == combatInfoEnum.NO_DAMAGE){
             this.addLogMessage(randomString(new String[] {"Your attack fails to hurt the "+this.enemy.getName()+" !",
                 "You do no damage! ", "The attack was too weak to damage the "+ enemy.getName(),"You do no damage :["
             }));
+        }else if(info.info == combatInfoEnum.DOGE){
+            this.addLogMessage(randomString(new String[] {"That was some poor aim !",enemy.getName()+" is too swift for you","The attack finds nothing but air",enemy.getName()+" doged the attack","to kill something you need to hit it"}));
+            this.addLogMessage("No damage");
+        }else if(info.info == combatInfoEnum.DEATH){
+            this.addLogMessage(randomString(new String[]{"You are victorious!",enemy.getName()+" is crushed under the weight of the blow","Sorcery, "+enemy.getName()+" is now a dead "+ enemy.getName(),enemy.getName()+ " is slain",
+                "They didn't catch you this time Prince","You won", "You killed the "+enemy.getName()
+            }));
         }
+
         
+        
+    }
+
+    private void oppTurn(){
+        
+        if(!this.playerTurn){
+
+            String name = enemy.getName();
+            CombatInfo info = this.combatEngine.oppTurn();
+            double damage = info.damage;
+            switch (info.info) {
+                case DEATH:
+                    gameOver();
+                    break;
+                case HIT:
+                    this.addLogMessage(name +" hit's you for "+ damage +" !");
+                    this.addLogMessage(randomString(new String[]{"Ouch","It leaves a deep wound","You'll carry that scar for life","The attack cuts deep","You can't take much more of them",
+                        this.player.getName()+" screams in pain"," you don't falter","Pain throbs from the wound","You're being carless","Be faster next time"
+                    }));
+                    break;
+                case DOGE:
+                    this.addLogMessage("Doge message here");
+                    break;
+                case BLOCK:
+                    this.addLogMessage("Block message here");
+                    break;
+                case NO_DAMAGE:
+                    this.addLogMessage("No Damage message here");
+                    break;
+                default:
+                    break;
+            }
+
+            updateHealthBars();
+            this.playerTurn = true;
+            
+
+
+        }
+    }
+
+    private void gameOver(){
+
     }
     private String randomString(String[] messageOptions){
         String message = "";
@@ -204,9 +287,12 @@ public class CombatInterface {
         this.enemyHealthBar.update();
     }
 
+    
 
     private void updateWeaponConditionBar(){
         Borders.singleLine(this.playerWeapon.getDisplayName());
         this.weaponConditionBar.update();
     }
+
+    
 }

@@ -9,7 +9,7 @@ public class HealthBar extends ProgressBar {
     }
 
     public void update() {
-        int healthPercentage = (int) (((double) entity.getHp()) / entity.getMaxHp()) * 100;
+        int healthPercentage = (int) ((((double) entity.getHp()) / entity.getMaxHp()) * 100);
         this.setValue(healthPercentage);
     }
     

@@ -15,9 +15,10 @@ public class Opp extends Character {
               modStat(agility, statsModifier), 
               modStat(luck, statsModifier), 
               race, 
-              maxHp);
+              modStat(maxHp,statsModifier));
 
         this.type = type;
+        this.hp = this.maxHp;
     }
 
     private static int modStat(int stat,double statsModifier){
