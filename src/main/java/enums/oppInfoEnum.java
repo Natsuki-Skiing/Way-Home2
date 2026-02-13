@@ -2,5 +2,7 @@ package enums;
 
 public enum oppInfoEnum {
     MONSTER,
-    HUMANOID
+    HUMANOID,
+    DUNGEON,
+    TERRESTRIAL
 }
