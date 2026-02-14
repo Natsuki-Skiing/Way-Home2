@@ -5,8 +5,8 @@ import java.util.Random;
 import enums.*;
 public class CreatureController {
     private static final Random randomGenerator = new Random();
-    private HashMap<Integer,HashMap<enums.oppInfoEnum,Vector<Opp>>> oppMap;
-
+    private HashMap<Integer,HashMap<enums.oppInfoEnum,Vector<Opp>>> aboveOppMap;
+    private HashMap<Integer,HashMap<enums.oppInfoEnum,Vector<Opp>>> dunOppMap;
 
     private void applyVetrancy(Opp opp){
         int number = randomGenerator.nextInt(100)+1;
@@ -58,8 +58,50 @@ public class CreatureController {
 
         return(rank);
     }
-    public Opp getOpp(int rank,boolean dungeonType,boolean monster){
-        Opp opp = new Opp(null, 0, 0, 0, 0, 0, 0, 0, null, 0, null);
+
+    private boolean isMonster(){
+        if(randomGenerator.nextInt(1) == 1){
+            return(true);
+        }
+
+        return(false);
+    }
+
+    private boolean isDungeonType(){
+        if(randomGenerator.nextInt(1) == 1){
+            return(true);
+        }
+
+        return(false);
+    }
+    public Opp getOpp(boolean dungeonType,double modifier){
+        Opp opp = getOpp(getRank(), dungeonType, isMonster(),modifier);
+
+        return(opp);
+    }
+    public Opp getOpp(int rank,boolean dungeonType,boolean monster,double modifier){
+        Opp opp = null;
+        HashMap<Integer,HashMap<enums.oppInfoEnum,Vector<Opp>>> oppMap =null;
+
+        if(dungeonType){
+            oppMap = this.dunOppMap;
+        }else{
+            oppMap = this.aboveOppMap;
+        }
+        if(oppMap.containsKey(rank)){
+            HashMap<oppInfoEnum,Vector<Opp>> rankMap = oppMap.get(rank);
+            oppInfoEnum type = oppInfoEnum.HUMANOID;
+            if(monster){
+                type = oppInfoEnum.MONSTER;
+            }
+
+            Vector<Opp> oppVector = rankMap.get(type);
+
+            Opp baseOpp = oppVector.get(this.randomGenerator.nextInt((oppVector.size()-1)));
+
+            opp = new Opp(baseOpp,modifier);
+
+        }
 
 
 

@@ -8,7 +8,16 @@ public class Opp extends Character {
     WeaponInstance weapon = null;
     oppInfoEnum type;
     int xp;
-    public Opp(String name, int strength,int perception,int endurance,int charisma,int agility, int luck , int maxHp,raceEnum race,double statsModifier,oppInfoEnum type,int xp){
+
+    public Opp(Opp baseOpp, double modifier) {
+        this(baseOpp.getName(),baseOpp.getStrength(),baseOpp.getPerception(),baseOpp.getEndurance(),baseOpp.getCharisma(),baseOpp.getAgility(),baseOpp.getLuck(),(int)baseOpp.getMaxHp(),baseOpp.getRace(),baseOpp.getType(),baseOpp.getDeathXp(),modifier);
+    }
+
+    public Opp(String name, int strength, int perception, int endurance, int charisma, int agility, int luck, int maxHp, raceEnum race, oppInfoEnum type, int xp) {
+    // ugly quick to write 
+    this(name, strength, perception, endurance, charisma, agility, luck, maxHp, race,  type, xp,1.0);
+    }   
+    public Opp(String name, int strength,int perception,int endurance,int charisma,int agility, int luck , int maxHp,raceEnum race,oppInfoEnum type,int xp,double statsModifier){
         super(name, 
               modStat(strength, statsModifier), 
               modStat(perception, statsModifier), 
@@ -24,7 +33,9 @@ public class Opp extends Character {
         this.xp = xp;
         
     }
-
+    public oppInfoEnum getType(){
+        return(this.type);
+    }
     public int getDeathXp(){
         return(this.xp);
     }
@@ -34,7 +45,12 @@ public class Opp extends Character {
     }
 
     private static int modStat(int stat,double statsModifier){
-        return((int) (stat*statsModifier));
+        if(statsModifier != 1.0){
+            return((int) (stat*statsModifier));
+        }
+        
+        return(stat);
+        
     }
 
     public WeaponInstance getWeapon(){
