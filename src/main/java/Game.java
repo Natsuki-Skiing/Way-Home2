@@ -22,6 +22,7 @@ import java.math.BigDecimal;
 
 import items.Instances.WeaponInstance;
 import items.ItemManager.ItemController;
+import creatures.CreatureController;
 public class Game {
     private Player player;
     public Screen screen;
@@ -128,7 +129,7 @@ public class Game {
 
 
     private void combatEncounter(){
-        Opp enemy = new Opp("Goblin",4,5,5,5,9,6,50,null,1.2,oppInfoEnum.HUMANOID,10);
+        // Opp enemy = new Opp("Goblin",4,5,5,5,9,6,50,null,1.2,oppInfoEnum.HUMANOID,10);
         enemy.setWeapon(new WeaponInstance(new WeaponTemplate("Goblin Scythe","Wop wop wop",1.0,20,1,itemTypeEnum.WEAPON_LARGE,1000,1)));
         CombatEncounter combat = new CombatEncounter(player, enemy, textGUI);
         combat.showInterface();

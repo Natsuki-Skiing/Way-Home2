@@ -204,6 +204,14 @@ public class ItemController {
 
         return(getItem(type,tier));
     }
+
+    public ItemInstance getItem(enums.itemTypeEnum itemType){
+        Vector<enums.itemTypeEnum> types = new Vector<>(this.mainItemMap.keySet());
+        enums.itemTypeEnum type = types.get(this.randomGenerator.nextInt(types.size()));
+
+        return(getItem(type,getRandomTier()));
+    }
+
     public ItemInstance getItem(){
         Vector<enums.itemTypeEnum> types = new Vector<>(this.mainItemMap.keySet());
         enums.itemTypeEnum type = types.get(this.randomGenerator.nextInt(types.size()));
