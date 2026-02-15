@@ -1,13 +1,25 @@
 package creatures;
+import java.io.File;
+import java.io.IOException;
 import java.util.HashMap;
 import java.util.Vector;
+import com.fasterxml.jackson.databind.ObjectMapper;
+import java.io.File;
+import java.io.IOException;
+import com.fasterxml.jackson.core.type.TypeReference;
+
 import java.util.Random; 
 import enums.*;
+import items.ItemManager.ItemController.regStruct;
 public class CreatureController {
     private static final Random randomGenerator = new Random();
     private HashMap<Integer,HashMap<enums.oppInfoEnum,Vector<Opp>>> aboveOppMap;
     private HashMap<Integer,HashMap<enums.oppInfoEnum,Vector<Opp>>> dunOppMap;
-
+    public class oppRegStruct{
+        public Opp opp;
+        public int rank;
+        public boolean dungeonType;
+    }
     private void applyVetrancy(Opp opp){
         int number = randomGenerator.nextInt(100)+1;
         double modifier =0.0;
@@ -109,6 +121,87 @@ public class CreatureController {
     }
 
 
+    private Vector<oppRegStruct>  loadOpps(String filePath){
+        ObjectMapper mapper = new ObjectMapper();
+        File oppsJson = new File(filePath);
+        Vector<HashMap<String, Object>> rawData = null; 
+        try {
+            rawData = mapper.readValue(oppsJson, new TypeReference<Vector<HashMap<String, Object>>>() {});
+            
+        } catch (IOException e) {
+            e.printStackTrace();
+            return(null);
+        }
+
+        if(rawData == null){
+            return(null);
+        }
+        Vector<oppRegStruct> oppVector = new Vector<oppRegStruct>();
 
 
+        for(HashMap<String,Object> oppData :rawData){
+            raceEnum race = null;
+            String oppTypeString = (String) oppData.get("type");
+            
+            enums.oppInfoEnum type = enums.oppInfoEnum.valueOf(oppTypeString);
+
+            if(type != enums.oppInfoEnum.MONSTER){
+                // Monsters don't have a race
+                String raceString = (String) oppData.get("race");
+                race = raceEnum.valueOf(raceString);
+            }
+
+            Opp opp = new Opp(
+                (String) oppData.get("name"),
+                (int) oppData.get("strength"),
+                (int) oppData.get("perception"),
+                (int) oppData.get("endurance"),
+                (int) oppData.get("charisma"),
+                (int) oppData.get("agility"),
+                (int) oppData.get("luck"),
+                (int) oppData.get("maxHp"),
+                race,
+                type,
+                (int) oppData.get("deathXp")
+            );
+
+            applyVetrancy(opp);
+            oppRegStruct struct = new oppRegStruct();
+            struct.opp = opp;
+            struct.rank = (int) oppData.get("rank");
+            struct.dungeonType = (boolean) oppData.get("dungeon");
+            oppVector.add(struct);
+        }
+
+        return(oppVector);
+    }
+    public CreatureController(String aboveOppFilePath){
+        this.aboveOppMap = new HashMap<Integer,HashMap<enums.oppInfoEnum,Vector<Opp>>>();
+        this.dunOppMap = new HashMap<Integer,HashMap<enums.oppInfoEnum,Vector<Opp>>>();
+
+        Vector<oppRegStruct> oppsVector = loadOpps(aboveOppFilePath);
+       
+        for(oppRegStruct struct : oppsVector){
+            Opp opp = struct.opp;
+            if(struct.dungeonType){
+                if(!this.dunOppMap.containsKey(struct.rank)){
+                    this.dunOppMap.put(struct.rank, new HashMap<enums.oppInfoEnum,Vector<Opp>>());
+                }
+                if(!this.dunOppMap.get(struct.rank).containsKey(opp.getType())){
+                    this.dunOppMap.get(struct.rank).put(opp.getType(), new Vector<Opp>());
+                }
+                this.dunOppMap.get(struct.rank).get(opp.getType()).add(opp);
+           
+            }else{
+                if(!this.aboveOppMap.containsKey(struct.rank)){
+                    this.aboveOppMap.put(struct.rank, new HashMap<enums.oppInfoEnum,Vector<Opp>>());
+                }
+                if(!this.aboveOppMap.get(struct.rank).containsKey(opp.getType())){
+                    this.aboveOppMap.get(struct.rank).put(opp.getType(), new Vector<Opp>());
+                }
+                this.aboveOppMap.get(struct.rank).get(opp.getType()).add(opp);
+            }
+
+        
+    }           
 }
