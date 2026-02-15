@@ -24,9 +24,18 @@ public class ConditionBar extends ProgressBar {
         // Apply it specifically to this component
         this.setTheme(conditionTheme);
     }
+    public void setConditionItem(ConditionInstance newConditionItem) {
+        this.conditionItem = newConditionItem;
+        update();
+    }
 
     public void update() {
-        this.setValue((int)this.conditionItem.getConditionPercentage());
+        if (this.conditionItem != null) {
+            // Ensure we are getting a 0-100 value
+            this.setValue((int) this.conditionItem.getConditionPercentage());
+        } else {
+            this.setValue(0);
+        }
     }
 
 

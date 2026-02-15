@@ -4,6 +4,7 @@ import com.googlecode.lanterna.TextColor;
 import com.googlecode.lanterna.gui2.*;
 import com.googlecode.lanterna.gui2.dialogs.ActionListDialogBuilder;
 import com.googlecode.lanterna.gui2.dialogs.MessageDialog;
+import com.googlecode.lanterna.gui2.dialogs.MessageDialogBuilder;
 import com.googlecode.lanterna.gui2.dialogs.MessageDialogButton;
 import com.googlecode.lanterna.screen.Screen;
 import com.googlecode.lanterna.screen.TerminalScreen;
@@ -28,7 +29,7 @@ public class CombatInterface {
     private HealthBar playerHealthBar;
     private HealthBar enemyHealthBar;
     private Player player;
-    private Entity enemy;
+    private Opp enemy;
     private WindowBasedTextGUI textGUI;
     private Window window;
     private Panel rootPanel;
@@ -189,7 +190,7 @@ public class CombatInterface {
     private void attack(){
         CombatInfo info = this.combatEngine.attack();
 
-        if(info.info == combatInfoEnum.HIT){
+        if(info.info == combatInfoEnum.HIT || info.info == combatInfoEnum.DEATH){
             double damage = info.damage;
             this.addLogMessage(randomString(new String[]{"Your attack lands!","You land a devestating blow!","That's going to leave a scar",
                 "You hit your mark", "The "+enemy.getName()+" failed to doge your attack","Your swift strike wounds "+enemy.getName()
@@ -199,6 +200,29 @@ public class CombatInterface {
 
             updateHealthBars();
             updateWeaponConditionBar();
+
+            if(info.info == combatInfoEnum.DEATH){
+                this.addLogMessage("You slay the "+this.enemy.getName()+" !");
+                int xpGained = this.enemy.getDeathXp();
+                this.addLogMessage("You gain "+xpGained+" XP !");
+
+                String popUpMessage = "You slay the " + this.enemy.getName() + "!\n" +
+                          "You gain " + xpGained + " XP!";
+
+                this.player.addXp(xpGained);
+
+                new MessageDialogBuilder()
+                    .setTitle("Victory")
+                    .setText(popUpMessage)
+                    .addButton(MessageDialogButton.OK)
+                    .build()
+                    .showDialog(this.textGUI);
+                
+                this.playerTurn = true;
+                this.window.close();
+                
+                
+            }
 
 
         }else if(info.info == combatInfoEnum.NO_DAMAGE){
@@ -227,7 +251,6 @@ public class CombatInterface {
             double damage = info.damage;
             switch (info.info) {
                 case DEATH:
-                    gameOver();
                     break;
                 case HIT:
                     this.addLogMessage(name +" hit's you for "+ damage +" !");
@@ -249,7 +272,12 @@ public class CombatInterface {
             }
 
             updateHealthBars();
-            this.playerTurn = true;
+            if(info.info == combatInfoEnum.DEATH){
+                gameOver();
+            }else{
+                this.playerTurn = true;
+            }
+            
             
 
 
@@ -257,7 +285,7 @@ public class CombatInterface {
     }
 
     private void gameOver(){
-
+        addLogMessage("GAMEOVER");
     }
     private String randomString(String[] messageOptions){
         String message = "";
@@ -290,7 +318,6 @@ public class CombatInterface {
     
 
     private void updateWeaponConditionBar(){
-        Borders.singleLine(this.playerWeapon.getDisplayName());
         this.weaponConditionBar.update();
     }
 

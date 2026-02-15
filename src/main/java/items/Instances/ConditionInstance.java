@@ -56,7 +56,7 @@ public class ConditionInstance extends ItemInstance {
             this.condition = this.getCondition();
         }
     }
-
+    
     public double getConditionPercentage() {
         if (getMaxCondition() == 0) {
             return 0.0;

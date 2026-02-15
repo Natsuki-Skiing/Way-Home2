@@ -14,4 +14,20 @@
         "race": null,
         "deathXp": 15
     }
+    ,
+    {
+        "rank": 1,
+        "type": "MONSTER",
+        "dungeon": false,
+        "name": "Rat",
+        "strength": 2,
+        "perception": 5,
+        "endurance": 2,
+        "charisma": 1,
+        "agility": 8,
+        "luck": 4,
+        "maxHp": 10,
+        "race": null,
+        "deathXp": 15
+    }
 ]

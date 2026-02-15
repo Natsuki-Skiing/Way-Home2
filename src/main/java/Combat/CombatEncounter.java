@@ -19,6 +19,7 @@ public class CombatEncounter {
     //TODO 
     //Make an opp class
     Opp opp;
+    double totalHealthLost = 0.0;
     CombatInterface ui;
     Random randomGen = new Random();
     Boolean isPlayerTurn = false;
@@ -70,6 +71,10 @@ public class CombatEncounter {
                 retInfo.info = combatInfoEnum.NO_DAMAGE;
             }
 
+            if(!playerWeapon.getDisplayName().equals("Unarmed")){
+                reduceItemCondition(playerWeapon);
+            }
+
             
 
         
@@ -105,6 +110,7 @@ public class CombatEncounter {
             //Weapon effects
 
             player.subHp(returnInfo.damage);
+            this.totalHealthLost += returnInfo.damage;
 
             if(player.getHp() <=0.0){
                 returnInfo.info = combatInfoEnum.DEATH;
@@ -116,6 +122,10 @@ public class CombatEncounter {
         }
 
         return(returnInfo);
+    }
+
+    public double getTotalHealthLost(){
+        return(this.totalHealthLost);
     }
 
     public void clearMessageBuffer(){
@@ -215,7 +225,7 @@ public class CombatEncounter {
         incomingDamage = (int)(incomingDamage * armourReductionFactor);
         return(incomingDamage);
     }
-    public Entity getOpp(){
+    public Opp getOpp(){
         return(this.opp);
     }
     private void addMessageOpp(String message){

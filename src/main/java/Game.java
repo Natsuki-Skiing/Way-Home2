@@ -19,10 +19,9 @@ import com.googlecode.lanterna.TerminalPosition;
 import com.googlecode.lanterna.TerminalSize;
 import java.util.regex.Pattern;
 import java.math.BigDecimal;
-
+import java.util.Random;
 import items.Instances.WeaponInstance;
 import items.ItemManager.ItemController;
-import creatures.CreatureController;
 public class Game {
     private Player player;
     public Screen screen;
@@ -34,6 +33,8 @@ public class Game {
     private Terminal terminal;
     private Clock clock;
     private ItemController itemController;
+    private CreatureController creatureController;
+    Random randomGen = new Random();
     public Game() {
         try {
             Terminal terminal = new DefaultTerminalFactory().createTerminal();
@@ -55,7 +56,7 @@ public class Game {
         
         this.player = new Player("Hero",  10, 10, 10, 10, 10, 10,raceEnum.NORD,150);
         
-       
+        this.creatureController = new CreatureController("src/jsons/creatures/opps.json");
         this.player.addItemToInventory(this.itemController.getItem(enums.itemTypeEnum.WEAPON), 3);
         
         
@@ -64,7 +65,7 @@ public class Game {
         /// 
         /// 
         ///
-        combatEncounter();
+        //combatEncounter();
         this.clock = new Clock(0, 2500, 200);
         this.mainWindow = new mainGameWindow(this.screen,this.textGUI,this.player);
         this.textGUI.addWindow(this.mainWindow.getWindow());
@@ -120,8 +121,13 @@ public class Game {
 
     private void movePlayer(int deltaX, int deltaY) {
         this.player.setX(this.player.getX() + deltaX);
-        this.player.setY(this.player.getY() + deltaY);  
+        this.player.setY(this.player.getY() + deltaY); 
         this.renderWindow = true;
+        //TODO increase chance if night time 
+        if(this.randomGen.nextInt(100) < 20){
+            combatEncounter();
+        }
+        
         
         
         
@@ -130,6 +136,7 @@ public class Game {
 
     private void combatEncounter(){
         // Opp enemy = new Opp("Goblin",4,5,5,5,9,6,50,null,1.2,oppInfoEnum.HUMANOID,10);
+        Opp enemy = this.creatureController.getOpp(false,1.5);
         enemy.setWeapon(new WeaponInstance(new WeaponTemplate("Goblin Scythe","Wop wop wop",1.0,20,1,itemTypeEnum.WEAPON_LARGE,1000,1)));
         CombatEncounter combat = new CombatEncounter(player, enemy, textGUI);
         combat.showInterface();

@@ -54,29 +54,33 @@ public class CreatureController {
         
     }
     private int getRank(){
-        int number = randomGenerator.nextInt(100);
-        int rank;
-        if(number < 40){
-            rank =1;
-        }else if(number >40 && number <=65 ){
-            rank =2;
-        }else if(number >65 && number <= 80){
-            rank =3;
-        }else if(number >80 && number <= 92 ){
-            rank = 4;
-        }else{
-            rank = 5;
-        }
+        //TODO DEBUG Only have rats for rank 1 so just return 1 for now
+        // int number = randomGenerator.nextInt(100);
+        // int rank;
+        // if(number < 40){
+        //     rank =1;
+        // }else if(number >40 && number <=65 ){
+        //     rank =2;
+        // }else if(number >65 && number <= 80){
+        //     rank =3;
+        // }else if(number >80 && number <= 92 ){
+        //     rank = 4;
+        // }else{
+        //     rank = 5;
+        // }
 
-        return(rank);
+        // return(rank);
+        return(1);
     }
 
     private boolean isMonster(){
-        if(randomGenerator.nextInt(1) == 1){
-            return(true);
-        }
+        //TODO DEBUG honly have rat which is a monster so just return true for now
+        // if(randomGenerator.nextInt(1) == 1){
+        //     return(true);
+        // }
 
-        return(false);
+        // return(false);
+        return(true);
     }
 
     private boolean isDungeonType(){
@@ -112,6 +116,7 @@ public class CreatureController {
             Opp baseOpp = oppVector.get(this.randomGenerator.nextInt((oppVector.size()-1)));
 
             opp = new Opp(baseOpp,modifier);
+            applyVetrancy(opp);
 
         }
 
@@ -165,7 +170,7 @@ public class CreatureController {
                 (int) oppData.get("deathXp")
             );
 
-            applyVetrancy(opp);
+           
             oppRegStruct struct = new oppRegStruct();
             struct.opp = opp;
             struct.rank = (int) oppData.get("rank");
@@ -204,4 +209,4 @@ public class CreatureController {
 
         
     }           
-}
+}}

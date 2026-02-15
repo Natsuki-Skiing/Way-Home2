@@ -30,7 +30,7 @@ public class Opp extends Character {
 
         this.type = type;
         this.hp = this.maxHp;
-        this.xp = xp;
+        this.xp = modStat(xp, statsModifier);
         
     }
     public oppInfoEnum getType(){
