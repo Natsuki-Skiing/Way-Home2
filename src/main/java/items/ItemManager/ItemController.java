@@ -19,6 +19,7 @@ import com.fasterxml.jackson.core.type.TypeReference;
 import java.io.File;
 import java.io.IOException;
 import java.util.NavigableMap;
+import items.ChestClasses.Chest;
 public class ItemController {
     private int maxTier = 3;
     private HashMap<enums.itemTypeEnum,HashMap<Integer,Vector<ItemTemplate>>> mainItemMap;
@@ -243,7 +244,24 @@ public class ItemController {
         return(item);
 
     }
-
+    public void populateChest(Chest chest, int numberOfItems){
+        for(int i = 0; i < numberOfItems; i++){
+            ItemInstance item = getItem();
+            if(item != null){
+                chest.addRegularItem(item);
+            }
+        }
+    }
+    public void addItemToChest(Chest chest, enums.itemTypeEnum itemType, int tier, int quantity){
+        ItemInstance item = this.retreiveInstanceFromMap(itemType,tier);
+        if(item != null){
+            Rarity itemRarity = this.getRarity();
+            if(itemRarity != null){
+                item = this.applyRarity(itemRarity,item);
+            }
+            chest.addRegularItem(item,quantity);
+        }
+    }
 
     public ItemInstance getItemByID(int itemID){
         if(this.idItemMap.containsKey(itemID)){
