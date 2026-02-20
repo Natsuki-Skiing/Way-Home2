@@ -124,7 +124,11 @@ public class Game {
         this.player.setY(this.player.getY() + deltaY); 
         this.renderWindow = true;
         //TODO increase chance if night time 
-        if(this.randomGen.nextInt(100) < 20){
+        int combatChance = 10;
+        if(this.clock.isNight()){
+            combatChance += 5;
+        }
+        if(this.randomGen.nextInt(100) < combatChance){
             combatEncounter();
         }
         

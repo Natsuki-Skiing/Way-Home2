@@ -1,3 +1,4 @@
+package clock;
 import java.time.Instant;
 import java.util.concurrent.atomic.AtomicInteger;
 
@@ -26,6 +27,14 @@ public class Clock {
 
     public boolean isRunning(){
         return(this.running);
+    }
+    public boolean isNight(){
+        int hours = (this.secondsSinceStart.get() / 3600) % 24;
+        return(hours >= 18 || hours < 6);
+    }
+
+    public boolean isDay(){
+        return !isNight();
     }
 
     public boolean startClock(){
