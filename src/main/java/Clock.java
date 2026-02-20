@@ -3,7 +3,7 @@ import java.util.concurrent.atomic.AtomicInteger;
 
 public class Clock {
     private AtomicInteger secondsSinceStart;
-    private long epochTime;
+    private long lastNano;
     private boolean running = false;
     private int sleepTime;
     private Thread backgroundThread;
@@ -15,9 +15,7 @@ public class Clock {
         
     }
 
-    private long getEpoch(){
-        return(Instant.now().getEpochSecond());
-    }
+    
     public void pause(){
         this.running = false;
     }
@@ -42,7 +40,7 @@ public class Clock {
         return(true);
     }
     private void mainLoop(){
-        this.epochTime = getEpoch();
+        this.lastNano = System.nanoTime();
         while(this.running){
             updateTime();
             try {
@@ -68,9 +66,12 @@ public class Clock {
     }
 
     public void updateTime(){
-        long newTime = this.getEpoch();
-        int diff =(int) (newTime - this.epochTime);
-        this.epochTime = newTime;
-        this.secondsSinceStart.addAndGet((diff*multiplier)); 
+        long now = System.nanoTime();
+        long diffSeconds = (now - this.lastNano) / 1_000_000_000L;
+        this.lastNano = now;
+        if(diffSeconds > 0){
+            this.secondsSinceStart.addAndGet((int)(diffSeconds * this.multiplier));
+            
+        }
     }
 }

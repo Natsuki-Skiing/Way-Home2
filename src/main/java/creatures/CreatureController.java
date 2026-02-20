@@ -113,8 +113,7 @@ public class CreatureController {
 
             Vector<Opp> oppVector = rankMap.get(type);
 
-            Opp baseOpp = oppVector.get(this.randomGenerator.nextInt((oppVector.size()-1)));
-
+            Opp baseOpp = oppVector.get(this.randomGenerator.nextInt(oppVector.size()));
             opp = new Opp(baseOpp,modifier);
             applyVetrancy(opp);
 

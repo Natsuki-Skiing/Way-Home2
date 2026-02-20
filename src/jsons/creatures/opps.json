@@ -16,18 +16,34 @@
     }
     ,
     {
-        "rank": 1,
+        "rank": 5,
+        "type": "HUMANOID",
+        "dungeon": false,
+        "name": "The Rat",
+        "strength": 10,
+        "perception": 10,
+        "endurance": 10,
+        "charisma": 10,
+        "agility": 10,
+        "luck": 10,
+        "maxHp": 10,
+        "race": "ORC",
+        "deathXp": 15
+    },
+    
+    {
+        "rank": 2,
         "type": "MONSTER",
         "dungeon": false,
-        "name": "Rat",
-        "strength": 2,
-        "perception": 5,
-        "endurance": 2,
+        "name": "Rat King",
+        "strength": 3,
+        "perception": 6,
+        "endurance": 3,
         "charisma": 1,
-        "agility": 8,
-        "luck": 4,
-        "maxHp": 10,
+        "agility": 9,
+        "luck": 6,
+        "maxHp": 20,
         "race": null,
-        "deathXp": 15
+        "deathXp": 30
     }
 ]
