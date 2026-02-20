@@ -23,18 +23,22 @@ public class InfoPanel extends Panel {
         this.addComponent(new Label("Health :"));
         this.addComponent(healthBar);
         this.addComponent(new Label("Position: "));
-        //TODO ADD player position label 
+        this.positionLabel = new Label("");
+        this.addComponent(positionLabel);
         this.addComponent(new EmptySpace());
         this.addComponent(new Label("Time: "));
         this.addComponent(timeLabel);
 
 
-        update("");
+        update("",0,0);
     } 
-    public void update(String timeString) {
+    public void update(String timeString,int x , int y) {
         this.healthBar.update();
         this.timeLabel.setText(timeString);
+        this.positionLabel.setText( x + " , " + y );
     }
+
+    
 
 
 }

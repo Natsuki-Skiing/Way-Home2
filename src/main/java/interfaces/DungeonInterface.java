@@ -20,8 +20,27 @@ import com.googlecode.lanterna.input.KeyType;
 import com.googlecode.lanterna.input.KeyStroke;
 import com.googlecode.lanterna.input.KeyType;
 import creatures.*;
+import Dungeon.Dungeon;
+
 public class DungeonInterface {
     private Player player;
     private WindowBasedTextGUI textGUI;
     private Window window;
+    private Dungeon dungeon;
+    private Panel rootPanel;
+
+    
+    public DungeonInterface(Player player,Dungeon dungeon, WindowBasedTextGUI textGUI) {
+        this.player = player;
+        this.textGUI = textGUI;
+        this.dungeon = dungeon;
+        this.window = new BasicWindow("Dungeon");
+
+
+
+
+
+    }
+
+
 }
