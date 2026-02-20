@@ -34,6 +34,9 @@ public class DungeonTile {
     }
 
     public boolean hasConnection(dungeonTileDirEnum dir) {
+        if(this.connections == null){
+            return false;
+        }
         return this.connections.contains(dir);
     }
 }
