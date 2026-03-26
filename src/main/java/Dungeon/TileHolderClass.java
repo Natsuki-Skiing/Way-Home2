@@ -1,36 +1,45 @@
 package Dungeon;
-import java.util.Vector;
 
 import enums.dungeonTileDirEnum;
 import enums.dungeonTileTypeEnum;
-public class TileHolderClass {
-    private TileTemplate forwardHallway;
-    private TileTemplate leftTurn;
-    private TileTemplate rightTurn;
-    private TileTemplate crossSection;
-    private TileTemplate deadEnd;
-    private TileTemplate doorEnd;
-    private TileTemplate chest;
+
+import java.util.Vector;
+
+public final class TileHolderClass {
+    private final TileTemplate forwardHallway;
+    private final TileTemplate leftTurn;
+    private final TileTemplate rightTurn;
+    private final TileTemplate crossSection;
+    private final TileTemplate tJunction;
+    private final TileTemplate deadEnd;
+    private final TileTemplate doorEnd;
+    private final TileTemplate chest;
+
+
     public TileHolderClass() {
-        
         this.forwardHallway = new TileTemplate("src/dungeonTiles/fowardHallway.txt");
         this.leftTurn = new TileTemplate("src/dungeonTiles/leftTurn.txt");
         this.rightTurn = new TileTemplate("src/dungeonTiles/rightTurn.txt");
         this.crossSection = new TileTemplate("src/dungeonTiles/crossSection.txt");
+        this.tJunction = new TileTemplate("src/dungeonTiles/tJunction.txt");
         this.deadEnd = new TileTemplate("src/dungeonTiles/deadEnd.txt");
         this.doorEnd = new TileTemplate("src/dungeonTiles/doorEnd.txt");
         this.chest = new TileTemplate("src/dungeonTiles/chestEnd.txt");
+
     }
 
-    public Vector<String> getTileImage(DungeonTile tile, dungeonTileDirEnum playerFacing){
+    public Vector<String> getTileImage(DungeonTile tile, dungeonTileDirEnum playerFacing) {
         if (tile.getType() == dungeonTileTypeEnum.EXIT) {
             return this.doorEnd.getImage();
-        }else if (tile.getType() == dungeonTileTypeEnum.CHEST) {
+        }
+        if (tile.getType() == dungeonTileTypeEnum.CHEST) {
             return this.chest.getImage();
         }
-        boolean canGoForward = false;
-        boolean canGoLeft = false;
-        boolean canGoRight = false;
+
+        boolean canGoForward;
+        boolean canGoLeft;
+        boolean canGoRight;
+
         switch (playerFacing) {
             case NORTH:
                 canGoForward = tile.hasConnection(dungeonTileDirEnum.NORTH);
@@ -52,18 +61,32 @@ public class TileHolderClass {
                 canGoLeft = tile.hasConnection(dungeonTileDirEnum.SOUTH);
                 canGoRight = tile.hasConnection(dungeonTileDirEnum.NORTH);
                 break;
+            default:
+                canGoForward = false;
+                canGoLeft = false;
+                canGoRight = false;
         }
 
-        if ((canGoForward && canGoLeft) || (canGoForward && canGoRight) || (canGoLeft && canGoRight)) {
+        int openCount = (canGoForward ? 1 : 0) + (canGoLeft ? 1 : 0) + (canGoRight ? 1 : 0);
+        // All three exits open: true 4-way crossroad.
+        if (openCount == 3) {
             return this.crossSection.getImage();
-        } else if (canGoForward) {
-            return this.forwardHallway.getImage();
-        } else if (canGoLeft) {
-            return this.leftTurn.getImage();
-        } else if (canGoRight) {
-            return this.rightTurn.getImage();
-        } else {
-            return this.deadEnd.getImage();
         }
+        // Two exits open: T-junction.
+        if (openCount == 2) {
+            return this.tJunction.getImage();
+        }
+
+        // Single open path
+        if (canGoForward) {
+            return this.forwardHallway.getImage();
+        }
+        if (canGoLeft) {
+            return this.leftTurn.getImage();
+        }
+        if (canGoRight) {
+            return this.rightTurn.getImage();
+        }
+        return this.deadEnd.getImage();
     }
 }

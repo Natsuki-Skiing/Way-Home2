@@ -58,7 +58,7 @@ public class mainGameWindow {
     }
 
     public void updateInfo(String time){
-        this.infoPanel.update(time);
+        this.infoPanel.update(time,this.player.getX(),this.player.getY());
     }
 
     

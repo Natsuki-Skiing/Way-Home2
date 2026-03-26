@@ -12,7 +12,8 @@ import com.googlecode.lanterna.screen.Screen;
 import com.googlecode.lanterna.screen.TerminalScreen;
 import com.googlecode.lanterna.terminal.DefaultTerminalFactory;
 import com.googlecode.lanterna.terminal.Terminal;
-
+import Dungeon.*;
+import interfaces.DungeonInterface;
 import Combat.CombatEncounter;
 import clock.*;
 import com.googlecode.lanterna.TerminalPosition;
@@ -34,6 +35,7 @@ public class Game {
     private Clock clock;
     private ItemController itemController;
     private CreatureController creatureController;
+    private TileHolderClass tileHolder;
     Random randomGen = new Random();
     public Game() {
         try {
@@ -53,6 +55,7 @@ public class Game {
     public  void main() {
         // CharacterMaker characterMaker = new CharacterMaker(this.screen,this.textGUI);
         // this.player = characterMaker.getPlayer();
+        this.tileHolder = new TileHolderClass();
         
         this.player = new Player("Hero",  10, 10, 10, 10, 10, 10,raceEnum.NORD,150);
         
@@ -67,6 +70,11 @@ public class Game {
         ///
         //combatEncounter();
         this.clock = new Clock(0, 2500, 200);
+
+        Dungeon dungeon = new Dungeon(player, creatureController, clock, this.tileHolder, 0);
+        DungeonInterface dungeonInterface = new DungeonInterface(player, dungeon, textGUI);
+        dungeonInterface.showDungeonWindow();
+
         this.mainWindow = new mainGameWindow(this.screen,this.textGUI,this.player);
         this.textGUI.addWindow(this.mainWindow.getWindow());
        
