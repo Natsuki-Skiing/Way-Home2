@@ -1,9 +1,10 @@
 package enums;
 
 public enum worldRegionEnum {
-   snow,
-   normal,
-   bog,
-   desert
+   SNOW,
+   NORMAL,
+   BOG,
+   DESERT,
+   MOUNTAINS
 
 }

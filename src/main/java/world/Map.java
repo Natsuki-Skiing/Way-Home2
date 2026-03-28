@@ -3,7 +3,7 @@ import java.util.HashMap;
 import interfaces.GameTile;
 public class Map {
     private HashMap<String,GameTile> mapTiles;
-
+    
     private String mapKey(int x , int y){
         return((Integer.toString(x)+Integer.toString(y)));
     }
