@@ -4,7 +4,7 @@ import interfaces.GameTile;
 import enums.worldRegionEnum;
 public class Map {
     private HashMap<String,GameTile> mapTiles;
-
+    private worldRegionEnum mapRegionType;
 
     public Map(int width, int height,worldRegionEnum region){
 
@@ -25,5 +25,9 @@ public class Map {
 
     public void setTile(int x, int y, GameTile newTile){
         this.mapTiles.put(mapKey(x, y),newTile);
+    }
+
+    public worldRegionEnum getRegionType(){
+        return(this.mapRegionType);
     }
 }
