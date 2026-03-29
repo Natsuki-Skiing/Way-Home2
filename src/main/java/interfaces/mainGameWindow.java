@@ -39,7 +39,7 @@ public class mainGameWindow {
         this.mapPanel.addComponent(this.gameGrid);
         this.infoPanel = new InfoPanel(this.player);
         this.rootPanel.addComponent(this.mapPanel);
-        this.rootPanel.addComponent(this.infoPanel.withBorder(Borders.doubleLineBevel(this.player.getName())));
+        this.rootPanel.addComponent(this.infoPanel.withBorder(Borders.singleLine(this.player.getName())));
         
         
         
@@ -59,8 +59,13 @@ public class mainGameWindow {
         return(this.window);
     }
 
-    public void updateInfo(String time){
-        this.infoPanel.update(time,this.player.getX(),this.player.getY());
+    public void updateInfo(String time,boolean newMap) {
+        if(newMap){
+            this.infoPanel.update(time,this.player.getX(),this.player.getY(),this.gameGrid.getCurrentMap().getRegionType(),this.player.getWorldX(),this.player.getWorldY());
+        } else {
+            this.infoPanel.update(time,this.player.getX(),this.player.getY());
+        }
+        
     }
 
     

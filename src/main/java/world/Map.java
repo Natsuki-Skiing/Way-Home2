@@ -39,7 +39,7 @@ public class Map {
                 break;
             default:
                 //Normal and bog have the same water chance
-                waterChance = 20; // 20% chance for water tile
+                waterChance = 25; // 25% chance for water tile
                 break;
         } 
 

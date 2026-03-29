@@ -37,6 +37,7 @@ public class Game {
     private CreatureController creatureController;
     private TileHolderClass tileHolder;
     private World world;
+    private Boolean newMap = false;
     private int mapWidth = 80;
     private int mapHeight = 30;
     Random randomGen = new Random();
@@ -90,12 +91,13 @@ public class Game {
             
             if(this.renderWindow){
                 try {
-                    this.mainWindow.updateInfo(this.clock.getTimeString());
+                    this.mainWindow.updateInfo(this.clock.getTimeString(),this.newMap);
                     this.textGUI.updateScreen();
                 } catch (java.io.IOException e) {
                     e.printStackTrace();
                 }
                 this.renderWindow = false;
+                this.newMap = false;
             }
             KeyStroke input;
             try{
@@ -137,7 +139,7 @@ public class Game {
         int newX = this.player.getX() + deltaX;
         int newY = this.player.getY() + deltaY;
         this.renderWindow = true;
-
+        this.newMap = true;
         if(newX < 0 || newX >= this.mapWidth || newY < 0 || newY >= this.mapHeight) {
             // Move to new map
             int worldX = this.player.getWorldX();

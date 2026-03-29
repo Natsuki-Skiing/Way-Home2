@@ -37,14 +37,19 @@ public class World {
 
         float noiseValue = this.noiseMaker.GetNoise(x*frequency, y*frequency);
 
+        float latitudeBiasStrength = 0.03f;
+
+        float latitudeBias = y * latitudeBiasStrength;
+        float biasedValue = Math.clamp(noiseValue + latitudeBias, -1.0f, 1.0f);
+
         worldRegionEnum regionEnum;
-        if (noiseValue < -0.4f) {
+        if (biasedValue < -0.4f) {
             regionEnum = worldRegionEnum.SNOW;
-        } else if (noiseValue < -0.1f) {
+        } else if (biasedValue < -0.1f) {
             regionEnum = worldRegionEnum.MOUNTAINS;
-        } else if (noiseValue < 0.2f) {
+        } else if (biasedValue < 0.2f) {
             regionEnum = worldRegionEnum.NORMAL;
-        } else if (noiseValue < 0.5f) {
+        } else if (biasedValue < 0.5f) {
             regionEnum = worldRegionEnum.BOG;
         } else {
             regionEnum = worldRegionEnum.DESERT;

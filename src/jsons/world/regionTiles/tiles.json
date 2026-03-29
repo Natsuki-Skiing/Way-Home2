@@ -25,7 +25,7 @@
         "char": "♣",
         "fgColor": "#2d6e1f",
         "bgColor": "#1a3300",
-        "walkable": false
+        "walkable": true
       },
       {
         "char": "*",
