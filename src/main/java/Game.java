@@ -13,7 +13,6 @@ import com.googlecode.lanterna.screen.TerminalScreen;
 import com.googlecode.lanterna.terminal.DefaultTerminalFactory;
 import com.googlecode.lanterna.terminal.Terminal;
 import Dungeon.*;
-import interfaces.DungeonInterface;
 import Combat.CombatEncounter;
 import clock.*;
 import com.googlecode.lanterna.TerminalPosition;
@@ -23,6 +22,7 @@ import java.math.BigDecimal;
 import java.util.Random;
 import items.Instances.WeaponInstance;
 import items.ItemManager.ItemController;
+import world.*;
 public class Game {
     private Player player;
     public Screen screen;
@@ -36,6 +36,9 @@ public class Game {
     private ItemController itemController;
     private CreatureController creatureController;
     private TileHolderClass tileHolder;
+    private World world;
+    private int mapWidth = 80;
+    private int mapHeight = 30;
     Random randomGen = new Random();
     public Game() {
         try {
@@ -53,6 +56,8 @@ public class Game {
         }
     }
     public  void main() {
+        this.world = new World(this.mapWidth, this.mapHeight,"src/jsons/maps/maps.json");
+        
         // CharacterMaker characterMaker = new CharacterMaker(this.screen,this.textGUI);
         // this.player = characterMaker.getPlayer();
         this.tileHolder = new TileHolderClass();
@@ -71,11 +76,11 @@ public class Game {
         //combatEncounter();
         this.clock = new Clock(0, 2500, 200);
 
-        Dungeon dungeon = new Dungeon(player, creatureController, clock, this.tileHolder, 0);
-        DungeonInterface dungeonInterface = new DungeonInterface(player, dungeon, textGUI);
-        dungeonInterface.showDungeonWindow();
+        // Dungeon dungeon = new Dungeon(player, creatureController, clock, this.tileHolder, 0);
+        // DungeonInterface dungeonInterface = new DungeonInterface(player, dungeon, textGUI);
+        // dungeonInterface.showDungeonWindow();
 
-        this.mainWindow = new mainGameWindow(this.screen,this.textGUI,this.player);
+        this.mainWindow = new mainGameWindow(this.screen,this.textGUI,this.player,this.world.getMap(0, 0));
         this.textGUI.addWindow(this.mainWindow.getWindow());
        
     
@@ -128,17 +133,49 @@ public class Game {
     }
 
     private void movePlayer(int deltaX, int deltaY) {
-        this.player.setX(this.player.getX() + deltaX);
-        this.player.setY(this.player.getY() + deltaY); 
+        
+        int newX = this.player.getX() + deltaX;
+        int newY = this.player.getY() + deltaY;
         this.renderWindow = true;
-        //TODO increase chance if night time 
-        int combatChance = 10;
-        if(this.clock.isNight()){
-            combatChance += 5;
+
+        if(newX < 0 || newX >= this.mapWidth || newY < 0 || newY >= this.mapHeight) {
+            // Move to new map
+            int worldX = this.player.getWorldX();
+            int worldY = this.player.getWorldY();
+            this.player.setX(newX);
+            this.player.setY(newY);
+            if(this.player.getX() < 0){
+                worldX -= 1;
+                this.player.setX(this.mapWidth - 1);
+            }else if(this.player.getX() >= this.mapWidth){
+                worldX += 1;
+                this.player.setX(0);
+            }
+            if(this.player.getY() < 0){
+                worldY -= 1;
+                this.player.setY(this.mapHeight - 1);
+            }else if(this.player.getY() >= this.mapHeight){
+                worldY += 1;
+                this.player.setY(0);
+            }
+            this.player.setWorldX(worldX);
+            this.player.setWorldY(worldY);
+            this.mainWindow.setCurrentMap(this.world.getMap(player.getWorldX(), player.getWorldY()));
+        }else if(this.world.currentMapTileWalkable(this.player.getX() + deltaX, this.player.getY() + deltaY)){ //check if tile is walkable
+            this.player.setX(newX);
+            this.player.setY(newY);
+            int combatChance = 10;
+            if(this.clock.isNight()){
+                combatChance += 5;
+            }
+            if(this.randomGen.nextInt(100) < combatChance){
+                //combatEncounter();
+            }
         }
-        if(this.randomGen.nextInt(100) < combatChance){
-            combatEncounter();
-        }
+        
+
+
+        
         
         
         

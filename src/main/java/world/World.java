@@ -8,9 +8,13 @@ public class World {
     private HashMap<String,Map> mapsHash;
     private int mapWidth;
     private int mapHeight;
+    private Map currentMap;
     private FastNoiseLite noiseMaker;
-
+    private TileFactory tileFactory = new TileFactory("src/jsons/world/regionTiles/tiles.json");
     public World(int mapWidth, int mapHeight,String existingMapsJsonPath){
+        //All the maps in the world are stored in a hash map with the key being the world coordinates of the map
+        this.mapsHash = new HashMap<>();
+
         //TODO load edisting maps 
 
         this.mapWidth = mapWidth;
@@ -49,22 +53,32 @@ public class World {
         String mapKey = getMapKey(x, y);
 
         //Actually making the map
-        Map newMap = new Map(this.mapWidth,this.mapHeight,regionEnum);
+        Map newMap = new Map(this.mapWidth,this.mapHeight,regionEnum,this.tileFactory);
+
+       
+
 
         //Might do more stuff here 
 
-        this.mapsHash.put(mapKey,newMap);
+        this.mapsHash.put(mapKey,newMap); 
+        
 
     
+    }
+
+    public boolean currentMapTileWalkable(int x, int y){
+        return(this.currentMap.isTileWalkable(x, y));
     }
     public Map getMap(int worldX, int worldY){
         String mapKey = getMapKey(worldX, worldY);
 
         if(!this.mapsHash.containsKey(mapKey)){
             //generate a map
+            genMap(worldX, worldY);//worldX worldY used for key gen
         }
-
-        return(this.mapsHash.get(mapKey));
+        Map map = this.mapsHash.get(mapKey);
+        this.currentMap = map;
+        return(map);
     }
 
 }

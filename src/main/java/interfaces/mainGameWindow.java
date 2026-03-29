@@ -13,7 +13,7 @@ import com.googlecode.lanterna.TerminalSize;
 
 import java.lang.ProcessHandle.Info;
 import java.util.regex.Pattern;
-
+import world.*;
 
 import creatures.*;
 public class mainGameWindow {
@@ -25,7 +25,7 @@ public class mainGameWindow {
     private Player player;
     private Window window;
     private Panel rootPanel;
-    public mainGameWindow(Screen screen, WindowBasedTextGUI textGUI, Player player) {
+    public mainGameWindow(Screen screen, WindowBasedTextGUI textGUI, Player player,Map startMap) {
         this.screen = screen;
         this.textGUI = textGUI;
         this.player = player;
@@ -34,7 +34,7 @@ public class mainGameWindow {
         this.rootPanel.setLayoutManager(new LinearLayout(Direction.HORIZONTAL));
         window.setComponent(this.rootPanel.withBorder(Borders.doubleLineBevel("Way Home")));
         this.mapPanel = new Panel();
-        this.gameGrid = new GameGrid(80, 30 ,this.player);
+        this.gameGrid = new GameGrid(80, 30 ,this.player,startMap);
         // Adding panels 
         this.mapPanel.addComponent(this.gameGrid);
         this.infoPanel = new InfoPanel(this.player);
@@ -45,7 +45,9 @@ public class mainGameWindow {
         
         
     }
-
+    public void setCurrentMap(Map newMap){
+        this.gameGrid.setCurrentMap(newMap);
+    }
     public void setTile(int x , int y, GameTile tile) {
         this.gameGrid.setTile(x, y, tile);
     }

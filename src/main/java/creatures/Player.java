@@ -15,12 +15,14 @@ public class Player extends Character {
     private int x = 0;
     private int y = 0;
     private int xp = 0;
+    private int worldX = 0;
+    private int worldY = 0;
     private int xpToNextLevel = 100;
     private Chest inventory = new Chest();
     private HashMap<itemTypeEnum, ItemInstance> equippedItems = new HashMap<>();
     private HashMap<enums.armourSlotEnum,ArmourInstance> armourSlots = new HashMap<>();
     private GameTile previousTile = null;
-    private GameTile playerTile = new GameTile(TextColor.ANSI.BLACK, TextColor.ANSI.RED_BRIGHT, '@');
+    private GameTile playerTile = new GameTile(TextColor.ANSI.BLACK, TextColor.ANSI.RED_BRIGHT, '@',true);
     public Player( String name, int strength,int perception,int endurance , int charisma ,int agility, int luck,raceEnum race, int maxHp) {
         super(name, strength, perception, endurance, charisma, agility, luck,race,maxHp);
         this.equippedItems.put(itemTypeEnum.WEAPON, null);
@@ -46,6 +48,19 @@ public class Player extends Character {
     }
     public void setPreviousTile(GameTile previousTile) {
         this.previousTile = previousTile;
+    }
+
+    public int getWorldX() {
+        return worldX;
+    }
+    public void setWorldX(int worldX) {
+        this.worldX = worldX;
+    }
+    public int getWorldY() {
+        return worldY;
+    }
+    public void setWorldY(int worldY) {
+        this.worldY = worldY;
     }
     public int getX() {
         return x;

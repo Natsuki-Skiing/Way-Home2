@@ -1,0 +1,303 @@
+{
+  "NORMAL": {
+    "BASE": [
+      {
+        "char": ".",
+        "fgColor": "#4a7c3f",
+        "bgColor": "#1a3300",
+        "walkable": true
+      },
+      {
+        "char": ",",
+        "fgColor": "#5a8c4f",
+        "bgColor": "#1a3300",
+        "walkable": true
+      },
+      {
+        "char": "`",
+        "fgColor": "#3d6b35",
+        "bgColor": "#1a3300",
+        "walkable": true
+      }
+    ],
+    "PLANTS": [
+      {
+        "char": "♣",
+        "fgColor": "#2d6e1f",
+        "bgColor": "#1a3300",
+        "walkable": false
+      },
+      {
+        "char": "*",
+        "fgColor": "#7fbf3f",
+        "bgColor": "#1a3300",
+        "walkable": true
+      },
+      {
+        "char": "↟",
+        "fgColor": "#bcd31e",
+        "bgColor": "#1a3300",
+        "walkable": true
+      },
+      {
+        "char": "♠",
+        "fgColor": "#1a4511",
+        "bgColor": "#1a3300",
+        "walkable": true
+      }
+    ],
+    "TEXTURE": [
+      {
+        "char": ":",
+        "fgColor": "#3a6030",
+        "bgColor": "#1a3300",
+        "walkable": true
+      },
+      {
+        "char": "░",
+        "fgColor": "#456835",
+        "bgColor": "#1a3300",
+        "walkable": true
+      }
+    ],
+    "WATER": [
+      {
+        "char": "~",
+        "fgColor": "#1a75ff",
+        "bgColor": "#001a33",
+        "walkable": false
+      },
+      {
+        "char": "≈",
+        "fgColor": "#1a85ff",
+        "bgColor": "#001a33",
+        "walkable": false
+      }
+    ]
+  },
+  "SNOW": {
+    "BASE": [
+      {
+        "char": ".",
+        "fgColor": "#ccddee",
+        "bgColor": "#334455",
+        "walkable": true
+      },
+      {
+        "char": ",",
+        "fgColor": "#ddeeff",
+        "bgColor": "#334455",
+        "walkable": true
+      }
+    ],
+    "PLANTS": [
+      {
+        "char": "Y",
+        "fgColor": "#aabbcc",
+        "bgColor": "#334455",
+        "walkable": false
+      },
+      {
+        "char": "t",
+        "fgColor": "#99aabb",
+        "bgColor": "#334455",
+        "walkable": false
+      }
+    ],
+    "TEXTURE": [
+      {
+        "char": "*",
+        "fgColor": "#ffffff",
+        "bgColor": "#334455",
+        "walkable": true
+      },
+      {
+        "char": "+",
+        "fgColor": "#eeeeff",
+        "bgColor": "#334455",
+        "walkable": true
+      },
+      {
+        "char": "~",
+        "fgColor": "#ccdde0",
+        "bgColor": "#334455",
+        "walkable": true
+      }
+    ]
+  },
+  "BOG": {
+    "BASE": [
+      {
+        "char": ".",
+        "fgColor": "#5a6e2f",
+        "bgColor": "#1a2200",
+        "walkable": true
+      },
+      {
+        "char": ",",
+        "fgColor": "#4e6128",
+        "bgColor": "#1a2200",
+        "walkable": true
+      }
+    ],
+    "PLANTS": [
+      {
+        "char": "\"",
+        "fgColor": "#6e8c2f",
+        "bgColor": "#1a2200",
+        "walkable": true
+      },
+      {
+        "char": "O",
+        "fgColor": "#2a4400",
+        "bgColor": "#0d1a00",
+        "walkable": false
+      },
+      {
+        "char": "%",
+        "fgColor": "#5a7a25",
+        "bgColor": "#1a2200",
+        "walkable": true
+      }
+    ],
+    "TEXTURE": [
+      {
+        "char": ";",
+        "fgColor": "#4a5e1f",
+        "bgColor": "#1a2200",
+        "walkable": true
+      },
+      {
+        "char": ":",
+        "fgColor": "#3e5219",
+        "bgColor": "#1a2200",
+        "walkable": true
+      }
+    ],"WATER": [
+      {
+        "char": "~",
+        "fgColor": "#1a75ff",
+        "bgColor": "#001a33",
+        "walkable": false
+      },
+      {
+        "char": "≈",
+        "fgColor": "#1a85ff",
+        "bgColor": "#001a33",
+        "walkable": false
+      },
+      {
+        "char": "-",
+        "fgColor": "#1a65e0",
+        "bgColor": "#001a33",
+        "walkable": false
+      }
+    ]
+  },
+  "DESERT": {
+    "BASE": [
+      {
+        "char": ".",
+        "fgColor": "#ccaa44",
+        "bgColor": "#4a3300",
+        "walkable": true
+      },
+      {
+        "char": ",",
+        "fgColor": "#ddbb55",
+        "bgColor": "#4a3300",
+        "walkable": true
+      },
+      {
+        "char": "`",
+        "fgColor": "#c09a38",
+        "bgColor": "#4a3300",
+        "walkable": true
+      }
+    ],
+    "PLANTS": [
+      {
+        "char": "i",
+        "fgColor": "#88aa44",
+        "bgColor": "#4a3300",
+        "walkable": false
+      },
+      {
+        "char": "!",
+        "fgColor": "#7a9a3a",
+        "bgColor": "#4a3300",
+        "walkable": false
+      }
+    ],
+    "TEXTURE": [
+      {
+        "char": "~",
+        "fgColor": "#bb9933",
+        "bgColor": "#4a3300",
+        "walkable": true
+      },
+      {
+        "char": "o",
+        "fgColor": "#997722",
+        "bgColor": "#3a2200",
+        "walkable": true
+      },
+      {
+        "char": ":",
+        "fgColor": "#aa8830",
+        "bgColor": "#4a3300",
+        "walkable": true
+      }
+    ]
+  },
+  "MOUNTAINS": {
+    "BASE": [
+      {
+        "char": ".",
+        "fgColor": "#888888",
+        "bgColor": "#2a2a2a",
+        "walkable": true
+      },
+      {
+        "char": ",",
+        "fgColor": "#777777",
+        "bgColor": "#2a2a2a",
+        "walkable": true
+      }
+    ],
+    "PLANTS": [
+      {
+        "char": "Y",
+        "fgColor": "#667766",
+        "bgColor": "#2a2a2a",
+        "walkable": false
+      },
+      {
+        "char": "t",
+        "fgColor": "#556655",
+        "bgColor": "#2a2a2a",
+        "walkable": false
+      }
+    ],
+    "TEXTURE": [
+      {
+        "char": "^",
+        "fgColor": "#aaaaaa",
+        "bgColor": "#2a2a2a",
+        "walkable": false
+      },
+      {
+        "char": "\"",
+        "fgColor": "#999999",
+        "bgColor": "#2a2a2a",
+        "walkable": true
+      },
+      {
+        "char": "#",
+        "fgColor": "#bbbbbb",
+        "bgColor": "#2a2a2a",
+        "walkable": false
+      }
+    ]
+  }
+}

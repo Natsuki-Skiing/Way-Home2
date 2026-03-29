@@ -9,29 +9,32 @@ import com.googlecode.lanterna.screen.TerminalScreen;
 import com.googlecode.lanterna.terminal.DefaultTerminalFactory;
 import com.googlecode.lanterna.terminal.Terminal;
 import creatures.Player;
+import world.*;
 public class GameGrid extends AbstractComponent<GameGrid> {
-    private final GameTile[][] tiles;
+    private Map currentMap;
+    
     private final int width;
     private final int height;
     private Player player;
-    public GameGrid(int width, int height, Player player) {
+    public GameGrid(int width, int height, Player player,Map startMap) {
         this.width = width;
         this.height = height;
         this.player = player;
-        this.tiles = new GameTile[this.width][this.height];
-        for (int x = 0; x < width; x++) {
-            for (int y = 0; y < height; y++) {
-                tiles[x][y] = new GameTile(TextColor.ANSI.BLACK, TextColor.ANSI.WHITE, '.');
-            }
-        }
-
+        this.currentMap = startMap;
     }
 
+
+    public void setCurrentMap(Map newMap){
+        this.currentMap = newMap;
+    }
+    public Map getCurrentMap(){
+        return(this.currentMap);
+    }
     public boolean setTile(int x , int y, GameTile tile) {
         if (x < 0 || x >= width || y < 0 || y >= height) {
             return false;
         }
-        tiles[x][y] = tile;
+        this.currentMap.setTile(x, y, tile);
         return true;
     }
 
@@ -39,7 +42,7 @@ public class GameGrid extends AbstractComponent<GameGrid> {
         if (x < 0 || x >= width || y < 0 || y >= height) {
             return null;
         }
-        return tiles[x][y];
+        return this.currentMap.getMapTile(x, y);
     }
 
     @Override
@@ -55,7 +58,7 @@ public class GameGrid extends AbstractComponent<GameGrid> {
                 // Iterate over the grid and draw every character
                 for (int x = 0; x < width; x++) {
                     for (int y = 0; y < height; y++) {
-                        GameTile tile = tiles[x][y];
+                        GameTile tile = currentMap.getMapTile(x, y);
                         graphics.setForegroundColor(tile.getForegroundColor());
                         graphics.setBackgroundColor(tile.getBackgroundColor());
                         graphics.setCharacter(x, y, tile.getDisplayChar());
