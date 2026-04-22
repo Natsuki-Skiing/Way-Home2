@@ -40,7 +40,7 @@ public class World {
         float latitudeBiasStrength = 0.03f;
 
         float latitudeBias = y * latitudeBiasStrength;
-        float biasedValue = Math.clamp(noiseValue + latitudeBias, -1.0f, 1.0f);
+        float biasedValue = Math.max(-1.0f, Math.min(1.0f, noiseValue + latitudeBias));
 
         worldRegionEnum regionEnum;
         if (biasedValue < -0.4f) {

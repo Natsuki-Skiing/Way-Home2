@@ -43,8 +43,17 @@ public class Game {
     Random randomGen = new Random();
     public Game() {
         try {
-            Terminal terminal = new DefaultTerminalFactory().createTerminal();
-            this.terminal = terminal;
+
+            //Doesn't like the window's terminal so making a swing emulator if on windows
+            //Only want this to happen if on windows tho
+            String osName = System.getProperty("os.name").toLowerCase();
+            DefaultTerminalFactory termFactory = new DefaultTerminalFactory();
+
+            // if(osName.contains("win")){
+            //     //We're on windows 
+            //     termFactory.setForceAWTOverSwing(true);
+            // }
+            this.terminal = termFactory.createTerminal();
             this.screen = new TerminalScreen(terminal);
             this.screen.startScreen();
             this.screen.setCursorPosition(null);
