@@ -1,7 +1,7 @@
 package items.templates;
 
 import enums.itemTypeEnum;
-import items.Enchantment;
+import items.Enchantment.*;
 
 import java.util.List;
 import java.util.ArrayList;

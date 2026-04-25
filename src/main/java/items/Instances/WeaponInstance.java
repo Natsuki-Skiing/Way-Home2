@@ -1,8 +1,10 @@
 package items.Instances;
 
 import java.util.ArrayList;
+import java.util.Vector;
 
-import items.Enchantment;
+import enums.effectCounterType;
+import items.Enchantment.*;
 import items.templates.WeaponTemplate;
 
 public class WeaponInstance extends ConditionInstance{
@@ -36,6 +38,23 @@ public class WeaponInstance extends ConditionInstance{
     public void addEnhancement(Enchantment enhancement) {
         this.enchantments.add(enhancement);
     } 
+
+
+    public synchronized Vector<String> applyEnchantEvent(effectCounterType event){
+        Vector<String> expiredEffects = new Vector<>(null);
+        for(Enchantment enchantment: this.enchantments){
+            if(enchantment instanceof TemporyEnchantment temporyEnchantment){
+                
+                if(temporyEnchantment.timerEvent(event) ==0){
+                    expiredEffects.add(enchantment.getName());
+                    this.enchantments.remove(enchantment);
+
+                }
+            }
+        }
+
+        return(expiredEffects);
+    }
 
 
     @Override

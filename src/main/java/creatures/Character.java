@@ -3,6 +3,7 @@ import enums.raceEnum;
 import items.Enchantment.*;
 import enums.effectCounterType;
 import java.util.Vector;
+import enums.skillEnum;
 public class Character extends Entity {
     protected raceEnum race;
     protected Vector<Enchantment> currentEnchantments;
@@ -41,5 +42,46 @@ public class Character extends Entity {
     }
     public raceEnum getRace() {
         return this.race;
+    }
+
+
+    private int getStatModifier(skillEnum skill){
+        int buffSum = 0;
+        for(Enchantment enchantment : this.currentEnchantments){
+            if(enchantment.getEffect() instanceof EnchantmentBuff buff){
+                if(buff.getStatToBuff() == skill){
+                    buffSum += buff.getBuffAmount();
+                }
+            }
+        }
+
+        return(buffSum);
+    }
+
+
+    public int getStrength() { 
+        return this.strength + getStatModifier(skillEnum.STR);
+    }
+
+
+    public int getPerception() { 
+        
+        return this.perception+ getStatModifier(skillEnum.PER);
+    }
+
+    public int getEndurance() { 
+        return this.endurance+ getStatModifier(skillEnum.END);
+    }
+
+    public int getCharisma() { 
+        return this.charisma+ getStatModifier(skillEnum.CHR);
+    }
+
+    public int getAgility() { 
+        return this.agility+ getStatModifier(skillEnum.AGL);
+    }
+
+    public int getLuck() { 
+        return this.luck+ getStatModifier(skillEnum.LUK);
     }
 }

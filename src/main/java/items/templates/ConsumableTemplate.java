@@ -16,12 +16,13 @@ public class ConsumableTemplate extends ItemTemplate {
         this.uses = uses;
     }
 
-    public Vector<Enchantment> use(){
-        this.uses --;
-        return(getEnchantments());
-    }
+    
     public Vector<Enchantment> getEnchantments(){
         return(this.enchantmentVetor);
+    }
+
+    public int getUses(){
+        return(this.uses);
     }
 
     // public synchronized void checkEffectTimers(effectCounterType eventType){

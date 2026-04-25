@@ -3,7 +3,7 @@ import creatures.*;
 import enums.armourSlotEnum;
 import enums.combatInfoEnum;
 import interfaces.CombatInterface;
-import items.EnchantmentEffects.*;
+import items.Enchantment.EnchantmentEffects.*;
 import items.Instances.ConditionInstance;
 import items.Instances.SheildInstance;
 import items.Instances.WeaponInstance;

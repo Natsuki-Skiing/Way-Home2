@@ -1,6 +1,4 @@
-package items.EnchantmentEffects;
-import items.Enchantment;
-import items.EnchantmentEffect;
+import items.Enchantment.EnchantmentEffect;
 public class LifeLeachEffect implements EnchantmentEffect{
     @Override 
     public String apply(creatures.Entity attacker, creatures.Entity target, double magnitude) {
