@@ -4,6 +4,11 @@ public class EffectTimer {
     private int effectCounter;
     private effectCounterType type;
 
+
+    public EffectTimer(int counterValue, effectCounterType timerType){
+        this.effectCounter = counterValue;
+        this.type = timerType;
+    }
     public int getCounter(){
         return(this.effectCounter);
     }
