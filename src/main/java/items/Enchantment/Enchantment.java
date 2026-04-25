@@ -1,4 +1,4 @@
-package items;
+package items.Enchantment;
 import creatures.*;
 public class Enchantment {
     private final String name;

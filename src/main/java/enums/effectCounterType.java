@@ -2,5 +2,6 @@ package enums;
 
 public enum effectCounterType {
     TURN,
-    USE
+    USE,
+    INSTANT
 }

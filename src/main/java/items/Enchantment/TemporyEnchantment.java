@@ -1,5 +1,6 @@
-package items;
+package items.Enchantment;
 import enums.effectCounterType;
+import items.EffectTimer;
 public class TemporyEnchantment extends Enchantment{
     private EffectTimer timer;
 
