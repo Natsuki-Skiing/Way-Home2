@@ -98,5 +98,26 @@ public class Chest  {
         return(new ArrayList<>(this.itemsMap.keySet()));
     }
 
+    public BigDecimal getSumOfItemValues(){
+        BigDecimal sum = new BigDecimal(0);
+
+        for (HashMap<Integer, ChestItem> innerMap : this.itemsMap.values()) {
+        
+            for (ChestItem chestItem : innerMap.values()) {
+                
+                int quantity = chestItem.getQuantity();
+                
+                
+                BigDecimal unitValue = chestItem.getItem().getValue();
+                
+                BigDecimal stackValue = unitValue.multiply(BigDecimal.valueOf(quantity));
+
+                sum.add(stackValue);
+            }
+        }
+        return sum;
+        
+    }
+
 
 }

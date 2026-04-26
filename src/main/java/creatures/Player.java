@@ -6,6 +6,8 @@ import items.ChestClasses.ChestItem;
 import items.templates.ArmourTemplate;
 import items.templates.ItemTemplate;
 import items.Instances.*;
+
+import java.math.BigDecimal;
 import java.util.HashMap;
 
 import com.googlecode.lanterna.TextColor;
@@ -19,6 +21,9 @@ public class Player extends Character {
     private int worldY = 0;
     private int xpToNextLevel = 100;
     private Chest inventory = new Chest();
+    private int totalDamage=0;
+    private BigDecimal gold = new BigDecimal(0.0);
+    private int totalHpLost =0;
     private HashMap<itemTypeEnum, ItemInstance> equippedItems = new HashMap<>();
     private HashMap<enums.armourSlotEnum,ArmourInstance> armourSlots = new HashMap<>();
     private GameTile previousTile = null;
@@ -36,6 +41,17 @@ public class Player extends Character {
         
     } 
     
+    public int getTotalHealthLost(){
+        return(this.totalHpLost);
+    }
+
+    public int getTotalDamage(){
+        return(this.totalDamage);
+    }
+
+    public void increaseTotalDamage(int increase){
+        this.totalDamage += increase;
+    }
     public GameTile getPlayerTile() {
         return playerTile;
     }
@@ -191,6 +207,21 @@ public class Player extends Character {
     
 
 
+    public int calculateScore(){
+        
+        BigDecimal valueOfItems = this.inventory.getSumOfItemValues();
+
+        
+        BigDecimal netWorthScore = this.gold.add(valueOfItems).multiply(BigDecimal.valueOf(0.6));
+
+        
+        BigDecimal finalScoreDecimal = netWorthScore.add(BigDecimal.valueOf(xp)).add(BigDecimal.valueOf(totalDamage - totalHpLost));
+
+        
+        return finalScoreDecimal.intValue();
+    }
+
+
     public ChestItem takeItemFromInventory(itemTypeEnum type, int itemID, int amount) {
         if(this.inventory.getNoOfItem(type,itemID) == 1){
             if(hasItemEquipped(type) && this.equippedItems.get(type).getItemID() == itemID){
@@ -215,6 +246,13 @@ public class Player extends Character {
         }
         return null;
     }
+
+    public double subHp(double amount) {
+        this.totalDamage += (int) amount;
+        return(super.subHp(amount));
+    }
+
+
     @Override
     public double getEvasionChance(){
         double evasionChance = super.getEvasionChance();
