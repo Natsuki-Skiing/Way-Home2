@@ -6,5 +6,7 @@ public enum combatInfoEnum {
     NO_DAMAGE,
     DEATH,
     BLOCK,
-    USE_ITEM
+    USE_ITEM,
+    WIN,
+    FLEE
 }

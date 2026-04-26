@@ -87,6 +87,14 @@ public class CombatInterface {
                     addLogMessage(player.getName() + " attempts to flee!");
                     if(combatEngine.flee()){
                         addLogMessage( randomString(new String[]{"You Flee!","You manage to escape the "+enemy.getName(),"You run away","You are a coward, but a lucky one"}));
+                        try {
+                            // 2000 milliseconds = 2 seconds
+                            Thread.sleep(2000); 
+                        } catch (InterruptedException e) {
+                            Thread.currentThread().interrupt();
+                        }
+                        running = false;
+                        window.close();
                     }else{
                         addLogMessage("");
                         playerTurn = false;
@@ -174,6 +182,15 @@ public class CombatInterface {
         leftContainerPanel.addComponent(this.actionPanel.withBorder(Borders.doubleLine("Combat Actions")));
     }
 
+    public void endComabt(){
+        this.running = false;
+        
+        this.window.close();
+        DeathInterface endScreen = new DeathInterface();
+        endScreen.showDeathScreen(player, textGUI);
+
+    }
+
     public void mainLoop(){
         this.running = true;
         this.textGUI.addWindowAndWait(this.window);
@@ -190,7 +207,7 @@ public class CombatInterface {
     private void attack(){
         CombatInfo info = this.combatEngine.attack();
 
-        if(info.info == combatInfoEnum.HIT || info.info == combatInfoEnum.DEATH){
+        if(info.info == combatInfoEnum.HIT || info.info == combatInfoEnum.WIN){
             double damage = info.damage;
             this.addLogMessage(randomString(new String[]{"Your attack lands!","You land a devestating blow!","That's going to leave a scar",
                 "You hit your mark", "The "+enemy.getName()+" failed to doge your attack","Your swift strike wounds "+enemy.getName()
@@ -201,7 +218,7 @@ public class CombatInterface {
             updateHealthBars();
             updateWeaponConditionBar();
 
-            if(info.info == combatInfoEnum.DEATH){
+            if(info.info == combatInfoEnum.WIN){
                 this.addLogMessage("You slay the "+this.enemy.getName()+" !");
                 int xpGained = this.enemy.getDeathXp();
                 this.addLogMessage("You gain "+xpGained+" XP !");
@@ -251,6 +268,9 @@ public class CombatInterface {
             double damage = info.damage;
             switch (info.info) {
                 case DEATH:
+                    DeathInterface deathUi = new DeathInterface();
+                    deathUi.showDeathScreen(player, textGUI);
+
                     break;
                 case HIT:
                     this.addLogMessage(name +" hit's you for "+ damage +" !");

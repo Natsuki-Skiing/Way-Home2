@@ -9,7 +9,7 @@
     "d": "RIGHT",
     "e": "INTERACT",
     "q": "INVENTORY",
-    "r":"STATS",
+    "i":"STATS",
     "Escape":"PAUSE",
     "p":"PAUSE"
 }

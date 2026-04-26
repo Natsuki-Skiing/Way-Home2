@@ -63,7 +63,8 @@ public class CombatEncounter {
                 retInfo.damage = damage;
                 opp.subHp(damage);
                 if(opp.getHp() <= 0.0){
-                    retInfo.info = combatInfoEnum.DEATH;
+                    retInfo.info = combatInfoEnum.WIN;
+                    retInfo.xp = opp.getDeathXp();
                 }else{
                     retInfo.info = combatInfoEnum.HIT;
                 }

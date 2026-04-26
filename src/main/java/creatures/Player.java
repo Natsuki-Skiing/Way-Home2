@@ -49,6 +49,18 @@ public class Player extends Character {
         return(this.totalDamage);
     }
 
+    public BigDecimal getGold(){
+        return(this.gold);
+    }
+
+    public void setGold(BigDecimal newValue){
+        this.gold = newValue;
+    }
+
+    public void addGold(double amount){
+        this.gold.add(BigDecimal.valueOf(amount));
+    }
+
     public void increaseTotalDamage(int increase){
         this.totalDamage += increase;
     }

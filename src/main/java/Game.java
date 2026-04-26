@@ -46,7 +46,7 @@ public class Game {
 
             //Doesn't like the window's terminal so making a swing emulator if on windows
             //Only want this to happen if on windows tho
-            String osName = System.getProperty("os.name").toLowerCase();
+            
             DefaultTerminalFactory termFactory = new DefaultTerminalFactory();
 
             // if(osName.contains("win")){
@@ -114,8 +114,9 @@ public class Game {
             }catch(Exception e){
                 continue;
             }
-            
-            switch (this.inputManager.getInput(input)) {
+            inputActionEnum action = this.inputManager.getInput(input);
+            if(action != null){
+                switch (action) {
                 case UP:
                     this.movePlayer(0, -1);
                     break;
@@ -134,12 +135,18 @@ public class Game {
                     //invScreen.mainLoop();
                     invScreen.show();
                 case STATS:
-                    break;
+                    PlayerStatusScreen statusScreen = new PlayerStatusScreen();
+                    statusScreen.showStatusScreen(player, textGUI);
                 default:
                     this.mainWindow.getWindow().handleInput(input);
                     this.renderWindow = true;
                     break;
+                }
+            }else{
+                this.mainWindow.getWindow().handleInput(input);
+                this.renderWindow = true;
             }
+            
         }
     }
 
@@ -180,7 +187,7 @@ public class Game {
                 combatChance += 5;
             }
             if(this.randomGen.nextInt(100) < combatChance){
-                //combatEncounter();
+                combatEncounter();
             }
         }
         

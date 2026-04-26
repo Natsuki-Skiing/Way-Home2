@@ -10,7 +10,7 @@ public class Character extends Entity {
     public Character(String name, int strength,int perception,int endurance , int charisma ,int agility, int luck,raceEnum race,int maxHp) {
         super(name, strength, perception, endurance, charisma, agility, luck,maxHp);
         this.race = race;
-        this.currentEnchantments = new Vector<>(currentEnchantments);
+        this.currentEnchantments = new Vector<>();
     }
 
     public void addEnchantment(Enchantment newEnchantment){

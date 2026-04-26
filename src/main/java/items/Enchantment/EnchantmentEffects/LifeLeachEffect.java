@@ -1,3 +1,4 @@
+package items.Enchantment.EnchantmentEffects;
 import items.Enchantment.EnchantmentEffect;
 public class LifeLeachEffect implements EnchantmentEffect{
     @Override 
