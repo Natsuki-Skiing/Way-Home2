@@ -1,7 +1,8 @@
 package creatures;
 import java.util.HashMap;
 import enums.*;
-public class Entity {
+import java.io.Serializable;
+public class Entity implements Serializable {
     protected String name;
     protected int level;
     protected int strength;
@@ -22,7 +23,7 @@ public class Entity {
         this.luck = luck;
         this.agility = agility;
         this.maxHp = calculateMaxHp(endurance, strength);
-        this.hp = maxHp;
+        this.hp = this.maxHp;
 
         
     }

@@ -3,14 +3,17 @@ import java.util.HashMap;
 import enums.worldRegionEnum;
 import util.FastNoiseLite;
 import util.FastNoiseLite.NoiseType;
-public class World {
+
+import java.beans.Transient;
+import java.io.Serializable;
+public class World implements Serializable {
     //I need to load already made maps here
     private HashMap<String,Map> mapsHash;
     private int mapWidth;
     private int mapHeight;
     private Map currentMap;
-    private FastNoiseLite noiseMaker;
-    private TileFactory tileFactory = new TileFactory("src/jsons/world/regionTiles/tiles.json");
+    private transient FastNoiseLite noiseMaker;
+    private transient TileFactory tileFactory = new TileFactory("src/jsons/world/regionTiles/tiles.json");
     public World(int mapWidth, int mapHeight,String existingMapsJsonPath){
         //All the maps in the world are stored in a hash map with the key being the world coordinates of the map
         this.mapsHash = new HashMap<>();
@@ -25,6 +28,19 @@ public class World {
         this.noiseMaker.SetSeed(1337);
         this.noiseMaker.SetNoiseType(NoiseType.OpenSimplex2);
 
+    }
+
+    public void reinitialize(String mapsJsonPath, String tilesJsonPath) {
+        this.tileFactory = new TileFactory(tilesJsonPath);
+        this.noiseMaker = new FastNoiseLite();
+        this.noiseMaker.SetSeed(1337); // Ensure this matches your original seed!
+        this.noiseMaker.SetNoiseType(FastNoiseLite.NoiseType.OpenSimplex2);
+    }
+
+    public void restoreAllTileColors() {
+        this.mapsHash.values().parallelStream().forEach(map -> {
+            map.restoreMapColors();
+        });
     }
 
 
@@ -70,7 +86,9 @@ public class World {
 
     
     }
-
+    public HashMap<String,Map> getHashMap(){
+        return(this.mapsHash);
+    }
     public boolean currentMapTileWalkable(int x, int y){
         return(this.currentMap.isTileWalkable(x, y));
     }

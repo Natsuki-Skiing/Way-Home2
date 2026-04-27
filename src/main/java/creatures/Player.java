@@ -6,6 +6,7 @@ import items.ChestClasses.ChestItem;
 import items.templates.ArmourTemplate;
 import items.templates.ItemTemplate;
 import items.Instances.*;
+import java.io.Serializable;
 
 import java.math.BigDecimal;
 import java.util.HashMap;

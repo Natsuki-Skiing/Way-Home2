@@ -1,6 +1,7 @@
 package items.Enchantment;
 import creatures.*;
-public class Enchantment {
+import java.io.Serializable;
+public class Enchantment implements Serializable {
     private final String name;
     private double magnitude;
     private int charges;

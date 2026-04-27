@@ -1,6 +1,7 @@
 package items.ChestClasses;
 import items.Instances.*;
-public class ChestItem {
+import java.io.Serializable;
+public class ChestItem implements Serializable{
     private final ItemInstance item;
     private  int quantity = 1;
 

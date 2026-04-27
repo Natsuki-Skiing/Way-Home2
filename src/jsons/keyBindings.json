@@ -10,6 +10,5 @@
     "e": "INTERACT",
     "q": "INVENTORY",
     "i":"STATS",
-    "Escape":"PAUSE",
     "p":"PAUSE"
 }
