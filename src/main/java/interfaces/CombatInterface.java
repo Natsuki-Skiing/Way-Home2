@@ -26,6 +26,7 @@ import com.googlecode.lanterna.input.KeyType;
 import Combat.*;
 import creatures.*;
 import enums.combatInfoEnum;
+import enums.effectCounterType;
 import items.Instances.WeaponInstance;
 
 public class CombatInterface {
@@ -281,11 +282,22 @@ public class CombatInterface {
         
     }
 
-    private void oppTurn(){
-        
-        if(!this.playerTurn){
+    private void enchantmentChecks(creatures.Character character,effectCounterType eventType){
+        Vector<String> expiredEffects = character.applyEnchantEvent(eventType);
 
-            String name = enemy.getName();
+        for(String effectName : expiredEffects){
+            String message = effectName +" expired.";
+            this.addLogMessage(message);
+        }
+    }
+
+    private void oppTurn(){
+    
+        if(!this.playerTurn){
+            //decremtning enemy tempory effects 
+            enchantmentChecks(this.enemy, effectCounterType.TURN);
+
+            String name = this.enemy.getName();
             CombatInfo info = this.combatEngine.oppTurn();
             double damage = info.damage;
             switch (info.info) {
@@ -318,6 +330,8 @@ public class CombatInterface {
                 gameOver();
             }else{
                 this.playerTurn = true;
+                // Decementing player tempory effect timers 
+                enchantmentChecks(this.player, effectCounterType.TURN);
             }
             
             
