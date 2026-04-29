@@ -284,11 +284,13 @@ public class CombatInterface {
 
     private void enchantmentChecks(creatures.Character character,effectCounterType eventType){
         Vector<String> expiredEffects = character.applyEnchantEvent(eventType);
-
-        for(String effectName : expiredEffects){
-            String message = effectName +" expired.";
-            this.addLogMessage(message);
+        if(expiredEffects != null){
+            for(String effectName : expiredEffects){
+                String message = effectName +" expired.";
+                this.addLogMessage(message);
+            }
         }
+       
     }
 
     private void oppTurn(){

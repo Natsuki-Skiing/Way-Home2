@@ -23,7 +23,7 @@ public class Character extends Entity{
     }
     //Not sure if needs to be thread safe but eaire to do now than run into problems later 
     public synchronized Vector<String> applyEnchantEvent(effectCounterType event){
-        Vector<String> expiredEffects = new Vector<>(null);
+        Vector<String> expiredEffects = new Vector<String>();
         for(Enchantment enchantment: this.currentEnchantments){
             if(enchantment instanceof TemporyEnchantment temporyEnchantment){
                 
