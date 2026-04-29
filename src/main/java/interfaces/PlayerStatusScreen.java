@@ -13,7 +13,8 @@ public class PlayerStatusScreen{
 
     public void showStatusScreen(Player player, WindowBasedTextGUI textGui) {
         // Create a centered window
-        BasicWindow statusWindow = new BasicWindow("Player Status");
+
+        BasicWindow statusWindow = new BasicWindow(player.getName());
         statusWindow.setHints(Arrays.asList(Window.Hint.CENTERED));
 
         Panel mainPanel = new Panel(new LinearLayout(Direction.VERTICAL));
@@ -36,9 +37,18 @@ public class PlayerStatusScreen{
         statsPanel.addComponent(new Label(player.getGold().toString())
                 .setForegroundColor(TextColor.ANSI.YELLOW_BRIGHT));
 
-        mainPanel.addComponent(statsPanel.withBorder(Borders.singleLine("Attributes")));
+        mainPanel.addComponent(statsPanel.withBorder(Borders.singleLine("Character Status")));
         mainPanel.addComponent(new EmptySpace());
 
+        Panel skillPanel =new Panel(new LinearLayout(Direction.VERTICAL));
+        skillPanel.addComponent(new Label("PER "+player.getPerception()));
+        skillPanel.addComponent(new Label("STR "+player.getStrength()));
+        skillPanel.addComponent(new Label("END "+player.getEndurance()));
+        skillPanel.addComponent(new Label("AGL "+player.getAgility()));
+        skillPanel.addComponent(new Label("LUK "+player.getLuck()));
+
+        mainPanel.addComponent(skillPanel.withBorder(Borders.singleLine("Attributes")));
+        mainPanel.addComponent(new EmptySpace());
         // --- Enchantments Section ---
         Panel enchantmentPanel = new Panel(new LinearLayout(Direction.VERTICAL));
         
