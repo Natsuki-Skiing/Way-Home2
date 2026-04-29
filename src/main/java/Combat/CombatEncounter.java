@@ -54,7 +54,8 @@ public class CombatEncounter {
         }
 
         if(!chancePass(this.opp.getEvasionChance())){
-            damage = calculateOppDamage(playerWeapon.getDamage());
+            double baseDamage = damageStrMod(playerWeapon.getDamage(), player);
+            damage = calculateOppDamage(baseDamage);
 
             //TODO  
             //Weapon effects
@@ -105,7 +106,8 @@ public class CombatEncounter {
         
 
         if(!chancePass(this.opp.getEvasionChance())){
-            returnInfo = calculateDamage(oppWeapon.getDamage());
+            double baseDamage = damageStrMod(oppWeapon.getDamage(), opp);
+            returnInfo = calculateDamage(baseDamage);
 
             //TODO  
             //Weapon effects
@@ -150,6 +152,16 @@ public class CombatEncounter {
         }
 
         return(pass);
+    }
+    private double damageStrMod(double baseDamage, creatures.Character attacker){
+        
+        
+        int str = attacker.getStrength();
+
+        double mult = 1.0 + (0.03 *str);
+
+        return(baseDamage * mult);
+        
     }
     private CombatInfo calculateDamage(double incomingDamage){
 

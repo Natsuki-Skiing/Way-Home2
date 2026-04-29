@@ -20,7 +20,7 @@ public class WayHome {
                 } catch (IOException e) {
                     // Relaunch failed, just continue running as-is
                     new Game().main();
-                    return;
+                    return ;
                 }
                 return;
             }

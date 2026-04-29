@@ -115,9 +115,9 @@ public class Game implements Serializable {
         if(this.player == null){
             //Assuming no game has be loaded using the other constructor 
 
-            CharacterMaker characterMaker = new CharacterMaker(this.screen,this.textGUI);
-            this.player = characterMaker.getPlayer();
-            // this.player = new Player("Hero",  10, 10, 10, 10, 10, 10,raceEnum.NORD,150);
+            // CharacterMaker characterMaker = new CharacterMaker(this.screen,this.textGUI);
+            // this.player = characterMaker.getPlayer();
+            this.player = new Player("Hero",  100, 100, 100, 100, 100, 100,raceEnum.NORD,150);
             this.player.addItemToInventory(this.itemController.getItem(enums.itemTypeEnum.WEAPON), 3);
             this.player.equipItem(this.player.getInventory().getItemsByType(enums.itemTypeEnum.WEAPON).get(0).getItem());
 
