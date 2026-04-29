@@ -10,6 +10,7 @@ import com.googlecode.lanterna.terminal.DefaultTerminalFactory;
 import com.googlecode.lanterna.terminal.Terminal;
 import com.googlecode.lanterna.TerminalPosition;
 import com.googlecode.lanterna.TerminalSize;
+import com.googlecode.lanterna.TerminalTextUtils;
 import java.util.regex.Pattern;
 
 import java.io.File;
@@ -23,6 +24,7 @@ import java.util.Random;
 import java.util.HashMap;
 import creatures.Player;
 import enums.raceEnum;
+import enums.skillEnum;
 public class CharacterMaker {
         private Screen screen;
         private HashMap<String,ArrayList<String>> namesMap = null;
@@ -35,6 +37,7 @@ public class CharacterMaker {
         private final int MAX_POINTS = 30; // Total points allowed
         private List<TextBox> attributeBoxes = new ArrayList<>(); // To track values
         private ComboBox<String> comboBoxRace;
+        private HashMap<String, HashMap<skillEnum, Integer>> racialStats;
         private Window window;
         private Window raceWindow;
         private Random randGen = new Random();
@@ -56,7 +59,7 @@ public class CharacterMaker {
                         // --- Name Section ---
                         contentPanel.addComponent(new Label("Name:"));
                         this.txtBoxName = new TextBox(new TerminalSize(25, 1));
-                        this.textBoxRaceDes = new TextBox(new TerminalSize(30, 10));
+                        this.textBoxRaceDes = new TextBox(new TerminalSize(45, 20));
                         contentPanel.addComponent(this.txtBoxName
                                         .setLayoutData(GridLayout.createLayoutData(
                                                         GridLayout.Alignment.BEGINNING,
@@ -66,6 +69,7 @@ public class CharacterMaker {
 
                         // --- Race Section ---
                         contentPanel.addComponent(new Label("Race:"));
+                        loadRacialSkills();
                         List<String> raceList = new ArrayList<>(loadRaces());
                         this.comboBoxRace = new ComboBox<>(raceList);
 
@@ -78,10 +82,20 @@ public class CharacterMaker {
                         contentPanel.addComponent(comboBoxRace);
 
                         comboBoxRace.addListener((selectedIndex, previousSelection, changedByUser) -> {
-                                String selectedRace = comboBoxRace.getItem(selectedIndex);
-                                if (this.raceDes != null && this.raceDes.containsKey(selectedRace)) {
-                                        this.textBoxRaceDes.setText(this.raceDes.get(selectedRace));
+                                String selectedItem = comboBoxRace.getItem(selectedIndex);
+                                String selectedRace = selectedItem.toUpperCase();
+                                this.updateRaceDescription(selectedItem);
+                                
+
+                                // Reset all boxes to the new racial minimums from raceSkill.json[cite: 2]
+                                HashMap<skillEnum, Integer> stats = racialStats.get(selectedRace);
+                                skillEnum[] attributes = { skillEnum.STR, skillEnum.PER, skillEnum.END, skillEnum.CHR, skillEnum.AGL, skillEnum.LUK };
+
+                                for (int i = 0; i < attributeBoxes.size(); i++) {
+                                        int newMin = stats.getOrDefault(attributes[i], 0);
+                                        attributeBoxes.get(i).setText(String.valueOf(newMin));
                                 }
+                                updatePointsLabel(); // Refresh the points label based on new totals[cite: 3]
                         });
 
                         
@@ -97,12 +111,20 @@ public class CharacterMaker {
                         contentPanel.addComponent(this.pointsLabel
                                         .setLayoutData(GridLayout.createHorizontallyFilledLayoutData(3)));
 
-                        String[] attributes = { "Strength", "Perception", "Endurance", "Charisma","Agility", "Luck" };
+                        skillEnum[] attributeEnums = { 
+                                skillEnum.STR, skillEnum.PER, skillEnum.END, 
+                                skillEnum.CHR, skillEnum.AGL, skillEnum.LUK 
+                        };
 
-                        for (String attr : attributes) {
-                                // Create the spinner and add it to the layout, spanning all 3 columns
-                                contentPanel.addComponent(createAttributeSpinner(attr)
-                                                .setLayoutData(GridLayout.createHorizontallyFilledLayoutData(3)));
+                        String[] attributeLabels = { 
+                                "Strength", "Perception", "Endurance", 
+                                "Charisma", "Agility", "Luck" 
+                        };
+
+                        for (int i = 0; i < attributeEnums.length; i++) {
+                        // Pass both the Label (String) and the Stat (skillEnum)
+                                contentPanel.addComponent(createAttributeSpinner(attributeLabels[i], attributeEnums[i])
+                                .setLayoutData(GridLayout.createHorizontallyFilledLayoutData(3)));
                         }
 
                         // Calculate initial points (since all start at 1)
@@ -135,7 +157,10 @@ public class CharacterMaker {
 
                         
                         window.setTheme(txtGUI.getTheme());
-
+                        if (!raceList.isEmpty()) {
+                                comboBoxRace.setSelectedIndex(0);
+                                this.updateRaceDescription(raceList.get(0));
+                        }
                         TerminalSize raceSize = contentPanel.getPreferredSize();
                         int estWidth = raceSize.getColumns() + 5;
 
@@ -150,73 +175,101 @@ public class CharacterMaker {
                 }
         }
 
+        private void updateRaceDescription(String raceName) {
+                if (this.raceDes != null && this.raceDes.containsKey(raceName)) {
+                        String rawDescription = this.raceDes.get(raceName);
+                        // Wrap at 28 to leave room for the scrollbar inside the 30-width box
+                        java.util.List<String> wrappedLines = TerminalTextUtils.getWordWrappedText(43, rawDescription);
+                        this.textBoxRaceDes.setText(String.join("\n", wrappedLines));
+                }
+        }
+
+        private void loadRacialSkills() {
+                ObjectMapper objectMapper = new ObjectMapper();
+                File skillJson = new File("src/jsons/raceSkill.json"); // Referencing raceSkill.json verbatim
+                try {
+                        this.racialStats = objectMapper.readValue(skillJson, 
+                        new TypeReference<HashMap<String, HashMap<skillEnum, Integer>>>() {});
+                } catch (IOException e) {
+                        e.printStackTrace();
+                }
+        }
         public Player getPlayer(){
                 return this.player;
         }
-        private void finish(){
-                if(this.getRemainingPoints() >0){
-                        MessageDialog.showMessageDialog(txtGUI, "Character Not Complete", "Haven't allocated all stat points", MessageDialogButton.Close);
-                }else if(this.txtBoxName.getText().length() ==0){
-                        MessageDialog.showMessageDialog(txtGUI, "Character Not Complete", "Character Needs a name. You can type one or use the generate button", MessageDialogButton.Close);
-                }else{
-                        this.player = new Player(this.txtBoxName.getText(),
-                                Integer.parseInt(this.attributeBoxes.get(0).getText()),
-                                Integer.parseInt(this.attributeBoxes.get(1).getText()),
-                                Integer.parseInt(this.attributeBoxes.get(2).getText()),
-                                Integer.parseInt(this.attributeBoxes.get(3).getText()),
-                                Integer.parseInt(this.attributeBoxes.get(4).getText()),
-                                Integer.parseInt(this.attributeBoxes.get(5).getText()),
-                                raceEnum.valueOf(this.comboBoxRace.getText().toUpperCase()),
-                                100); 
-                        try{
-                                this.raceWindow.close();
-                                this.window.close();
-                        }catch(Exception e){
-                                e.printStackTrace();
-                        }
+    
+        private void finish() {
+                if (this.getRemainingPoints() > 0) {
+                        MessageDialog.showMessageDialog(txtGUI, "Character Not Complete", "Allocate all points.",
+                                        MessageDialogButton.Close);
+                }else if(this.txtBoxName.getText().trim().isEmpty()){
+                      MessageDialog.showMessageDialog(txtGUI, "Character Not Complete", "Character Must have a name.\nIf you can't think of one, use the name generator!",
+                                        MessageDialogButton.Close);  
+                } else {
+                        // Pull the racial HP from the loaded stats[cite: 2]
+                        String selectedRace = this.comboBoxRace.getSelectedItem().toUpperCase();
+                        int racialHp = this.racialStats.get(selectedRace).getOrDefault(skillEnum.HP, 100);
 
+                        this.player = new Player(
+                                        this.txtBoxName.getText(),
+                                        Integer.parseInt(this.attributeBoxes.get(0).getText()), // STR
+                                        Integer.parseInt(this.attributeBoxes.get(1).getText()), // PER
+                                        Integer.parseInt(this.attributeBoxes.get(2).getText()), // END
+                                        Integer.parseInt(this.attributeBoxes.get(3).getText()), // CHR
+                                        Integer.parseInt(this.attributeBoxes.get(4).getText()), // AGL
+                                        Integer.parseInt(this.attributeBoxes.get(5).getText()), // LUK
+                                        raceEnum.valueOf(selectedRace),
+                                        racialHp // Pass the racial HP here[cite: 2, 8]
+                        );
+
+                        //WorkAround
+                        this.player.setMaxHp(this.player.getMaxHp()+racialHp);
+                        this.player.setHp(this.player.getMaxHp());
+
+                        this.raceWindow.close();
+                        this.window.close();
                 }
-                
         }
 
 
-
-        private Panel createAttributeSpinner(String attributeName) {
+        private Panel createAttributeSpinner(String attributeName,skillEnum skill) {
                 Panel panel = new Panel(new GridLayout(5));
+                panel.addComponent(new Label(attributeName).setLayoutData(GridLayout.createHorizontallyFilledLayoutData(2)));
+                String selectedRace = comboBoxRace.getText().toUpperCase();
+                int racialMin = racialStats.get(selectedRace).getOrDefault(skill, 0);
+               
 
-                
-                panel.addComponent(new Label(attributeName)
-                                .setLayoutData(GridLayout.createHorizontallyFilledLayoutData(2)));
-
-                // The Value Box
-                TextBox valueBox = new TextBox("1");
+                TextBox valueBox = new TextBox(String.valueOf(racialMin));
                 valueBox.setReadOnly(true);
                 valueBox.setPreferredSize(new TerminalSize(3, 1));
-                this.attributeBoxes.add(valueBox); // Add to our tracking list
+                this.attributeBoxes.add(valueBox); 
 
-                // Minus Button
                 panel.addComponent(new Button("-", () -> {
                         int currentVal = Integer.parseInt(valueBox.getText());
-                        if (currentVal > 1) {
-                                valueBox.setText(String.valueOf(currentVal - 1));
-                                updatePointsLabel();
+                        // Dynamically resolve the current race's minimum at click time,
+                        // so the floor always reflects the selected race (fixes Vivique CHR etc.)
+                        String currentRace = comboBoxRace.getSelectedItem().toUpperCase();
+                        int currentMin = racialStats.get(currentRace).getOrDefault(skill, 0);
+                        if (currentVal > currentMin) {
+                        valueBox.setText(String.valueOf(currentVal - 1));
+                        updatePointsLabel();
                         }
                 }));
 
-                // Value Display
                 panel.addComponent(valueBox);
 
-                // Plus Button
                 panel.addComponent(new Button("+", () -> {
                         int currentVal = Integer.parseInt(valueBox.getText());
-                        if (currentVal < 10 && getRemainingPoints() > 0) {
-                                valueBox.setText(String.valueOf(currentVal + 1));
-                                updatePointsLabel();
+                        // Max limit of 20 and check point pool
+                        if (currentVal < 20 && getRemainingPoints() > 0) {
+                        valueBox.setText(String.valueOf(currentVal + 1));
+                        updatePointsLabel();
                         }
                 }));
 
                 return panel;
         }
+        
 
         private int getRemainingPoints() {
                 int used = 0;

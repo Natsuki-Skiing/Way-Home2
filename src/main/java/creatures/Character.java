@@ -4,7 +4,8 @@ import items.Enchantment.*;
 import enums.effectCounterType;
 import java.util.Vector;
 import enums.skillEnum;
-public class Character extends Entity {
+import java.io.Serializable;
+public class Character extends Entity{
     protected raceEnum race;
     protected Vector<Enchantment> currentEnchantments;
     public Character(String name, int strength,int perception,int endurance , int charisma ,int agility, int luck,raceEnum race,int maxHp) {
@@ -22,7 +23,7 @@ public class Character extends Entity {
     }
     //Not sure if needs to be thread safe but eaire to do now than run into problems later 
     public synchronized Vector<String> applyEnchantEvent(effectCounterType event){
-        Vector<String> expiredEffects = new Vector<>(null);
+        Vector<String> expiredEffects = new Vector<String>();
         for(Enchantment enchantment: this.currentEnchantments){
             if(enchantment instanceof TemporyEnchantment temporyEnchantment){
                 

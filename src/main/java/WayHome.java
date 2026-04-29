@@ -1,6 +1,12 @@
 import java.io.IOException;
+import world.*;
+import creatures.*;
+import clock.*;
 
 public class WayHome {
+
+    //For jackson saving
+    public WayHome (){}
     public static void main(String[] args) {
 
         if (System.getProperty("os.name", "").toLowerCase().contains("windows")) {
@@ -19,8 +25,17 @@ public class WayHome {
                 return;
             }
         }
-
-        Game game = new Game();
+        Game game;
+        if(false){
+            SaverLoader loader = new SaverLoader();
+            saveData data = loader.loadGame("save.dat");
+            Clock clock = new Clock(data.clockSeconds, data.clockSleepTime, data.clockMultiplier);
+            game = new Game(data.savedPlayer, data.savedWorld,clock);
+        }else{
+            game = new Game();
+        }
+        
+        
         game.main();
     }
 }

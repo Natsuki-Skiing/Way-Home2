@@ -1,5 +1,8 @@
+
+
 {
-    "Nord":{"Smithing":0,"Light_Weapon":0,"Heavy_Weapon":0,"Alcahemy":0,"Barter":0,"Defense":0,"stealth":0},
-    "Breton":{"Smithing":0,"Light_Weapon":0,"Destruction":0,"Alchemy":0,"Barter":0,"Defense":0,"stealth":0},
-    "Orc":{"Smithing":0,"Light_Weapon":0,"Heavy_Weapon":0,"Alchemy":0,"Barter":0,"Defense":0,"stealth":0}
+    "NORD":{"PER":2,"STR":2,"END":2,"AGL":2,"LUK":1,"CHR":1,"HP":20},
+    "ORC":{"PER":0,"STR":6,"END":5,"AGL":0,"LUK":0,"CHR":-1,"HP":40},
+    "BRETON":{"PER":3,"STR":1,"END":1,"AGL":2,"LUK":2,"CHR":1,"HP":20},
+    "VIVIQUE":{"PER":4,"STR":1,"END":0,"AGL":5,"LUK":3,"CHR":-3,"HP":25}
 }

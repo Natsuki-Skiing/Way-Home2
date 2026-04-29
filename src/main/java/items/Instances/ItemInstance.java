@@ -2,7 +2,8 @@ package items.Instances;
 
 import items.templates.ItemTemplate;
 import java.math.BigDecimal;
-public class ItemInstance {
+import java.io.Serializable;
+public class ItemInstance implements Serializable{
     protected final ItemTemplate template;
     private String nameModifier = "";
     private BigDecimal value;

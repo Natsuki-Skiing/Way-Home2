@@ -1,13 +1,14 @@
 package clock;
+import java.io.Serializable;
 import java.time.Instant;
 import java.util.concurrent.atomic.AtomicInteger;
 
-public class Clock {
+public class Clock implements Serializable {
     private AtomicInteger secondsSinceStart;
-    private long lastNano;
-    private boolean running = false;
+    private transient long lastNano;
+    private transient boolean running = false;
     private int sleepTime;
-    private Thread backgroundThread;
+    private transient Thread backgroundThread;
     private int multiplier;
     public Clock(int secondsStartPoint,int sleepTime,int multiplier){
         this.secondsSinceStart = new AtomicInteger( secondsStartPoint);
@@ -15,7 +16,12 @@ public class Clock {
         this.multiplier = multiplier;
         
     }
-
+    public int getSleepTime() { 
+        return this.sleepTime; 
+    }
+    public int getMultiplier() { 
+        return this.multiplier;
+    }
     
     public void pause(){
         this.running = false;

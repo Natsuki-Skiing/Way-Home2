@@ -1,6 +1,5 @@
-
-import interfaces.*;
 import items.templates.WeaponTemplate;
+
 import creatures.*;
 import enums.*;
 import com.googlecode.lanterna.TextColor;
@@ -23,8 +22,10 @@ import java.util.Random;
 import items.Instances.WeaponInstance;
 import items.ItemManager.ItemController;
 import world.*;
-public class Game {
-    private Player player;
+import interfaces.*;
+import java.io.Serializable;
+public class Game implements Serializable {
+    private Player player = null;
     public Screen screen;
     public mainGameWindow mainWindow;
     public MultiWindowTextGUI textGUI;
@@ -32,11 +33,11 @@ public class Game {
     private InputManager inputManager;
     private boolean renderWindow;
     private Terminal terminal;
-    private Clock clock;
+    private Clock clock = null;
     private ItemController itemController;
     private CreatureController creatureController;
     private TileHolderClass tileHolder;
-    private World world;
+    private World world = null;
     private Boolean newMap = false;
     private int mapWidth = 80;
     private int mapHeight = 30;
@@ -65,26 +66,77 @@ public class Game {
             e.printStackTrace();
         }
     }
+
+    
+
+
+    public Game(Player player, World world, Clock clock) {
+        this(); 
+        this.player = player;
+        this.world = world;
+        this.clock = clock;
+    }
+
+    public saveData prepareSave() {
+        saveData data = new saveData();
+        
+        // The entire player (including character/entity fields) is packed here
+        data.savedPlayer = this.player;
+        data.savedWorld = this.world;
+        
+        // Pack clock values
+        data.clockSeconds = this.clock.getSecondsTime();
+        data.clockMultiplier = this.clock.getMultiplier();
+        data.clockSleepTime = this.clock.getSleepTime();
+        
+        return data;
+    }
+
+    public void loadSave(saveData data) {
+        // Simply replace the current objects with the loaded ones
+        this.player = data.savedPlayer;
+        this.world = data.savedWorld;
+        this.world.reinitialize("src/jsons/maps/maps.json", "src/jsons/world/regionTiles/tiles.json");
+        this.world.restoreAllTileColors();
+        // Re-initialize the clock since the background thread cannot be saved
+        this.clock = new Clock(data.clockSeconds, data.clockSleepTime, data.clockMultiplier);
+        this.clock.startClock();
+        
+        // Update the UI to show the loaded position
+        this.mainWindow.setCurrentMap(this.world.getMap(this.player.getWorldX(), this.player.getWorldY()));
+        this.renderWindow = true;
+    }
+
     public  void main() {
         this.world = new World(this.mapWidth, this.mapHeight,"src/jsons/maps/maps.json");
         
-        // CharacterMaker characterMaker = new CharacterMaker(this.screen,this.textGUI);
-        // this.player = characterMaker.getPlayer();
+       
         this.tileHolder = new TileHolderClass();
+        if(this.player == null){
+            //Assuming no game has be loaded using the other constructor 
+
+            CharacterMaker characterMaker = new CharacterMaker(this.screen,this.textGUI);
+            this.player = characterMaker.getPlayer();
+            // this.player = new Player("Hero",  10, 10, 10, 10, 10, 10,raceEnum.NORD,150);
+            this.player.addItemToInventory(this.itemController.getItem(enums.itemTypeEnum.WEAPON), 3);
+            this.player.equipItem(this.player.getInventory().getItemsByType(enums.itemTypeEnum.WEAPON).get(0).getItem());
+
+            this.clock = new Clock(0, 2500, 200);
+            this.clock.startClock();
+        }
         
-        this.player = new Player("Hero",  10, 10, 10, 10, 10, 10,raceEnum.NORD,150);
         
         this.creatureController = new CreatureController("src/jsons/creatures/opps.json");
-        this.player.addItemToInventory(this.itemController.getItem(enums.itemTypeEnum.WEAPON), 3);
+       
         
         
-        this.player.equipItem(this.player.getInventory().getItemsByType(enums.itemTypeEnum.WEAPON).get(0).getItem());
+
         ///combatEncounter();
         /// 
         /// 
         ///
         //combatEncounter();
-        this.clock = new Clock(0, 2500, 200);
+       
 
         // Dungeon dungeon = new Dungeon(player, creatureController, clock, this.tileHolder, 0);
         // DungeonInterface dungeonInterface = new DungeonInterface(player, dungeon, textGUI);
@@ -95,7 +147,7 @@ public class Game {
        
     
         movePlayer(0, 0);
-        this.clock.startClock();
+        
         while(this.running){
             
             if(this.renderWindow){
@@ -110,7 +162,7 @@ public class Game {
             }
             KeyStroke input;
             try{
-                input = this.terminal.readInput();
+                input = this.screen.readInput();
             }catch(Exception e){
                 continue;
             }
@@ -134,9 +186,17 @@ public class Game {
                     InventoryInterface invScreen = new InventoryInterface(player, screen, textGUI);
                     //invScreen.mainLoop();
                     invScreen.show();
+                    break;
                 case STATS:
                     PlayerStatusScreen statusScreen = new PlayerStatusScreen();
                     statusScreen.showStatusScreen(player, textGUI);
+                    break;
+                case PAUSE:
+                    this.clock.pause();
+                    PauseMenu pauseMenu = new PauseMenu(this, new SaverLoader());
+                    pauseMenu.show(textGUI);
+                    this.clock.start();
+                    break;
                 default:
                     this.mainWindow.getWindow().handleInput(input);
                     this.renderWindow = true;
@@ -186,7 +246,7 @@ public class Game {
             if(this.clock.isNight()){
                 combatChance += 5;
             }
-            if(this.randomGen.nextInt(100) < combatChance){
+            if(this.randomGen.nextInt(100) < combatChance && !(deltaX ==0 && deltaY == 0)){
                 combatEncounter();
             }
         }

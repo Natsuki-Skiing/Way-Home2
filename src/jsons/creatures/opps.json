@@ -12,7 +12,8 @@
         "luck": 4,
         "maxHp": 10,
         "race": null,
-        "deathXp": 15
+        "deathXp": 15,
+        "deathBaseGold": 0.5
     }
     ,
     {
@@ -28,7 +29,8 @@
         "luck": 10,
         "maxHp": 10,
         "race": "ORC",
-        "deathXp": 15
+        "deathXp": 15,
+        "deathBaseGold": 5.0
     },
     
     {
@@ -44,6 +46,7 @@
         "luck": 6,
         "maxHp": 20,
         "race": null,
-        "deathXp": 30
+        "deathXp": 30,
+        "deathBaseGold": 10.0
     }
 ]

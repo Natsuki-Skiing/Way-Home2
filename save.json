@@ -1,0 +1,34 @@
+{
+  "screen" : {
+    "cursorPosition" : {
+      "row" : 28,
+      "column" : 85
+    },
+    "tabBehaviour" : "ALIGN_TO_COLUMN_4",
+    "terminalSize" : {
+      "columns" : 180,
+      "rows" : 53
+    },
+    "terminal" : {
+      "parent" : null,
+      "x" : 193,
+      "y" : 460,
+      "width" : 1460,
+      "height" : 846,
+      "cursor" : {
+        "type" : 0,
+        "name" : "Default Cursor"
+      },
+      "locale" : "en_GB",
+      "bufferStrategy" : null,
+      "ignoreRepaint" : false,
+      "enabled" : true,
+      "valid" : true,
+      "dropTarget" : null,
+      "name" : "frame0",
+      "focusable" : true,
+      "focusTraversalKeysEnabled" : true,
+      "componentOrientation" : {
+        "horizontal" : true,
+        "leftToRight" : true
+      }

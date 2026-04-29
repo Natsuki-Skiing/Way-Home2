@@ -6,6 +6,7 @@ import items.ChestClasses.ChestItem;
 import items.templates.ArmourTemplate;
 import items.templates.ItemTemplate;
 import items.Instances.*;
+import java.io.Serializable;
 
 import java.math.BigDecimal;
 import java.util.HashMap;
@@ -58,9 +59,13 @@ public class Player extends Character {
     }
 
     public void addGold(double amount){
-        this.gold.add(BigDecimal.valueOf(amount));
+        this.gold = this.gold.add(BigDecimal.valueOf(amount));
     }
 
+
+    public void addGold(BigDecimal amount){
+        this.gold =this.gold.add(amount);
+    }
     public void increaseTotalDamage(int increase){
         this.totalDamage += increase;
     }
