@@ -220,7 +220,13 @@ public class ItemController {
         return(getItem(type,getRandomTier()));
     }
     public ItemInstance getItem(enums.itemTypeEnum itemType,int tier){
-        
+        //For vendors and another suff, armour is just the gneral type but isn't a real item type
+        if(itemType == itemTypeEnum.ARMOR){
+            itemTypeEnum[] armourType = {itemTypeEnum.ARMOUR_LIGHT,itemTypeEnum.ARMOUR_MEDIUM,itemTypeEnum.ARMOUR_HEAVY};
+            int index = this.randomGenerator.nextInt(0, armourType.length);
+            itemType = armourType[index];
+
+        }
         ItemInstance item = this.retreiveInstanceFromMap(itemType,tier);
         if (item != null){
             Rarity itemRarity = this.getRarity();
