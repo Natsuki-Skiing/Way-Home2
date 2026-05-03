@@ -178,7 +178,7 @@ public class ChestContentsPanel extends Panel {
         for (ChestItem item : itemList) {
             String name = item.getName();
             String quantity = Integer.toString(item.getQuantity());
-            String equipped = " ";
+            String equipped = "";
             
             if (this.player != null && this.player.checkIfEquipt(item.getItem())) {
                 equipped = "E";

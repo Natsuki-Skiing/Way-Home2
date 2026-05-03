@@ -20,7 +20,7 @@ public class Player extends Character {
     private int xp = 0;
     private int worldX = 0;
     private int worldY = 0;
-    private int xpToNextLevel = 50;
+    private int xpToNextLevel = 50      ;
     private Chest inventory = new Chest();
     private int totalDamage=0;
     private BigDecimal gold = new BigDecimal(0.0);
@@ -224,7 +224,23 @@ public class Player extends Character {
         return takeItemFromInventory(item.getTemplate().getType(), item.getItemID(), amount);
     }
     public void unequipItem(ItemInstance item){
-        this.equippedItems.put(item.getTemplate().getType(), null);
+        if(item instanceof ArmourInstance armour){
+            unequipArmour(armour);
+        }else{
+            this.equippedItems.put(item.getTemplate().getType(), null);
+        }
+        
+    }
+
+    private boolean unequipArmour(ArmourInstance item){
+        ArmourTemplate template =(ArmourTemplate) item.getTemplate();
+        if(this.armourSlots.containsKey(template.getArmourSlot())){
+            if(this.armourSlots.get(template.getArmourSlot()) == item){
+                this.armourSlots.put(template.getArmourSlot(),null);
+            }
+            return true;
+        }
+            return false;
     }
     private boolean equipArmour(ArmourInstance item){
         ArmourTemplate template =(ArmourTemplate) item.getTemplate();
@@ -232,7 +248,7 @@ public class Player extends Character {
             this.armourSlots.put(template.getArmourSlot(), item);
             return true;
         }
-        return false;
+            return false;
     }
 
     private boolean equipRegularItem(ItemInstance item){
@@ -279,8 +295,17 @@ public class Player extends Character {
     }
 
     public boolean checkIfEquipt(ItemInstance item){
-        ItemInstance equippedItem = this.equippedItems.get(item.getTemplate().getType());
-        return equippedItem != null && equippedItem.getItemID() == item.getItemID();
+        
+        if( item instanceof ArmourInstance armourInstance){
+            ArmourTemplate template = (ArmourTemplate) armourInstance.getTemplate();
+            ArmourInstance equippedArmour = this.armourSlots.get(template.getArmourSlot());
+            return equippedArmour != null && equippedArmour.getItemID() == item.getItemID();
+        }else{
+            ItemInstance equippedItem = this.equippedItems.get(item.getTemplate().getType());
+            return equippedItem != null && equippedItem.getItemID() == item.getItemID();
+        }
+        
+        
     }
     public ChestItem takeItemFromInventory(ChestItem chestItem) {
         return takeItemFromInventory(chestItem.getItem(), chestItem.getQuantity());

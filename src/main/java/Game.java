@@ -1,3 +1,5 @@
+import items.templates.ArmourTemplate;
+import items.templates.ItemTemplate;
 import items.templates.WeaponTemplate;
 
 import creatures.*;
@@ -19,6 +21,9 @@ import com.googlecode.lanterna.TerminalSize;
 import java.util.regex.Pattern;
 import java.math.BigDecimal;
 import java.util.Random;
+
+import items.Instances.ArmourInstance;
+import items.Instances.ItemInstance;
 import items.Instances.WeaponInstance;
 import items.ItemManager.ItemController;
 import world.*;
@@ -115,9 +120,16 @@ public class Game implements Serializable {
         if(this.player == null){
             //Assuming no game has be loaded using the other constructor 
 
-            CharacterMaker characterMaker = new CharacterMaker(this.screen,this.textGUI);
-            this.player = characterMaker.getPlayer();
-            // this.player = new Player("Hero",  100, 100, 100, 100, 100, 100,raceEnum.NORD,150);
+            // CharacterMaker characterMaker = new CharacterMaker(this.screen,this.textGUI);
+            // this.player = characterMaker.getPlayer();
+            this.player = new Player("Hero",  100, 100, 100, 100, 100, 100,raceEnum.NORD,150);
+
+           
+
+
+            ArmourInstance ragTop = new ArmourInstance(new ArmourTemplate("Rag Shirt", "Smelly old raggy top. Was white once but is now a repulsive stained gray. It has more holes than not.", new BigDecimal(0.5),5.0,0.2,itemTypeEnum.ARMOUR_LIGHT,armourSlotEnum.CHEST_PLATE,200,9999999));
+            this.player.addItemToInventory(ragTop,1);
+            this.player.equipItem(this.player.getInventory().getItemsByType(enums.itemTypeEnum.ARMOR).get(0).getItem());
             this.player.addItemToInventory(this.itemController.getItem(enums.itemTypeEnum.WEAPON), 3);
             this.player.equipItem(this.player.getInventory().getItemsByType(enums.itemTypeEnum.WEAPON).get(0).getItem());
 
