@@ -249,6 +249,7 @@ public class CombatInterface {
 
                 
 
+
                 this.player.addXp(xpGained);
 
                 new MessageDialogBuilder()

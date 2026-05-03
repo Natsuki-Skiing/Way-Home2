@@ -267,6 +267,20 @@ public class Game implements Serializable {
         enemy.setWeapon(new WeaponInstance(new WeaponTemplate("Goblin Scythe","Wop wop wop",1.0,20,1,itemTypeEnum.WEAPON_LARGE,1000,1)));
         CombatEncounter combat = new CombatEncounter(player, enemy, textGUI);
         combat.showInterface();
+
+        while(this.player.getXp() >= this.player.getXpToNextLevel()){
+            this.player.setXpToNextLevel();
+            LevelUpMenu levelUpMenu = new LevelUpMenu(textGUI,this.player);
+            skillEnum levelUpSKill = levelUpMenu.show(1);
+            int amount = 1;
+
+            if(levelUpSKill == skillEnum.HP){
+                amount = 15;
+            }
+
+            this.player.addToSkill(levelUpSKill, amount);
+
+        }
         
     }
 }

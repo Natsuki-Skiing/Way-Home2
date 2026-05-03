@@ -20,7 +20,7 @@ public class Player extends Character {
     private int xp = 0;
     private int worldX = 0;
     private int worldY = 0;
-    private int xpToNextLevel = 100;
+    private int xpToNextLevel = 50;
     private Chest inventory = new Chest();
     private int totalDamage=0;
     private BigDecimal gold = new BigDecimal(0.0);
@@ -111,20 +111,50 @@ public class Player extends Character {
         return xp;
     }
     public boolean addXp(int amount) {
-        boolean hasLeveled = false;
+            
+
         this.xp += amount;
-        while (this.xp >= this.xpToNextLevel) {
-            this.xp -= this.xpToNextLevel;
-            levelUp(); 
-            hasLeveled = true;
-        }
-        return hasLeveled;
+        
+        return false;
  
     }
-    private void levelUp(){}
-
-    public int getXpToNextLevel() {
-        return xpToNextLevel;
+   
+    public void addToSkill(skillEnum skill, int amount){
+        switch (skill) {
+            case STR :
+                this.strength   += amount;
+                break;
+            case PER :
+                this.perception += amount;
+                break;
+            case END:
+                this.endurance  += amount;
+                break;
+            case CHR :
+                this.charisma   += amount;
+                break;
+            case AGL :
+                this.agility    += amount;
+                break;
+            case LUK :
+                this.luck       += amount;
+                break;
+                
+            case HP:
+                this.setMaxHp(this.getMaxHp()+amount);
+                this.addHp(amount);
+                break;
+            default: 
+                return; 
+        } // HP, DOGE, CRIT_CHANCE, BARTER, WEAPON_*, HEALING — no setter available
+        
+    }
+    public int getXpToNextLevel(){
+        return(this.xpToNextLevel);
+    }
+    public void setXpToNextLevel() {
+        int xpLevel = (int)(this.xpToNextLevel *1.20);
+        this.xpToNextLevel = xpLevel+ this.xpToNextLevel    ;
     }
     public void setXpToNextLevel(int xpToNextLevel) {
         this.xpToNextLevel = xpToNextLevel;
