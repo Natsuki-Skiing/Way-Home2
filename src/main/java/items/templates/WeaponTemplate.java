@@ -11,7 +11,7 @@ public class WeaponTemplate extends ConditionTemplate {
     private ArrayList<Enchantment> enchantments;
     private itemTypeEnum weaponType;
     
-    public WeaponTemplate(String name, String description, java.math.BigDecimal value, int damage, double weight, itemTypeEnum weaponType,int maxCondition,int itemID){
+    public WeaponTemplate(String name, String description, long  value, int damage, double weight, itemTypeEnum weaponType,int maxCondition,String itemID){
         super(name, description, value,maxCondition, itemTypeEnum.WEAPON,itemTypeEnum.EQUIPPABLE,itemID);
         this.damage = damage;
         this.weaponType = weaponType;
@@ -19,14 +19,14 @@ public class WeaponTemplate extends ConditionTemplate {
         
     }
 
-    public WeaponTemplate(HashMap<String, Object> itemData, int itemID) {
-        super(itemData, itemID);
+    public WeaponTemplate(HashMap<String, Object> itemData) {
+        super(itemData);
         this.damage = (Double) itemData.get("damage");
         this.weaponType = enums.itemTypeEnum.valueOf(((String) itemData.get("weaponType")).toUpperCase());
     }
     
-    public  WeaponTemplate(String name, String description, double value, int damage, double weight, itemTypeEnum weaponType,int maxCondition,int itemID){
-        this(name, description, new java.math.BigDecimal(value), damage, weight, weaponType, maxCondition,itemID);
+    public  WeaponTemplate(String name, String description, double value, int damage, double weight, itemTypeEnum weaponType,int maxCondition,String itemID){
+        this(name, description, value, damage, weight, weaponType, maxCondition,itemID);
     }
 
     public double getDamage() {

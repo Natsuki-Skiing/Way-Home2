@@ -1,5 +1,5 @@
 package items.templates;
-import java.math.BigDecimal;
+
 import enums.itemTypeEnum;
 import java.util.HashMap;
 
@@ -7,11 +7,11 @@ public class ItemTemplate  {
 
     private String name;
     private String description;
-    private BigDecimal value;
+    private long value;
     private itemTypeEnum type;
     private itemTypeEnum useType;
-    protected int itemID;
-    public ItemTemplate(String name, String description, BigDecimal value, itemTypeEnum type,itemTypeEnum useType, int itemID) {
+    protected String itemID;
+    public ItemTemplate(String name, String description, long value, itemTypeEnum type,itemTypeEnum useType, String itemID) {
         this.name = name;
         this.description = description;
         this.value = value;
@@ -20,10 +20,11 @@ public class ItemTemplate  {
         this.itemID = itemID;
     }
 
-    public ItemTemplate(HashMap<String, Object> itemData, int itemID) {
+    public ItemTemplate(HashMap<String, Object> itemData) {
+        this.itemID = (String) itemData.get("id");
         this.name = (String) itemData.get("name");
         this.description = (String) itemData.get("description");
-        this.value = new BigDecimal((Double) itemData.get("value"));
+        this.value = (long) itemData.get("value");
         String typeStr = (String) itemData.get("type");
         this.type = enums.itemTypeEnum.valueOf(typeStr.toUpperCase());
         this.useType = enums.itemTypeEnum.valueOf(((String) itemData.get("useType")).toUpperCase());
@@ -36,7 +37,7 @@ public class ItemTemplate  {
         this.value = other.value;
         this.type = other.type;
     }
-    public int getItemID(){
+    public String getItemID(){
         return(this.itemID);
     }
     public ItemTemplate copy() {
@@ -54,17 +55,17 @@ public class ItemTemplate  {
     public String getDescription() {
         return description;
     }
-    public BigDecimal getValue() {
+    public long getValue() {
         return value;   
     }
-    public void setItemID(int itemID){
+    public void setItemID(String itemID){
         this.itemID = itemID;
     }
     public String getValueAsString(){
         return(String.format("%.2f", this.value));
     }
 
-    public void setValue(BigDecimal value) {
+    public void setValue(long value) {
         this.value = value;
     }
 

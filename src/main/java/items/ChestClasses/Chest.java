@@ -1,5 +1,5 @@
 package items.ChestClasses;
-import java.math.BigDecimal;
+
 import enums.itemTypeEnum;
 import java.util.HashMap;
 import java.util.ArrayList;
@@ -8,19 +8,20 @@ import items.Instances.*;
 import items.templates.*;
 
 public class Chest   {
-    private HashMap<itemTypeEnum, HashMap<Integer,ChestItem>> itemsMap;
+    private HashMap<itemTypeEnum, HashMap<String,ChestItem>> itemsMap; //ItemID followed by chest item, sorted by type of item
 
 
     public Chest() {
         this.itemsMap = new HashMap<>();
-        this.itemsMap.put(itemTypeEnum.WEAPON, new HashMap<Integer,ChestItem>());
-        this.itemsMap.put(itemTypeEnum.ARMOR, new HashMap<Integer,ChestItem>());
-        this.itemsMap.put(itemTypeEnum.POTION, new HashMap<Integer,ChestItem>());
-        this.itemsMap.put(itemTypeEnum.MISC, new HashMap<Integer,ChestItem>());
-        this.itemsMap.put(itemTypeEnum.FOOD, new HashMap<Integer,ChestItem>());
-        this.itemsMap.put(itemTypeEnum.FISHING_ROD, new HashMap<Integer,ChestItem>());
+        this.itemsMap.put(itemTypeEnum.WEAPON, new HashMap<String,ChestItem>());
+        this.itemsMap.put(itemTypeEnum.ARMOR, new HashMap<String,ChestItem>());
+        this.itemsMap.put(itemTypeEnum.POTION, new HashMap<String,ChestItem>());
+        this.itemsMap.put(itemTypeEnum.MISC, new HashMap<String,ChestItem>());
+        this.itemsMap.put(itemTypeEnum.FOOD, new HashMap<String,ChestItem>());
+        this.itemsMap.put(itemTypeEnum.FISHING_ROD, new HashMap<String,ChestItem>());
     }
 
+    //For if stacking is needed 
     private boolean alreadyContainsItem(ItemInstance item, int quantity){
         boolean contains = false;
         enums.itemTypeEnum template = item.getTemplate().getType();
@@ -67,7 +68,7 @@ public class Chest   {
         return itemList;
     }
 
-    public ChestItem takeItem(itemTypeEnum type, int itemID, int amount) {
+    public ChestItem takeItem(itemTypeEnum type, String itemID, int amount) {
         ChestItem chestItem = this.itemsMap.get(type).get(itemID);
         if (chestItem != null) {
             int availableQuantity = chestItem.getQuantity();
@@ -83,7 +84,7 @@ public class Chest   {
         return null; // Item not found
     }
 
-    public int getNoOfItem(itemTypeEnum type, int itemID) {
+    public int getNoOfItem(itemTypeEnum type, String itemID) {
         ChestItem chestItem = this.itemsMap.get(type).get(itemID);
         if (chestItem != null) {
             return chestItem.getQuantity();
@@ -99,21 +100,21 @@ public class Chest   {
         return(new ArrayList<>(this.itemsMap.keySet()));
     }
 
-    public BigDecimal getSumOfItemValues(){
-        BigDecimal sum = new BigDecimal(0);
+    public long getSumOfItemValues(){
+        long sum = 0;
 
-        for (HashMap<Integer, ChestItem> innerMap : this.itemsMap.values()) {
+        for (HashMap<String, ChestItem> innerMap : this.itemsMap.values()) {
         
             for (ChestItem chestItem : innerMap.values()) {
                 
                 int quantity = chestItem.getQuantity();
                 
                 
-                BigDecimal unitValue = chestItem.getItem().getValue();
+                long unitValue = chestItem.getItem().getValue();
                 
-                BigDecimal stackValue = unitValue.multiply(BigDecimal.valueOf(quantity));
+                long stackValue = unitValue * quantity;
 
-                sum.add(stackValue);
+                sum += stackValue;
             }
         }
         return sum;

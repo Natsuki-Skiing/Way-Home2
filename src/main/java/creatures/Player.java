@@ -7,8 +7,8 @@ import items.templates.ArmourTemplate;
 import items.templates.ItemTemplate;
 import items.Instances.*;
 
+import java.math.*;
 
-import java.math.BigDecimal;
 import java.util.HashMap;
 
 import com.googlecode.lanterna.TextColor;
@@ -23,7 +23,7 @@ public class Player extends Character {
     private int xpToNextLevel = 50      ;
     private Chest inventory = new Chest();
     private int totalDamage=0;
-    private BigDecimal gold = new BigDecimal(0.0);
+    private long gold =0;
     private int totalHpLost =0;
     private HashMap<itemTypeEnum, ItemInstance> equippedItems = new HashMap<>();
     private HashMap<enums.armourSlotEnum,ArmourInstance> armourSlots = new HashMap<>();
@@ -50,22 +50,20 @@ public class Player extends Character {
         return(this.totalDamage);
     }
 
-    public BigDecimal getGold(){
+    public long getGold(){
         return(this.gold);
     }
 
-    public void setGold(BigDecimal newValue){
+    public void setGold(long newValue){
         this.gold = newValue;
     }
 
     public void addGold(double amount){
-        this.gold = this.gold.add(BigDecimal.valueOf(amount));
+        this.gold = this.gold +=(amount);
     }
 
 
-    public void addGold(BigDecimal amount){
-        this.gold =this.gold.add(amount);
-    }
+   
     public void increaseTotalDamage(int increase){
         this.totalDamage += increase;
     }
@@ -270,18 +268,18 @@ public class Player extends Character {
     
 
 
-    public int calculateScore(){
+    public long calculateScore(){
         
-        BigDecimal valueOfItems = this.inventory.getSumOfItemValues();
+        long valueOfItems = this.inventory.getSumOfItemValues();
 
         
-        BigDecimal netWorthScore = this.gold.add(valueOfItems).multiply(BigDecimal.valueOf(0.6));
+        double netWorthScore = (this.gold + valueOfItems) * 0.6;
 
         
-        BigDecimal finalScoreDecimal = netWorthScore.add(BigDecimal.valueOf(xp)).add(BigDecimal.valueOf(totalDamage - totalHpLost));
+        double finalScoreDecimal = netWorthScore + xp + ((totalDamage - totalHpLost) * 1.34);
 
         
-        return finalScoreDecimal.intValue();
+        return math.round(finalScoreDecimal);
     }
 
 

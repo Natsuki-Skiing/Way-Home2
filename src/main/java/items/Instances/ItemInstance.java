@@ -1,12 +1,12 @@
 package items.Instances;
 
 import items.templates.ItemTemplate;
-import java.math.BigDecimal;
+
 
 public class ItemInstance {
     protected final ItemTemplate template;
     private String nameModifier = "";
-    private BigDecimal value;
+    private long value;
     private boolean showOriginalName = true;
     private int idOverride = -1;
     public ItemInstance(ItemTemplate template) {
@@ -43,12 +43,10 @@ public class ItemInstance {
         return(String.format("%.2f", this.value));
     }
 
-    public int getItemID(){
-        if(idOverride != -1){
-            return(idOverride);
-        } else {
-            return(template.getItemID());
-        }
+    public String getItemID(){
+        
+        return(template.getItemID());
+        
     }
 
     public void setItemIDOverride(int itemID){
@@ -58,11 +56,11 @@ public class ItemInstance {
         return template;
     }
 
-    public BigDecimal getValue() {
+    public long getValue() {
         return value;
     }
 
-    public void setValue(BigDecimal value) {
+    public void setValue(long value) {
         this.value = value;
     }
 

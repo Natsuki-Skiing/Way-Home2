@@ -19,7 +19,7 @@ import clock.*;
 import com.googlecode.lanterna.TerminalPosition;
 import com.googlecode.lanterna.TerminalSize;
 import java.util.regex.Pattern;
-import java.math.BigDecimal;
+
 import java.util.Random;
 
 import items.Instances.ArmourInstance;
@@ -130,7 +130,7 @@ public class Game  {
            
 
 
-            ArmourInstance ragTop = new ArmourInstance(new ArmourTemplate("Rag Shirt", "Smelly old raggy top. Was white once but is now a repulsive stained gray. It has more holes than not.", new BigDecimal(0.5),5.0,0.2,itemTypeEnum.ARMOUR_LIGHT,armourSlotEnum.CHEST_PLATE,200,9999999));
+            ArmourInstance ragTop = new ArmourInstance(new ArmourTemplate("Rag Shirt", "Smelly old raggy top. Was white once but is now a repulsive stained gray. It has more holes than not.", 5,5.0,0.2,itemTypeEnum.ARMOUR_LIGHT,armourSlotEnum.CHEST_PLATE,200,9999999));
             this.player.addItemToInventory(ragTop,1);
             this.player.equipItem(this.player.getInventory().getItemsByType(enums.itemTypeEnum.ARMOR).get(0).getItem());
             this.player.addItemToInventory(this.itemController.getItem(enums.itemTypeEnum.WEAPON), 3);

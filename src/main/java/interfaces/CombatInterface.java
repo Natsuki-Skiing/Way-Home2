@@ -11,7 +11,7 @@ import com.googlecode.lanterna.screen.TerminalScreen;
 import com.googlecode.lanterna.terminal.DefaultTerminalFactory;
 import com.googlecode.lanterna.terminal.Terminal;
 
-import java.math.BigDecimal;
+
 import java.math.RoundingMode;
 import java.util.Random;
 import java.util.Vector;
@@ -226,7 +226,7 @@ public class CombatInterface {
                 this.addLogMessage("You slay the "+this.enemy.getName()+" !");
                 int xpGained = this.enemy.getDeathXp();
                 this.addLogMessage("You gain "+xpGained+" XP !");
-                BigDecimal goldGained = new BigDecimal(0.0);
+                long goldGained = 0;
                 int playerLuck = this.player.getLuck();
                 double goldChance = 0.20 + (0.50*(playerLuck/(playerLuck+0.40)));
 
@@ -235,15 +235,15 @@ public class CombatInterface {
                           "You gain " + xpGained + " XP!";
 
                 if (this.randGen.nextDouble() < goldChance) {
-                    BigDecimal goldAmount = this.enemy.getDeathGold();
+                    long goldAmount = this.enemy.getDeathGold();
 
                     double luckMultiplier = 1.0 + (playerLuck / 7.5);
 
-                    goldAmount = goldAmount.multiply(BigDecimal.valueOf(luckMultiplier)).setScale(2,RoundingMode.HALF_DOWN);
+                    goldAmount = Math.round(goldAmount *luckMultiplier);
 
                     this.player.addGold(goldAmount);
 
-                    popUpMessage += "\n Picked up "+ goldAmount.toString()+" gold.";
+                    popUpMessage += "\n Picked up "+ Long.toString(goldAmount)+" gold.";
 
                 }
 

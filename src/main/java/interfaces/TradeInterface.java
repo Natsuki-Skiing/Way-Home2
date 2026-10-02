@@ -13,7 +13,7 @@ import items.ChestClasses.ChestItem;
 import items.ItemManager.ItemController;
 import vendors.Vendor;
 
-import java.math.BigDecimal;
+
 import java.math.RoundingMode;
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -23,7 +23,7 @@ import java.util.concurrent.atomic.AtomicBoolean;
 import java.util.stream.Collectors;
 
 public class TradeInterface {
-    private static final BigDecimal SELL_RATE = new BigDecimal("0.50");
+    private static final double SELL_RATE = 0.5;
 
     private final Player player;
     private final Vendor vendor;
@@ -62,9 +62,9 @@ public class TradeInterface {
     private static class PendingEntry {
         final ChestItem chestItem;
         final boolean isBuy;
-        final BigDecimal price;
+        final long price;
 
-        PendingEntry(ChestItem chestItem, boolean isBuy, BigDecimal price) {
+        PendingEntry(ChestItem chestItem, boolean isBuy, long price) {
             this.chestItem = chestItem;
             this.isBuy = isBuy;
             this.price = price;
@@ -231,8 +231,7 @@ public class TradeInterface {
         if (idx >= items.size()) return;
         ChestItem item = items.get(idx);
         // Sell price is always 50% of the base template value, never the modified price
-        BigDecimal sellPrice = item.getItem().getTemplate().getValue()
-                .multiply(SELL_RATE).setScale(2, RoundingMode.HALF_UP);
+        long sellPrice = Math.round(item.getItem().getTemplate().getValue()*SELL_RATE);
         pending.add(new PendingEntry(item, false, sellPrice));
         refreshPending();
     }
@@ -245,11 +244,11 @@ public class TradeInterface {
     }
 
     private void confirmTrade() {
-        BigDecimal cost    = vendorTotal();
-        BigDecimal income  = playerTotal();
-        BigDecimal newGold = player.getGold().add(income).subtract(cost);
+        long cost    = vendorTotal();
+        long income  = playerTotal();
+        long newGold = player.getGold() + (income -cost);
 
-        if (newGold.compareTo(BigDecimal.ZERO) < 0) {
+        if (newGold  < 0) {
             MessageDialog.showMessageDialog(textGUI, "Cannot Trade",
                     "Not enough gold!", MessageDialogButton.OK);
             return;
@@ -293,8 +292,7 @@ public class TradeInterface {
         itemTypeEnum type = playerCats.get(playerCatIndex);
         playerCatLabel.setText(type.name());
         for (ChestItem item : player.getInventory().getItemsByType(type)) {
-            BigDecimal sell = item.getItem().getTemplate().getValue()
-                    .multiply(SELL_RATE).setScale(2, RoundingMode.HALF_UP);
+            long sell = Math.round(item.getItem().getTemplate().getValue() *SELL_RATE);
             String line = padRight(item.getName(), 16)
                     + String.format("%4d", item.getQuantity())
                     + String.format("%7.2f", sell);
@@ -312,33 +310,10 @@ public class TradeInterface {
             pendingList.addItem(line, () -> {});
         }
         if (!pending.isEmpty()) pendingList.setSelectedIndex(pending.size() - 1);
-        updateSummary();
+        
     }
 
-    private void updateSummary() {
-        BigDecimal cost   = vendorTotal();
-        BigDecimal income = playerTotal();
-        BigDecimal net    = player.getGold().add(income).subtract(cost);
-
-        playerGivesLabel.setText("|Player Item Value:  G " + fmt(income)          + "|");
-        playerGetsLabel .setText("|Vendor Item Value:  G " + fmt(cost)            + "|");
-        fundsLabel      .setText("|Player Funds:       G " + fmt(player.getGold())+ "|");
-        netLabel        .setText("|Transaction Sum:    G " + fmt(net)             + "|");
-    }
-
-    private BigDecimal vendorTotal() {
-        return pending.stream().filter(e -> e.isBuy)
-                .map(e -> e.price).reduce(BigDecimal.ZERO, BigDecimal::add);
-    }
-
-    private BigDecimal playerTotal() {
-        return pending.stream().filter(e -> !e.isBuy)
-                .map(e -> e.price).reduce(BigDecimal.ZERO, BigDecimal::add);
-    }
-
-    private String fmt(BigDecimal v) {
-        return String.format("%.2f", v);
-    }
+    
 
     private String padRight(String s, int width) {
         if (s.length() >= width) return s.substring(0, width);

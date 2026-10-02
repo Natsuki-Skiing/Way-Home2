@@ -1,7 +1,7 @@
 package vendors;
 import items.*;
 
-import java.math.BigDecimal;
+
 import java.util.Random;
 import java.util.Vector;
 import enums.*;
@@ -66,7 +66,7 @@ public class Vendor {
 
     }
 
-    private void prepareVendorForPlayer(BigDecimal priceMultiplier){
+    private void prepareVendorForPlayer(double priceMultiplier){
         this.modifiedChest = new Chest();
 
 
@@ -78,8 +78,8 @@ public class Vendor {
                 ItemInstance clonedItem = originalChestItem.getItem().copy();
 
                 // 2. Calculate the new price based on player stats
-                BigDecimal originalValue = clonedItem.getValue();
-                BigDecimal adjustedValue = originalValue.multiply(priceMultiplier);
+                long originalValue = clonedItem.getValue();
+                long adjustedValue = Math.round(originalValue * priceMultiplier);
                 
                 // 3. Update the cloned item's value (Assumes a setValue method in ItemInstance)
                 clonedItem.setValue(adjustedValue);
@@ -91,7 +91,7 @@ public class Vendor {
         }
     }
 
-    private BigDecimal calculateModifier(Player player){
+    private double calculateModifier(Player player){
         double modifier = 1.45;
 
         if(player.getRace() == this.race){
@@ -104,7 +104,7 @@ public class Vendor {
             modifier = 1.10;
         }
 
-        return(new BigDecimal(modifier));
+        return(modifier);
     }
 
     public void updateVendor(int clockTime, ItemController itemController, Player player){

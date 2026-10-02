@@ -2,14 +2,14 @@ package items.templates;
 
 import enums.itemTypeEnum;
 import enums.armourSlotEnum;
-import java.math.BigDecimal;
+
 import java.util.HashMap;
 public class ArmourTemplate extends ConditionTemplate {
     private itemTypeEnum armourType;
     private armourSlotEnum armourSlot;
     private double blockChance;
     private double defense;
-    public ArmourTemplate(String name, String description, java.math.BigDecimal value, double defense, double blockChance, itemTypeEnum armourType,armourSlotEnum armourSlot,int maxCondition,int itemID){
+    public ArmourTemplate(String name, String description, long  value, double defense, double blockChance, itemTypeEnum armourType,armourSlotEnum armourSlot,int maxCondition,String itemID){
         super(name,description,value,maxCondition, itemTypeEnum.ARMOR,itemTypeEnum.EQUIPPABLE,itemID);
         this.armourType = armourType;
         this.blockChance = blockChance;
@@ -19,8 +19,8 @@ public class ArmourTemplate extends ConditionTemplate {
        
     }
 
-    public ArmourTemplate(HashMap<String, Object> itemData, int itemID) {
-        super(itemData, itemID);
+    public ArmourTemplate(HashMap<String, Object> itemData) {
+        super(itemData);
         this.armourType = itemTypeEnum.valueOf(((String) itemData.get("armourType")).toUpperCase());
         this.armourSlot = armourSlotEnum.valueOf(((String) itemData.get("armourSlot")).toUpperCase());
         this.defense = ((Number) itemData.get("defense")).doubleValue();

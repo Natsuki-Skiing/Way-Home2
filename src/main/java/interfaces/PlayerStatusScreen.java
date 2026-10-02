@@ -33,8 +33,8 @@ public class PlayerStatusScreen{
         statsPanel.addComponent(new Label(String.valueOf(player.getXpToNextLevel()))); // From Player.java
 
         statsPanel.addComponent(new Label("Gold:"));
-        // Assuming a getGold() method exists for the BigDecimal field seen in your score logic
-        statsPanel.addComponent(new Label(player.getGold().toString())
+        
+        statsPanel.addComponent(new Label(Long.toString(player.getGold()))
                 .setForegroundColor(TextColor.ANSI.YELLOW_BRIGHT));
 
         mainPanel.addComponent(statsPanel.withBorder(Borders.singleLine("Character Status")));

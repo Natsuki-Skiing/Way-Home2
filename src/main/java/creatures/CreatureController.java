@@ -1,14 +1,14 @@
 package creatures;
 import java.io.File;
 import java.io.IOException;
-import java.math.BigDecimal;
+
 import java.util.HashMap;
 import java.util.Vector;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import java.io.File;
 import java.io.IOException;
 import com.fasterxml.jackson.core.type.TypeReference;
-
+import java.math.*;
 import java.util.Random; 
 import enums.*;
 import items.ItemManager.ItemController.regStruct;
@@ -47,7 +47,7 @@ public class CreatureController {
         opp.setAgility((int) (opp.getAgility() * modifier));
         opp.setLuck((int) (opp.getLuck() * modifier));
         opp.setMaxHp((int) (opp.getMaxHp() * modifier));
-        opp.setDeathGold( opp.getDeathGold().multiply(new BigDecimal(modifier)).max(BigDecimal.ONE));
+        opp.setDeathGold( opp.getDeathGold() * Math.max(modifier,1));
         opp.setDeathXp((int)(opp.getDeathXp()*modifier));
 
 
@@ -168,7 +168,7 @@ public class CreatureController {
                 race,
                 type,
                 (int) oppData.get("deathXp"),
-                new BigDecimal(oppData.get( "deathBaseGold").toString())
+                (long)oppData.get( "deathBaseGold").toString()
             );
 
            
