@@ -2,8 +2,8 @@ package items.templates;
 import java.math.BigDecimal;
 import enums.itemTypeEnum;
 import java.util.HashMap;
-import java.io.Serializable;
-public class ItemTemplate implements Serializable {
+
+public class ItemTemplate  {
 
     private String name;
     private String description;

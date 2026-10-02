@@ -4,7 +4,7 @@ import items.Enchantment.*;
 import enums.effectCounterType;
 import java.util.Vector;
 import enums.skillEnum;
-import java.io.Serializable;
+
 public class Character extends Entity{
     protected raceEnum race;
     protected Vector<Enchantment> currentEnchantments;

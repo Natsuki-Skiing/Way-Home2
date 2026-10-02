@@ -24,19 +24,41 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Vector;
 import java.util.concurrent.atomic.AtomicBoolean;
+import java.util.function.Consumer;
+import java.util.function.Function;
 
 public class ChestContentsPanel extends Panel {
     private final Player player;
     private final Chest inventory;
     private final Label currentCatLabel;
-    private final TextBox itemDesBox;
-    private final TextBox itemStatBox;
+    private TextBox itemDesBox;
+    private TextBox itemStatBox;
     private final ListeningActionListBox table;
     private final ArrayList<itemTypeEnum> catList;
     private int currentCatIndex = 0;
     private WindowBasedTextGUI textGUI;
 
-    public ChestContentsPanel(Player player, Chest inventorySource,WindowBasedTextGUI textGUI) {
+    // Optional callback: replaces the default equip/drop dialog when set
+    private Consumer<ChestItem> itemActionCallback = null;
+    // Optional callback: fires whenever the selected item changes
+    private Consumer<ChestItem> selectionChangedCallback = null;
+    // Optional formatter: customises the item label shown in the list
+    private Function<ChestItem, String> labelFormatter = null;
+
+    public void setItemActionCallback(Consumer<ChestItem> callback)    { this.itemActionCallback = callback; }
+    public void setSelectionChangedCallback(Consumer<ChestItem> cb)    { this.selectionChangedCallback = cb; }
+    public void setLabelFormatter(Function<ChestItem, String> fmt)     { this.labelFormatter = fmt; }
+
+    /** Full panel with item list + description/stats. */
+    public ChestContentsPanel(Player player, Chest inventorySource, WindowBasedTextGUI textGUI) {
+        this(player, inventorySource, textGUI, true);
+    }
+
+    /**
+     * @param showInfo when false the description/stats panels are omitted,
+     *                 making the panel compact enough for side-by-side layouts.
+     */
+    public ChestContentsPanel(Player player, Chest inventorySource, WindowBasedTextGUI textGUI, boolean showInfo) {
         this.player = player;
         this.inventory = inventorySource;
         this.catList = this.inventory.getTypesOfChest();
@@ -45,32 +67,60 @@ public class ChestContentsPanel extends Panel {
         this.setLayoutManager(new LinearLayout(Direction.HORIZONTAL));
 
         Panel listPanel = new Panel();
-        Panel infoPanel = new Panel();
 
         this.currentCatLabel = new Label(" ");
         this.table = new ListeningActionListBox();
-        
+
         listPanel.addComponent(currentCatLabel);
         listPanel.addComponent(this.table);
-        
-        String title = (player != null && inventorySource == player.getInventory()) 
-                ? "Inventory of " + player.getName() 
+
+        String title = (player != null && inventorySource == player.getInventory())
+                ? "Inventory of " + player.getName()
                 : "Container";
-                
+
         this.addComponent(listPanel.withBorder(Borders.doubleLine(title)));
 
-        this.itemDesBox = new TextBox(new TerminalSize(50, 10));
-        this.itemStatBox = new TextBox(new TerminalSize(50, 10));
-        this.itemDesBox.setReadOnly(true);
-        this.itemStatBox.setReadOnly(true);
-
-        infoPanel.addComponent(this.itemDesBox.withBorder(Borders.singleLine("Description")));
-        infoPanel.addComponent(this.itemStatBox.withBorder(Borders.singleLine("Stats")));
-        
-        this.addComponent(infoPanel.withBorder(Borders.doubleLine("Item information")));
+        if (showInfo) {
+            Panel infoPanel = new Panel();
+            this.itemDesBox = new TextBox(new TerminalSize(50, 10));
+            this.itemStatBox = new TextBox(new TerminalSize(50, 10));
+            this.itemDesBox.setReadOnly(true);
+            this.itemStatBox.setReadOnly(true);
+            infoPanel.addComponent(this.itemDesBox.withBorder(Borders.singleLine("Description")));
+            infoPanel.addComponent(this.itemStatBox.withBorder(Borders.singleLine("Stats")));
+            this.addComponent(infoPanel.withBorder(Borders.doubleLine("Item information")));
+        }
 
         setupInputHandling();
         changeCat(0);
+    }
+
+    /** Re-populates the list from the current chest state (call after chest contents change). */
+    public void refresh() {
+        this.catList.clear();
+        this.catList.addAll(this.inventory.getTypesOfChest());
+        if (!this.catList.isEmpty() && this.currentCatIndex >= this.catList.size()) {
+            this.currentCatIndex = 0;
+        }
+        if (!this.catList.isEmpty()) {
+            this.currentCatLabel.setText(this.catList.get(this.currentCatIndex).name());
+        }
+        populateTable();
+    }
+
+    /** Gives keyboard focus to this panel's item list. */
+    public void takeFocus() {
+        this.table.takeFocus();
+    }
+
+    /** Returns the ChestItem currently highlighted in the list, or null. */
+    public ChestItem getSelectedChestItem() {
+        int idx = this.table.getSelectedIndex();
+        itemTypeEnum type = getCurrentType();
+        if (type == null || idx < 0) return null;
+        List<ChestItem> items = this.inventory.getItemsByType(type);
+        if (idx >= items.size()) return null;
+        return items.get(idx);
     }
 
     private void setupInputHandling() {
@@ -122,12 +172,18 @@ public class ChestContentsPanel extends Panel {
     }
 
     private void updateDescription() {
+        if (this.itemDesBox == null) {
+            ChestItem selected = getSelectedChestItem();
+            if (selectionChangedCallback != null) selectionChangedCallback.accept(selected);
+            return;
+        }
         int index = this.table.getSelectedIndex();
         List<ChestItem> items = this.inventory.getItemsByType(getCurrentType());
-        
+
         if (index < 0 || index >= items.size()) {
             this.itemDesBox.setText("");
             this.itemStatBox.setText("");
+            if (selectionChangedCallback != null) selectionChangedCallback.accept(null);
             return;
         }
 
@@ -157,7 +213,12 @@ public class ChestContentsPanel extends Panel {
             this.itemStatBox.addLine("Condition : " + conItem.getCondition() + " / " + conItem.getMaxCondition());
         }
         
-        this.itemStatBox.addLine("Value : ᚠ " + item.getValueAsString());
+        this.itemStatBox.addLine("Value : G " + item.getValueAsString());
+
+        if (selectionChangedCallback != null) {
+            List<ChestItem> cbItems = this.inventory.getItemsByType(getCurrentType());
+            if (index < cbItems.size()) selectionChangedCallback.accept(cbItems.get(index));
+        }
     }
 
     public void executeSelectedItem() {
@@ -184,7 +245,9 @@ public class ChestContentsPanel extends Panel {
                 equipped = "E";
             }
             
-            String label = name + " " + quantity + " " + equipped;
+            String label = (labelFormatter != null)
+                    ? labelFormatter.apply(item)
+                    : name + " " + quantity + " " + equipped;
             this.table.addItem(label, () -> handleSelection(item));
         }
         
@@ -217,6 +280,10 @@ public class ChestContentsPanel extends Panel {
         
     }
     private void handleSelection(ChestItem selectedItem) {
+        if (itemActionCallback != null) {
+            itemActionCallback.accept(selectedItem);
+            return;
+        }
         final AtomicBoolean isEquippable = new AtomicBoolean(false);
         final AtomicBoolean isEquipped = new AtomicBoolean(false);
         String actionMsg = "Consume";

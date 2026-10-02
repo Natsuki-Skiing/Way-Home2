@@ -3,6 +3,7 @@ package items.templates;
 import enums.itemTypeEnum;
 import enums.armourSlotEnum;
 import java.math.BigDecimal;
+import java.util.HashMap;
 public class ArmourTemplate extends ConditionTemplate {
     private itemTypeEnum armourType;
     private armourSlotEnum armourSlot;
@@ -16,6 +17,14 @@ public class ArmourTemplate extends ConditionTemplate {
         this.armourSlot = armourSlot;       
         
        
+    }
+
+    public ArmourTemplate(HashMap<String, Object> itemData, int itemID) {
+        super(itemData, itemID);
+        this.armourType = itemTypeEnum.valueOf(((String) itemData.get("armourType")).toUpperCase());
+        this.armourSlot = armourSlotEnum.valueOf(((String) itemData.get("armourSlot")).toUpperCase());
+        this.defense = ((Number) itemData.get("defense")).doubleValue();
+        this.blockChance = ((Number) itemData.get("blockChance")).doubleValue();
     }
 
     public double getDefense(){

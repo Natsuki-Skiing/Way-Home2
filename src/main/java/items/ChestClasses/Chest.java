@@ -6,8 +6,8 @@ import java.util.ArrayList;
 
 import items.Instances.*;
 import items.templates.*;
-import java.io.Serializable;
-public class Chest implements Serializable  {
+
+public class Chest   {
     private HashMap<itemTypeEnum, HashMap<Integer,ChestItem>> itemsMap;
 
 

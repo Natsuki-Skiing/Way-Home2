@@ -41,15 +41,15 @@ public class InventoryInterface {
     private Window window;
     private Panel rootPanel;
     public InventoryInterface(Player player,Screen screen, WindowBasedTextGUI textGUI){
-        this.chestPanel = new ChestContentsPanel(player, player.getInventory(),this.textGUI);
+        this.screen = screen;
+        this.textGUI = textGUI;
+
+        this.chestPanel = new ChestContentsPanel(player, player.getInventory(), textGUI);
 
         this.window = new BasicWindow();
         this.window.setHints(java.util.Arrays.asList(
             Window.Hint.NO_POST_RENDERING   // Prevents windows behind from drawing
         ));
-
-        this.screen = screen;
-        this.textGUI = textGUI;
 
         this.rootPanel = new Panel();
         this.rootPanel.addComponent(chestPanel);

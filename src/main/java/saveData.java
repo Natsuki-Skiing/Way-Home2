@@ -1,10 +1,10 @@
 
 
-import java.io.Serializable;
+
 import creatures.Player;
 import world.World;
 
-public class saveData implements Serializable {
+public class saveData  {
     private static final long serialVersionUID = 1L;
 
     // Directly save the entire objects

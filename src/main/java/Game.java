@@ -28,8 +28,10 @@ import items.Instances.WeaponInstance;
 import items.ItemManager.ItemController;
 import world.*;
 import interfaces.*;
-import java.io.Serializable;
-public class Game implements Serializable {
+import vendors.Vendor;
+import java.util.Vector;
+
+public class Game  {
     private Player player = null;
     public Screen screen;
     public mainGameWindow mainWindow;
@@ -44,6 +46,7 @@ public class Game implements Serializable {
     private TileHolderClass tileHolder;
     private World world = null;
     private Boolean newMap = false;
+    private Vendor vendor = null;
     private int mapWidth = 80;
     private int mapHeight = 30;
     Random randomGen = new Random();
@@ -133,9 +136,17 @@ public class Game implements Serializable {
             this.player.addItemToInventory(this.itemController.getItem(enums.itemTypeEnum.WEAPON), 3);
             this.player.equipItem(this.player.getInventory().getItemsByType(enums.itemTypeEnum.WEAPON).get(0).getItem());
 
+            this.player.addGold(100.0);
+
             this.clock = new Clock(0, 2500, 200);
             this.clock.startClock();
         }
+
+        Vector<itemTypeEnum> vendorSells = new Vector<>();
+        vendorSells.add(itemTypeEnum.WEAPON);
+        vendorSells.add(itemTypeEnum.ARMOR);
+        vendorSells.add(itemTypeEnum.FOOD);
+        this.vendor = new Vendor(vendorSells);
         
         
         this.creatureController = new CreatureController("src/jsons/creatures/opps.json");
@@ -156,19 +167,17 @@ public class Game implements Serializable {
 
         this.mainWindow = new mainGameWindow(this.screen,this.textGUI,this.player,this.world.getMap(0, 0));
         this.textGUI.addWindow(this.mainWindow.getWindow());
-       
-    
+
         movePlayer(0, 0);
-        
+
+        // Give the Swing terminal's EDT time to finish painting the window before first render
+        try { Thread.sleep(400); } catch (InterruptedException ignored) {}
+        forceRender();
+
         while(this.running){
-            
+
             if(this.renderWindow){
-                try {
-                    this.mainWindow.updateInfo(this.clock.getTimeString(),this.newMap);
-                    this.textGUI.updateScreen();
-                } catch (java.io.IOException e) {
-                    e.printStackTrace();
-                }
+                forceRender();
                 this.renderWindow = false;
                 this.newMap = false;
             }
@@ -196,18 +205,27 @@ public class Game implements Serializable {
                 case INVENTORY:
                     this.clock.updateTime();
                     InventoryInterface invScreen = new InventoryInterface(player, screen, textGUI);
-                    //invScreen.mainLoop();
                     invScreen.show();
+                    this.renderWindow = true;
                     break;
                 case STATS:
                     PlayerStatusScreen statusScreen = new PlayerStatusScreen();
                     statusScreen.showStatusScreen(player, textGUI);
+                    this.renderWindow = true;
                     break;
                 case PAUSE:
                     this.clock.pause();
                     PauseMenu pauseMenu = new PauseMenu(this, new SaverLoader());
                     pauseMenu.show(textGUI);
                     this.clock.start();
+                    this.renderWindow = true;
+                    break;
+                case INTERACT:
+                    this.clock.pause();
+                    TradeInterface tradeMenu = new TradeInterface(this.vendor, this.player, this.textGUI, this.itemController, this.clock.getSecondsTime());
+                    tradeMenu.show();
+                    this.clock.start();
+                    this.renderWindow = true;
                     break;
                 default:
                     this.mainWindow.getWindow().handleInput(input);
@@ -219,6 +237,16 @@ public class Game implements Serializable {
                 this.renderWindow = true;
             }
             
+        }
+    }
+
+    private void forceRender() {
+        try {
+            this.mainWindow.updateInfo(this.clock.getTimeString(), this.newMap);
+            this.screen.doResizeIfNecessary();
+            this.textGUI.updateScreen();
+        } catch (java.io.IOException e) {
+            e.printStackTrace();
         }
     }
 

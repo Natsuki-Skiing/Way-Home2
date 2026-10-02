@@ -59,7 +59,8 @@ public class Vendor {
             // 2. Get the specific enum type
             itemTypeEnum selectedType = this.typeSells.get(randomIndex);
 
-            this.baseChest.addRegularItem(itemController.getItem(selectedType));
+            ItemInstance item = itemController.getItem(selectedType);
+            if(item != null){ this.baseChest.addRegularItem(item); }
         }
 
 
@@ -91,31 +92,37 @@ public class Vendor {
     }
 
     private BigDecimal calculateModifier(Player player){
-        double modifier = 0.30;
-        
+        double modifier = 1.45;
 
         if(player.getRace() == this.race){
-            modifier += 0.10;
+            modifier -= 0.10;
         }
 
-        modifier += player.getCharisma() * 0.025;
+        modifier -= player.getCharisma() * 0.005;
 
-        if(modifier > 0.9){
-            modifier = 0.9;
+        if(modifier < 1.10){
+            modifier = 1.10;
         }
 
         return(new BigDecimal(modifier));
     }
 
-    public void updateVendor(int clockTime, ItemController itemController,Player player){
-        //TODO check the propoer time scale forgot init
+    public void updateVendor(int clockTime, ItemController itemController, Player player){
         if(clockTime - this.lastUpdate >= 500 || this.lastUpdate == -1){
             this.lastUpdate = clockTime;
             populateBaseChest(itemController);
-
         }
 
-        prepareVendorForPlayer(new BigDecimal(1.45));
+        prepareVendorForPlayer(calculateModifier(player));
+    }
+
+    public Chest getVendorChest(Player player, int clockTime, ItemController itemController){
+        updateVendor(clockTime, itemController, player);
+        return this.modifiedChest;
+    }
+
+    public String getName(){
+        return this.name;
     }
 
 }

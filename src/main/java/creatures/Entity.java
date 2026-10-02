@@ -1,8 +1,8 @@
 package creatures;
 import java.util.HashMap;
 import enums.*;
-import java.io.Serializable;
-public class Entity implements Serializable {
+
+public class Entity  {
     protected String name;
     protected int level;
     protected int strength;

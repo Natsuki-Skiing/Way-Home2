@@ -5,8 +5,8 @@ import util.FastNoiseLite;
 import util.FastNoiseLite.NoiseType;
 
 import java.beans.Transient;
-import java.io.Serializable;
-public class World implements Serializable {
+
+public class World  {
     //I need to load already made maps here
     private HashMap<String,Map> mapsHash;
     private int mapWidth;

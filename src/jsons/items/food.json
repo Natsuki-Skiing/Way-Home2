@@ -1,0 +1,90 @@
+[
+    {
+        "name": "Stale Bread",
+        "description": "A hard, dry loaf that's seen better days. Not pleasant to eat, but it'll keep hunger at bay.",
+        "value": 0.50,
+        "type": "FOOD",
+        "useType": "CONSUMABLE",
+        "tier": 1
+    },
+    {
+        "name": "Dried Meat",
+        "description": "Strips of salted, sun-dried meat. Tough to chew but rich in protein. A staple of travelers and soldiers.",
+        "value": 1.20,
+        "type": "FOOD",
+        "useType": "CONSUMABLE",
+        "tier": 1
+    },
+    {
+        "name": "Apple",
+        "description": "A slightly bruised but still edible apple. Sweet and refreshing.",
+        "value": 0.80,
+        "type": "FOOD",
+        "useType": "CONSUMABLE",
+        "tier": 1
+    },
+    {
+        "name": "Hardtack",
+        "description": "A dense, unleavened biscuit that could double as a throwing weapon. Lasts forever. Tastes like it too.",
+        "value": 0.60,
+        "type": "FOOD",
+        "useType": "CONSUMABLE",
+        "tier": 1
+    },
+    {
+        "name": "Hot Stew",
+        "description": "A bowl of hearty stew with vegetables and a mystery meat. Whatever it is, it's warm and filling.",
+        "value": 4.00,
+        "type": "FOOD",
+        "useType": "CONSUMABLE",
+        "tier": 2
+    },
+    {
+        "name": "Roasted Chicken",
+        "description": "A whole roasted chicken, seasoned with herbs and cooked to a golden crisp. The smell alone restores morale.",
+        "value": 6.50,
+        "type": "FOOD",
+        "useType": "CONSUMABLE",
+        "tier": 2
+    },
+    {
+        "name": "Venison",
+        "description": "A thick cut of fresh venison, lightly salted and pan-seared. The meal of hunters and lords alike.",
+        "value": 8.00,
+        "type": "FOOD",
+        "useType": "CONSUMABLE",
+        "tier": 2
+    },
+    {
+        "name": "Cheese Wedge",
+        "description": "A generous wedge of aged hard cheese. Sharp and salty, best paired with bread — not that you have any.",
+        "value": 3.50,
+        "type": "FOOD",
+        "useType": "CONSUMABLE",
+        "tier": 2
+    },
+    {
+        "name": "Feast Bread",
+        "description": "A rich, soft loaf baked with butter and honey. The kind served at noble tables. You must have stolen it.",
+        "value": 15.00,
+        "type": "FOOD",
+        "useType": "CONSUMABLE",
+        "tier": 3
+    },
+    {
+        "name": "Hearty Broth",
+        "description": "A thick, restorative broth boiled from prime cuts and rare herbs. Warmth spreads through you with every sip.",
+        "value": 18.00,
+        "type": "FOOD",
+        "useType": "CONSUMABLE",
+        "tier": 3
+    },
+    {
+        "name": "Smoked Salmon",
+        "description": "A beautifully smoked side of salmon, caught from a clean northern river. Rich, fatty, and deeply satisfying.",
+        "value": 20.00,
+        "type": "FOOD",
+        "useType": "CONSUMABLE",
+        "tier": 3
+    }
+]

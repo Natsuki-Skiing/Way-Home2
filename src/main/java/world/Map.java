@@ -6,9 +6,9 @@ import interfaces.GameTile;
 import enums.worldRegionEnum;
 import enums.worldTileTypeEnum;
 import java.util.Vector;
-import java.io.Serializable;
+
 import interfaces.GameTile;
-public class Map implements Serializable {
+public class Map  {
     private HashMap<String,GameTile> mapTiles;
     private worldRegionEnum mapRegionType;
 

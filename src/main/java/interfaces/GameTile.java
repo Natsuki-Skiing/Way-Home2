@@ -1,7 +1,7 @@
 package interfaces;
 import com.googlecode.lanterna.TextColor;
-import java.io.Serializable;
-public class GameTile implements Serializable {
+
+public class GameTile  {
     private transient TextColor backgroundColor;
     private transient TextColor foregroundColor;
     private String fgColorHex;

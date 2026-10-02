@@ -1,9 +1,9 @@
 package clock;
-import java.io.Serializable;
+
 import java.time.Instant;
 import java.util.concurrent.atomic.AtomicInteger;
 
-public class Clock implements Serializable {
+public class Clock  {
     private AtomicInteger secondsSinceStart;
     private transient long lastNano;
     private transient boolean running = false;

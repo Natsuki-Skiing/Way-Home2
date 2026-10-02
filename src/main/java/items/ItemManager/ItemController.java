@@ -57,6 +57,8 @@ public class ItemController {
         addRarity(2, gold);
 
         populateItemMap("src/jsons/items/weapons.json");
+        populateItemMap("src/jsons/items/armour.json");
+        populateItemMap("src/jsons/items/food.json");
     }
     private void addRarity(int weight, Rarity rarity){
         if(weight > 0){
@@ -127,7 +129,11 @@ public class ItemController {
                     itemTemplate = new WeaponTemplate(itemData,getNewItemID());
                     break;
                 default:
-                    itemTemplate = new ItemTemplate(itemData,getNewItemID());
+                    if(itemData.containsKey("armourSlot")){
+                        itemTemplate = new items.templates.ArmourTemplate(itemData,getNewItemID());
+                    } else {
+                        itemTemplate = new ItemTemplate(itemData,getNewItemID());
+                    }
                     break;
             }
             if(itemTemplate != null){
@@ -220,13 +226,6 @@ public class ItemController {
         return(getItem(type,getRandomTier()));
     }
     public ItemInstance getItem(enums.itemTypeEnum itemType,int tier){
-        //For vendors and another suff, armour is just the gneral type but isn't a real item type
-        if(itemType == itemTypeEnum.ARMOR){
-            itemTypeEnum[] armourType = {itemTypeEnum.ARMOUR_LIGHT,itemTypeEnum.ARMOUR_MEDIUM,itemTypeEnum.ARMOUR_HEAVY};
-            int index = this.randomGenerator.nextInt(0, armourType.length);
-            itemType = armourType[index];
-
-        }
         ItemInstance item = this.retreiveInstanceFromMap(itemType,tier);
         if (item != null){
             Rarity itemRarity = this.getRarity();
@@ -278,8 +277,9 @@ public class ItemController {
         
     }
     public ItemInstance instanceFromTemplate(ItemTemplate template){
-       
-        if(template instanceof WeaponTemplate weaponTemplate){
+        if(template instanceof items.templates.ArmourTemplate armourTemplate){
+            return(new items.Instances.ArmourInstance(armourTemplate));
+        } else if(template instanceof WeaponTemplate weaponTemplate){
             return(new WeaponInstance(weaponTemplate,weaponTemplate.getMaxCondition()));
         } else if(template instanceof ConditionTemplate conditionTemplate){
             return(new ConditionInstance(conditionTemplate,conditionTemplate.getMaxCondition()));
@@ -291,7 +291,10 @@ public class ItemController {
     }
     private ItemInstance retreiveInstanceFromMap(enums.itemTypeEnum itemType,int tier){
         ItemTemplate template = null;
-        Vector<ItemTemplate> itemVector = this.mainItemMap.get(itemType).get(tier);
+        if(!this.mainItemMap.containsKey(itemType)) return null;
+        HashMap<Integer,Vector<ItemTemplate>> tierMap = this.mainItemMap.get(itemType);
+        if(!tierMap.containsKey(tier)) return null;
+        Vector<ItemTemplate> itemVector = tierMap.get(tier);
         Random randomGenerator = new Random();
 
         int randIndex = randomGenerator.nextInt(itemVector.size());

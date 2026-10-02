@@ -1,3 +1,14 @@
-Game$1.class
-enums/dungeonTileTypeEnum.class
+enums\dungeonTileTypeEnum.class
+interfaces\CombatInterface$6.class
+world\Map$1.class
+interfaces\DungeonCompass$2.class
+interfaces\DungeonInterface$2.class
+interfaces\TradeInterface$2.class
+interfaces\InfoPanel$1.class
 Game.class
+items\ItemManager\ItemController$2.class
+Dungeon\TileHolderClass$1.class
+Dungeon\Dungeon$1.class
+creatures\Player$1.class
+util\FastNoiseLite$1.class
+Game$1.class
