@@ -1,5 +1,6 @@
 [
     {
+        "id":"boot_worn_leather",
         "name": "Worn Leather Boots",
         "description": "A pair of scuffed leather boots, cracked at the toe but still wearable. Better than going barefoot.",
         "value": 4.00,
@@ -13,6 +14,7 @@
         "tier": 1
     },
     {
+        "id":"cap_rough_hide",
         "name": "Rough Hide Cap",
         "description": "A cap stitched together from various scraps of hide. Offers minimal protection but keeps your head dry.",
         "value": 3.50,
@@ -26,6 +28,7 @@
         "tier": 1
     },
     {
+        "id":"shirt_leather_jerkin",
         "name": "Leather Jerkin",
         "description": "A simple leather vest worn by hunters and travelers. Lightweight and flexible, providing basic protection without slowing you down.",
         "value": 8.00,
@@ -39,6 +42,7 @@
         "tier": 1
     },
     {
+        "id":"gloves_cloth_wraps",
         "name": "Cloth Wraps",
         "description": "Strips of rough cloth wound around the hands. Hardly armour, but they protect your knuckles.",
         "value": 2.00,
@@ -52,6 +56,7 @@
         "tier": 1
     },
     {
+        "id":"boots_hardened_leather",
         "name": "Hardened Leather Boots",
         "description": "Boots reinforced with hardened leather plates at the shin and toe. Standard issue for scouts and rangers.",
         "value": 22.00,

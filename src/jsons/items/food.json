@@ -1,5 +1,6 @@
 [
     {
+        "id": "stale_bread",
         "name": "Stale Bread",
         "description": "A hard, dry loaf that's seen better days. Not pleasant to eat, but it'll keep hunger at bay.",
         "value": 0.50,
@@ -8,6 +9,7 @@
         "tier": 1
     },
     {
+        "id": "dried_meat",
         "name": "Dried Meat",
         "description": "Strips of salted, sun-dried meat. Tough to chew but rich in protein. A staple of travelers and soldiers.",
         "value": 1.20,
@@ -16,6 +18,7 @@
         "tier": 1
     },
     {
+        "id": "apple",
         "name": "Apple",
         "description": "A slightly bruised but still edible apple. Sweet and refreshing.",
         "value": 0.80,
@@ -24,6 +27,7 @@
         "tier": 1
     },
     {
+        "id": "hardtack",
         "name": "Hardtack",
         "description": "A dense, unleavened biscuit that could double as a throwing weapon. Lasts forever. Tastes like it too.",
         "value": 0.60,
@@ -32,6 +36,7 @@
         "tier": 1
     },
     {
+        "id": "hot_stew",
         "name": "Hot Stew",
         "description": "A bowl of hearty stew with vegetables and a mystery meat. Whatever it is, it's warm and filling.",
         "value": 4.00,
@@ -40,6 +45,7 @@
         "tier": 2
     },
     {
+        "id": "roasted_chicken",
         "name": "Roasted Chicken",
         "description": "A whole roasted chicken, seasoned with herbs and cooked to a golden crisp. The smell alone restores morale.",
         "value": 6.50,
@@ -48,6 +54,7 @@
         "tier": 2
     },
     {
+        "id": "venison",
         "name": "Venison",
         "description": "A thick cut of fresh venison, lightly salted and pan-seared. The meal of hunters and lords alike.",
         "value": 8.00,
@@ -56,6 +63,7 @@
         "tier": 2
     },
     {
+        "id": "cheese_wedge",
         "name": "Cheese Wedge",
         "description": "A generous wedge of aged hard cheese. Sharp and salty, best paired with bread — not that you have any.",
         "value": 3.50,
@@ -64,6 +72,7 @@
         "tier": 2
     },
     {
+        "id": "feast_bread",
         "name": "Feast Bread",
         "description": "A rich, soft loaf baked with butter and honey. The kind served at noble tables. You must have stolen it.",
         "value": 15.00,
@@ -72,6 +81,7 @@
         "tier": 3
     },
     {
+        "id": "hearty_broth",
         "name": "Hearty Broth",
         "description": "A thick, restorative broth boiled from prime cuts and rare herbs. Warmth spreads through you with every sip.",
         "value": 18.00,
@@ -80,6 +90,7 @@
         "tier": 3
     },
     {
+        "id": "smoked_salmon",
         "name": "Smoked Salmon",
         "description": "A beautifully smoked side of salmon, caught from a clean northern river. Rich, fatty, and deeply satisfying.",
         "value": 20.00,
